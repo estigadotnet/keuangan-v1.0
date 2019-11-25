@@ -670,6 +670,8 @@ class t001_jo_view extends t001_jo
 		$this->Shipper->setVisibility();
 		$this->Qty->setVisibility();
 		$this->Cont->setVisibility();
+		$this->Tujuan->setVisibility();
+		$this->Kapal->setVisibility();
 		$this->Doc->setVisibility();
 		$this->hideFieldsForAddEdit();
 
@@ -862,6 +864,8 @@ class t001_jo_view extends t001_jo
 		$this->Shipper->setDbValue($row['Shipper']);
 		$this->Qty->setDbValue($row['Qty']);
 		$this->Cont->setDbValue($row['Cont']);
+		$this->Tujuan->setDbValue($row['Tujuan']);
+		$this->Kapal->setDbValue($row['Kapal']);
 		$this->Doc->Upload->DbValue = $row['Doc'];
 		$this->Doc->setDbValue($this->Doc->Upload->DbValue);
 	}
@@ -877,6 +881,8 @@ class t001_jo_view extends t001_jo
 		$row['Shipper'] = NULL;
 		$row['Qty'] = NULL;
 		$row['Cont'] = NULL;
+		$row['Tujuan'] = NULL;
+		$row['Kapal'] = NULL;
 		$row['Doc'] = NULL;
 		return $row;
 	}
@@ -909,6 +915,8 @@ class t001_jo_view extends t001_jo
 		// Shipper
 		// Qty
 		// Cont
+		// Tujuan
+		// Kapal
 		// Doc
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
@@ -947,6 +955,14 @@ class t001_jo_view extends t001_jo
 			$this->Cont->ViewValue = $this->Cont->CurrentValue;
 			$this->Cont->ViewCustomAttributes = "";
 
+			// Tujuan
+			$this->Tujuan->ViewValue = $this->Tujuan->CurrentValue;
+			$this->Tujuan->ViewCustomAttributes = "";
+
+			// Kapal
+			$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
+			$this->Kapal->ViewCustomAttributes = "";
+
 			// Doc
 			if (!EmptyValue($this->Doc->Upload->DbValue)) {
 				$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
@@ -984,6 +1000,16 @@ class t001_jo_view extends t001_jo
 			$this->Cont->LinkCustomAttributes = "";
 			$this->Cont->HrefValue = "";
 			$this->Cont->TooltipValue = "";
+
+			// Tujuan
+			$this->Tujuan->LinkCustomAttributes = "";
+			$this->Tujuan->HrefValue = "";
+			$this->Tujuan->TooltipValue = "";
+
+			// Kapal
+			$this->Kapal->LinkCustomAttributes = "";
+			$this->Kapal->HrefValue = "";
+			$this->Kapal->TooltipValue = "";
 
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";

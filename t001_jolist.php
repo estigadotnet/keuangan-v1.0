@@ -94,6 +94,16 @@ loadjs.ready("head", function() {
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_list->Cont->caption(), $t001_jo_list->Cont->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_jo_list->Tujuan->Required) { ?>
+				elm = this.getElements("x" + infix + "_Tujuan");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_list->Tujuan->caption(), $t001_jo_list->Tujuan->RequiredErrorMessage)) ?>");
+			<?php } ?>
+			<?php if ($t001_jo_list->Kapal->Required) { ?>
+				elm = this.getElements("x" + infix + "_Kapal");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_list->Kapal->caption(), $t001_jo_list->Kapal->RequiredErrorMessage)) ?>");
+			<?php } ?>
 			<?php if ($t001_jo_list->Doc->Required) { ?>
 				felm = this.getElements("x" + infix + "_Doc");
 				elm = this.getElements("fn_x" + infix + "_Doc");
@@ -122,6 +132,8 @@ loadjs.ready("head", function() {
 		if (ew.valueChanged(fobj, infix, "Shipper", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Qty", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Cont", false)) return false;
+		if (ew.valueChanged(fobj, infix, "Tujuan", false)) return false;
+		if (ew.valueChanged(fobj, infix, "Kapal", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Doc", false)) return false;
 		return true;
 	}
@@ -305,6 +317,24 @@ $t001_jo_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
+<?php if ($t001_jo_list->Tujuan->Visible) { // Tujuan ?>
+	<?php if ($t001_jo_list->SortUrl($t001_jo_list->Tujuan) == "") { ?>
+		<th data-name="Tujuan" class="<?php echo $t001_jo_list->Tujuan->headerCellClass() ?>"><div id="elh_t001_jo_Tujuan" class="t001_jo_Tujuan"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Tujuan->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="Tujuan" class="<?php echo $t001_jo_list->Tujuan->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->Tujuan) ?>', 2);"><div id="elh_t001_jo_Tujuan" class="t001_jo_Tujuan">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Tujuan->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Tujuan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Tujuan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
+<?php if ($t001_jo_list->Kapal->Visible) { // Kapal ?>
+	<?php if ($t001_jo_list->SortUrl($t001_jo_list->Kapal) == "") { ?>
+		<th data-name="Kapal" class="<?php echo $t001_jo_list->Kapal->headerCellClass() ?>"><div id="elh_t001_jo_Kapal" class="t001_jo_Kapal"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Kapal->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="Kapal" class="<?php echo $t001_jo_list->Kapal->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->Kapal) ?>', 2);"><div id="elh_t001_jo_Kapal" class="t001_jo_Kapal">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Kapal->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Kapal->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Kapal->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php if ($t001_jo_list->Doc->Visible) { // Doc ?>
 	<?php if ($t001_jo_list->SortUrl($t001_jo_list->Doc) == "") { ?>
 		<th data-name="Doc" class="<?php echo $t001_jo_list->Doc->headerCellClass() ?>"><div id="elh_t001_jo_Doc" class="t001_jo_Doc"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Doc->caption() ?></div></div></th>
@@ -401,6 +431,22 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 <input type="text" data-table="t001_jo" data-field="x_Cont" name="x<?php echo $t001_jo_list->RowIndex ?>_Cont" id="x<?php echo $t001_jo_list->RowIndex ?>_Cont" size="10" maxlength="5" placeholder="<?php echo HtmlEncode($t001_jo_list->Cont->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Cont->EditValue ?>"<?php echo $t001_jo_list->Cont->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_Cont" name="o<?php echo $t001_jo_list->RowIndex ?>_Cont" id="o<?php echo $t001_jo_list->RowIndex ?>_Cont" value="<?php echo HtmlEncode($t001_jo_list->Cont->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($t001_jo_list->Tujuan->Visible) { // Tujuan ?>
+		<td data-name="Tujuan">
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Tujuan" class="form-group t001_jo_Tujuan">
+<input type="text" data-table="t001_jo" data-field="x_Tujuan" name="x<?php echo $t001_jo_list->RowIndex ?>_Tujuan" id="x<?php echo $t001_jo_list->RowIndex ?>_Tujuan" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Tujuan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Tujuan->EditValue ?>"<?php echo $t001_jo_list->Tujuan->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_Tujuan" name="o<?php echo $t001_jo_list->RowIndex ?>_Tujuan" id="o<?php echo $t001_jo_list->RowIndex ?>_Tujuan" value="<?php echo HtmlEncode($t001_jo_list->Tujuan->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($t001_jo_list->Kapal->Visible) { // Kapal ?>
+		<td data-name="Kapal">
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Kapal" class="form-group t001_jo_Kapal">
+<input type="text" data-table="t001_jo" data-field="x_Kapal" name="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Kapal->EditValue ?>"<?php echo $t001_jo_list->Kapal->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_Kapal" name="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" value="<?php echo HtmlEncode($t001_jo_list->Kapal->OldValue) ?>">
 </td>
 	<?php } ?>
 	<?php if ($t001_jo_list->Doc->Visible) { // Doc ?>
@@ -685,6 +731,46 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 <?php } ?>
 </td>
 	<?php } ?>
+	<?php if ($t001_jo_list->Tujuan->Visible) { // Tujuan ?>
+		<td data-name="Tujuan" <?php echo $t001_jo_list->Tujuan->cellAttributes() ?>>
+<?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Tujuan" class="form-group">
+<input type="text" data-table="t001_jo" data-field="x_Tujuan" name="x<?php echo $t001_jo_list->RowIndex ?>_Tujuan" id="x<?php echo $t001_jo_list->RowIndex ?>_Tujuan" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Tujuan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Tujuan->EditValue ?>"<?php echo $t001_jo_list->Tujuan->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_Tujuan" name="o<?php echo $t001_jo_list->RowIndex ?>_Tujuan" id="o<?php echo $t001_jo_list->RowIndex ?>_Tujuan" value="<?php echo HtmlEncode($t001_jo_list->Tujuan->OldValue) ?>">
+<?php } ?>
+<?php if ($t001_jo->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Tujuan" class="form-group">
+<input type="text" data-table="t001_jo" data-field="x_Tujuan" name="x<?php echo $t001_jo_list->RowIndex ?>_Tujuan" id="x<?php echo $t001_jo_list->RowIndex ?>_Tujuan" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Tujuan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Tujuan->EditValue ?>"<?php echo $t001_jo_list->Tujuan->editAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($t001_jo->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Tujuan">
+<span<?php echo $t001_jo_list->Tujuan->viewAttributes() ?>><?php echo $t001_jo_list->Tujuan->getViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
+	<?php if ($t001_jo_list->Kapal->Visible) { // Kapal ?>
+		<td data-name="Kapal" <?php echo $t001_jo_list->Kapal->cellAttributes() ?>>
+<?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Kapal" class="form-group">
+<input type="text" data-table="t001_jo" data-field="x_Kapal" name="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Kapal->EditValue ?>"<?php echo $t001_jo_list->Kapal->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_Kapal" name="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" value="<?php echo HtmlEncode($t001_jo_list->Kapal->OldValue) ?>">
+<?php } ?>
+<?php if ($t001_jo->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Kapal" class="form-group">
+<input type="text" data-table="t001_jo" data-field="x_Kapal" name="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Kapal->EditValue ?>"<?php echo $t001_jo_list->Kapal->editAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($t001_jo->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Kapal">
+<span<?php echo $t001_jo_list->Kapal->viewAttributes() ?>><?php echo $t001_jo_list->Kapal->getViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
 	<?php if ($t001_jo_list->Doc->Visible) { // Doc ?>
 		<td data-name="Doc" <?php echo $t001_jo_list->Doc->cellAttributes() ?>>
 <?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -826,6 +912,22 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowIndex);
 <input type="text" data-table="t001_jo" data-field="x_Cont" name="x<?php echo $t001_jo_list->RowIndex ?>_Cont" id="x<?php echo $t001_jo_list->RowIndex ?>_Cont" size="10" maxlength="5" placeholder="<?php echo HtmlEncode($t001_jo_list->Cont->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Cont->EditValue ?>"<?php echo $t001_jo_list->Cont->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_Cont" name="o<?php echo $t001_jo_list->RowIndex ?>_Cont" id="o<?php echo $t001_jo_list->RowIndex ?>_Cont" value="<?php echo HtmlEncode($t001_jo_list->Cont->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($t001_jo_list->Tujuan->Visible) { // Tujuan ?>
+		<td data-name="Tujuan">
+<span id="el$rowindex$_t001_jo_Tujuan" class="form-group t001_jo_Tujuan">
+<input type="text" data-table="t001_jo" data-field="x_Tujuan" name="x<?php echo $t001_jo_list->RowIndex ?>_Tujuan" id="x<?php echo $t001_jo_list->RowIndex ?>_Tujuan" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Tujuan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Tujuan->EditValue ?>"<?php echo $t001_jo_list->Tujuan->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_Tujuan" name="o<?php echo $t001_jo_list->RowIndex ?>_Tujuan" id="o<?php echo $t001_jo_list->RowIndex ?>_Tujuan" value="<?php echo HtmlEncode($t001_jo_list->Tujuan->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($t001_jo_list->Kapal->Visible) { // Kapal ?>
+		<td data-name="Kapal">
+<span id="el$rowindex$_t001_jo_Kapal" class="form-group t001_jo_Kapal">
+<input type="text" data-table="t001_jo" data-field="x_Kapal" name="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Kapal->EditValue ?>"<?php echo $t001_jo_list->Kapal->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_Kapal" name="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" value="<?php echo HtmlEncode($t001_jo_list->Kapal->OldValue) ?>">
 </td>
 	<?php } ?>
 	<?php if ($t001_jo_list->Doc->Visible) { // Doc ?>

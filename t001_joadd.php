@@ -89,6 +89,16 @@ loadjs.ready("head", function() {
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_add->Cont->caption(), $t001_jo_add->Cont->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_jo_add->Tujuan->Required) { ?>
+				elm = this.getElements("x" + infix + "_Tujuan");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_add->Tujuan->caption(), $t001_jo_add->Tujuan->RequiredErrorMessage)) ?>");
+			<?php } ?>
+			<?php if ($t001_jo_add->Kapal->Required) { ?>
+				elm = this.getElements("x" + infix + "_Kapal");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_add->Kapal->caption(), $t001_jo_add->Kapal->RequiredErrorMessage)) ?>");
+			<?php } ?>
 			<?php if ($t001_jo_add->Doc->Required) { ?>
 				felm = this.getElements("x" + infix + "_Doc");
 				elm = this.getElements("fn_x" + infix + "_Doc");
@@ -210,6 +220,26 @@ $t001_jo_add->showMessage();
 <input type="text" data-table="t001_jo" data-field="x_Cont" name="x_Cont" id="x_Cont" size="10" maxlength="5" placeholder="<?php echo HtmlEncode($t001_jo_add->Cont->getPlaceHolder()) ?>" value="<?php echo $t001_jo_add->Cont->EditValue ?>"<?php echo $t001_jo_add->Cont->editAttributes() ?>>
 </span>
 <?php echo $t001_jo_add->Cont->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t001_jo_add->Tujuan->Visible) { // Tujuan ?>
+	<div id="r_Tujuan" class="form-group row">
+		<label id="elh_t001_jo_Tujuan" for="x_Tujuan" class="<?php echo $t001_jo_add->LeftColumnClass ?>"><?php echo $t001_jo_add->Tujuan->caption() ?><?php echo $t001_jo_add->Tujuan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $t001_jo_add->RightColumnClass ?>"><div <?php echo $t001_jo_add->Tujuan->cellAttributes() ?>>
+<span id="el_t001_jo_Tujuan">
+<input type="text" data-table="t001_jo" data-field="x_Tujuan" name="x_Tujuan" id="x_Tujuan" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_add->Tujuan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_add->Tujuan->EditValue ?>"<?php echo $t001_jo_add->Tujuan->editAttributes() ?>>
+</span>
+<?php echo $t001_jo_add->Tujuan->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t001_jo_add->Kapal->Visible) { // Kapal ?>
+	<div id="r_Kapal" class="form-group row">
+		<label id="elh_t001_jo_Kapal" for="x_Kapal" class="<?php echo $t001_jo_add->LeftColumnClass ?>"><?php echo $t001_jo_add->Kapal->caption() ?><?php echo $t001_jo_add->Kapal->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $t001_jo_add->RightColumnClass ?>"><div <?php echo $t001_jo_add->Kapal->cellAttributes() ?>>
+<span id="el_t001_jo_Kapal">
+<input type="text" data-table="t001_jo" data-field="x_Kapal" name="x_Kapal" id="x_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_add->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_add->Kapal->EditValue ?>"<?php echo $t001_jo_add->Kapal->editAttributes() ?>>
+</span>
+<?php echo $t001_jo_add->Kapal->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 <?php if ($t001_jo_add->Doc->Visible) { // Doc ?>

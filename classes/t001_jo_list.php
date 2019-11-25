@@ -830,6 +830,8 @@ class t001_jo_list extends t001_jo
 		$this->Shipper->setVisibility();
 		$this->Qty->setVisibility();
 		$this->Cont->setVisibility();
+		$this->Tujuan->setVisibility();
+		$this->Kapal->setVisibility();
 		$this->Doc->setVisibility();
 		$this->hideFieldsForAddEdit();
 
@@ -1559,6 +1561,10 @@ class t001_jo_list extends t001_jo
 			return FALSE;
 		if ($CurrentForm->hasValue("x_Cont") && $CurrentForm->hasValue("o_Cont") && $this->Cont->CurrentValue != $this->Cont->OldValue)
 			return FALSE;
+		if ($CurrentForm->hasValue("x_Tujuan") && $CurrentForm->hasValue("o_Tujuan") && $this->Tujuan->CurrentValue != $this->Tujuan->OldValue)
+			return FALSE;
+		if ($CurrentForm->hasValue("x_Kapal") && $CurrentForm->hasValue("o_Kapal") && $this->Kapal->CurrentValue != $this->Kapal->OldValue)
+			return FALSE;
 		if (!EmptyValue($this->Doc->Upload->Value))
 			return FALSE;
 		return TRUE;
@@ -1650,6 +1656,8 @@ class t001_jo_list extends t001_jo
 		$filterList = Concat($filterList, $this->Shipper->AdvancedSearch->toJson(), ","); // Field Shipper
 		$filterList = Concat($filterList, $this->Qty->AdvancedSearch->toJson(), ","); // Field Qty
 		$filterList = Concat($filterList, $this->Cont->AdvancedSearch->toJson(), ","); // Field Cont
+		$filterList = Concat($filterList, $this->Tujuan->AdvancedSearch->toJson(), ","); // Field Tujuan
+		$filterList = Concat($filterList, $this->Kapal->AdvancedSearch->toJson(), ","); // Field Kapal
 		$filterList = Concat($filterList, $this->Doc->AdvancedSearch->toJson(), ","); // Field Doc
 		if ($this->BasicSearch->Keyword != "") {
 			$wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1745,6 +1753,22 @@ class t001_jo_list extends t001_jo
 		$this->Cont->AdvancedSearch->SearchOperator2 = @$filter["w_Cont"];
 		$this->Cont->AdvancedSearch->save();
 
+		// Field Tujuan
+		$this->Tujuan->AdvancedSearch->SearchValue = @$filter["x_Tujuan"];
+		$this->Tujuan->AdvancedSearch->SearchOperator = @$filter["z_Tujuan"];
+		$this->Tujuan->AdvancedSearch->SearchCondition = @$filter["v_Tujuan"];
+		$this->Tujuan->AdvancedSearch->SearchValue2 = @$filter["y_Tujuan"];
+		$this->Tujuan->AdvancedSearch->SearchOperator2 = @$filter["w_Tujuan"];
+		$this->Tujuan->AdvancedSearch->save();
+
+		// Field Kapal
+		$this->Kapal->AdvancedSearch->SearchValue = @$filter["x_Kapal"];
+		$this->Kapal->AdvancedSearch->SearchOperator = @$filter["z_Kapal"];
+		$this->Kapal->AdvancedSearch->SearchCondition = @$filter["v_Kapal"];
+		$this->Kapal->AdvancedSearch->SearchValue2 = @$filter["y_Kapal"];
+		$this->Kapal->AdvancedSearch->SearchOperator2 = @$filter["w_Kapal"];
+		$this->Kapal->AdvancedSearch->save();
+
 		// Field Doc
 		$this->Doc->AdvancedSearch->SearchValue = @$filter["x_Doc"];
 		$this->Doc->AdvancedSearch->SearchOperator = @$filter["z_Doc"];
@@ -1765,6 +1789,8 @@ class t001_jo_list extends t001_jo
 		$this->buildBasicSearchSql($where, $this->Shipper, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->Qty, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->Cont, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->Tujuan, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->Kapal, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->Doc, $arKeywords, $type);
 		return $where;
 	}
@@ -1933,6 +1959,8 @@ class t001_jo_list extends t001_jo
 			$this->updateSort($this->Shipper, $ctrl); // Shipper
 			$this->updateSort($this->Qty, $ctrl); // Qty
 			$this->updateSort($this->Cont, $ctrl); // Cont
+			$this->updateSort($this->Tujuan, $ctrl); // Tujuan
+			$this->updateSort($this->Kapal, $ctrl); // Kapal
 			$this->updateSort($this->Doc, $ctrl); // Doc
 			$this->setStartRecordNumber(1); // Reset start position
 		}
@@ -1977,6 +2005,8 @@ class t001_jo_list extends t001_jo
 				$this->Shipper->setSort("");
 				$this->Qty->setSort("");
 				$this->Cont->setSort("");
+				$this->Tujuan->setSort("");
+				$this->Kapal->setSort("");
 				$this->Doc->setSort("");
 			}
 
@@ -2474,6 +2504,10 @@ class t001_jo_list extends t001_jo
 		$this->Qty->OldValue = $this->Qty->CurrentValue;
 		$this->Cont->CurrentValue = NULL;
 		$this->Cont->OldValue = $this->Cont->CurrentValue;
+		$this->Tujuan->CurrentValue = NULL;
+		$this->Tujuan->OldValue = $this->Tujuan->CurrentValue;
+		$this->Kapal->CurrentValue = NULL;
+		$this->Kapal->OldValue = $this->Kapal->CurrentValue;
 		$this->Doc->Upload->DbValue = NULL;
 		$this->Doc->OldValue = $this->Doc->Upload->DbValue;
 	}
@@ -2555,6 +2589,26 @@ class t001_jo_list extends t001_jo
 		}
 		$this->Cont->setOldValue($CurrentForm->getValue("o_Cont"));
 
+		// Check field name 'Tujuan' first before field var 'x_Tujuan'
+		$val = $CurrentForm->hasValue("Tujuan") ? $CurrentForm->getValue("Tujuan") : $CurrentForm->getValue("x_Tujuan");
+		if (!$this->Tujuan->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->Tujuan->Visible = FALSE; // Disable update for API request
+			else
+				$this->Tujuan->setFormValue($val);
+		}
+		$this->Tujuan->setOldValue($CurrentForm->getValue("o_Tujuan"));
+
+		// Check field name 'Kapal' first before field var 'x_Kapal'
+		$val = $CurrentForm->hasValue("Kapal") ? $CurrentForm->getValue("Kapal") : $CurrentForm->getValue("x_Kapal");
+		if (!$this->Kapal->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->Kapal->Visible = FALSE; // Disable update for API request
+			else
+				$this->Kapal->setFormValue($val);
+		}
+		$this->Kapal->setOldValue($CurrentForm->getValue("o_Kapal"));
+
 		// Check field name 'id' first before field var 'x_id'
 		$val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
 		if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
@@ -2573,6 +2627,8 @@ class t001_jo_list extends t001_jo
 		$this->Shipper->CurrentValue = $this->Shipper->FormValue;
 		$this->Qty->CurrentValue = $this->Qty->FormValue;
 		$this->Cont->CurrentValue = $this->Cont->FormValue;
+		$this->Tujuan->CurrentValue = $this->Tujuan->FormValue;
+		$this->Kapal->CurrentValue = $this->Kapal->FormValue;
 	}
 
 	// Load recordset
@@ -2646,6 +2702,8 @@ class t001_jo_list extends t001_jo
 		$this->Shipper->setDbValue($row['Shipper']);
 		$this->Qty->setDbValue($row['Qty']);
 		$this->Cont->setDbValue($row['Cont']);
+		$this->Tujuan->setDbValue($row['Tujuan']);
+		$this->Kapal->setDbValue($row['Kapal']);
 		$this->Doc->Upload->DbValue = $row['Doc'];
 		$this->Doc->setDbValue($this->Doc->Upload->DbValue);
 	}
@@ -2662,6 +2720,8 @@ class t001_jo_list extends t001_jo
 		$row['Shipper'] = $this->Shipper->CurrentValue;
 		$row['Qty'] = $this->Qty->CurrentValue;
 		$row['Cont'] = $this->Cont->CurrentValue;
+		$row['Tujuan'] = $this->Tujuan->CurrentValue;
+		$row['Kapal'] = $this->Kapal->CurrentValue;
 		$row['Doc'] = $this->Doc->Upload->DbValue;
 		return $row;
 	}
@@ -2717,6 +2777,8 @@ class t001_jo_list extends t001_jo
 		// Shipper
 		// Qty
 		// Cont
+		// Tujuan
+		// Kapal
 		// Doc
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
@@ -2755,6 +2817,14 @@ class t001_jo_list extends t001_jo
 			$this->Cont->ViewValue = $this->Cont->CurrentValue;
 			$this->Cont->ViewCustomAttributes = "";
 
+			// Tujuan
+			$this->Tujuan->ViewValue = $this->Tujuan->CurrentValue;
+			$this->Tujuan->ViewCustomAttributes = "";
+
+			// Kapal
+			$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
+			$this->Kapal->ViewCustomAttributes = "";
+
 			// Doc
 			if (!EmptyValue($this->Doc->Upload->DbValue)) {
 				$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
@@ -2792,6 +2862,16 @@ class t001_jo_list extends t001_jo
 			$this->Cont->LinkCustomAttributes = "";
 			$this->Cont->HrefValue = "";
 			$this->Cont->TooltipValue = "";
+
+			// Tujuan
+			$this->Tujuan->LinkCustomAttributes = "";
+			$this->Tujuan->HrefValue = "";
+			$this->Tujuan->TooltipValue = "";
+
+			// Kapal
+			$this->Kapal->LinkCustomAttributes = "";
+			$this->Kapal->HrefValue = "";
+			$this->Kapal->TooltipValue = "";
 
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
@@ -2848,6 +2928,22 @@ class t001_jo_list extends t001_jo
 			$this->Cont->EditValue = HtmlEncode($this->Cont->CurrentValue);
 			$this->Cont->PlaceHolder = RemoveHtml($this->Cont->caption());
 
+			// Tujuan
+			$this->Tujuan->EditAttrs["class"] = "form-control";
+			$this->Tujuan->EditCustomAttributes = "";
+			if (!$this->Tujuan->Raw)
+				$this->Tujuan->CurrentValue = HtmlDecode($this->Tujuan->CurrentValue);
+			$this->Tujuan->EditValue = HtmlEncode($this->Tujuan->CurrentValue);
+			$this->Tujuan->PlaceHolder = RemoveHtml($this->Tujuan->caption());
+
+			// Kapal
+			$this->Kapal->EditAttrs["class"] = "form-control";
+			$this->Kapal->EditCustomAttributes = "";
+			if (!$this->Kapal->Raw)
+				$this->Kapal->CurrentValue = HtmlDecode($this->Kapal->CurrentValue);
+			$this->Kapal->EditValue = HtmlEncode($this->Kapal->CurrentValue);
+			$this->Kapal->PlaceHolder = RemoveHtml($this->Kapal->caption());
+
 			// Doc
 			$this->Doc->EditAttrs["class"] = "form-control";
 			$this->Doc->EditCustomAttributes = "";
@@ -2884,6 +2980,14 @@ class t001_jo_list extends t001_jo
 			// Cont
 			$this->Cont->LinkCustomAttributes = "";
 			$this->Cont->HrefValue = "";
+
+			// Tujuan
+			$this->Tujuan->LinkCustomAttributes = "";
+			$this->Tujuan->HrefValue = "";
+
+			// Kapal
+			$this->Kapal->LinkCustomAttributes = "";
+			$this->Kapal->HrefValue = "";
 
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
@@ -2939,6 +3043,22 @@ class t001_jo_list extends t001_jo
 			$this->Cont->EditValue = HtmlEncode($this->Cont->CurrentValue);
 			$this->Cont->PlaceHolder = RemoveHtml($this->Cont->caption());
 
+			// Tujuan
+			$this->Tujuan->EditAttrs["class"] = "form-control";
+			$this->Tujuan->EditCustomAttributes = "";
+			if (!$this->Tujuan->Raw)
+				$this->Tujuan->CurrentValue = HtmlDecode($this->Tujuan->CurrentValue);
+			$this->Tujuan->EditValue = HtmlEncode($this->Tujuan->CurrentValue);
+			$this->Tujuan->PlaceHolder = RemoveHtml($this->Tujuan->caption());
+
+			// Kapal
+			$this->Kapal->EditAttrs["class"] = "form-control";
+			$this->Kapal->EditCustomAttributes = "";
+			if (!$this->Kapal->Raw)
+				$this->Kapal->CurrentValue = HtmlDecode($this->Kapal->CurrentValue);
+			$this->Kapal->EditValue = HtmlEncode($this->Kapal->CurrentValue);
+			$this->Kapal->PlaceHolder = RemoveHtml($this->Kapal->caption());
+
 			// Doc
 			$this->Doc->EditAttrs["class"] = "form-control";
 			$this->Doc->EditCustomAttributes = "";
@@ -2975,6 +3095,14 @@ class t001_jo_list extends t001_jo
 			// Cont
 			$this->Cont->LinkCustomAttributes = "";
 			$this->Cont->HrefValue = "";
+
+			// Tujuan
+			$this->Tujuan->LinkCustomAttributes = "";
+			$this->Tujuan->HrefValue = "";
+
+			// Kapal
+			$this->Kapal->LinkCustomAttributes = "";
+			$this->Kapal->HrefValue = "";
 
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
@@ -3031,6 +3159,16 @@ class t001_jo_list extends t001_jo
 		if ($this->Cont->Required) {
 			if (!$this->Cont->IsDetailKey && $this->Cont->FormValue != NULL && $this->Cont->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->Cont->caption(), $this->Cont->RequiredErrorMessage));
+			}
+		}
+		if ($this->Tujuan->Required) {
+			if (!$this->Tujuan->IsDetailKey && $this->Tujuan->FormValue != NULL && $this->Tujuan->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->Tujuan->caption(), $this->Tujuan->RequiredErrorMessage));
+			}
+		}
+		if ($this->Kapal->Required) {
+			if (!$this->Kapal->IsDetailKey && $this->Kapal->FormValue != NULL && $this->Kapal->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->Kapal->caption(), $this->Kapal->RequiredErrorMessage));
 			}
 		}
 		if ($this->Doc->Required) {
@@ -3198,6 +3336,12 @@ class t001_jo_list extends t001_jo
 			// Cont
 			$this->Cont->setDbValueDef($rsnew, $this->Cont->CurrentValue, NULL, $this->Cont->ReadOnly);
 
+			// Tujuan
+			$this->Tujuan->setDbValueDef($rsnew, $this->Tujuan->CurrentValue, NULL, $this->Tujuan->ReadOnly);
+
+			// Kapal
+			$this->Kapal->setDbValueDef($rsnew, $this->Kapal->CurrentValue, NULL, $this->Kapal->ReadOnly);
+
 			// Doc
 			if ($this->Doc->Visible && !$this->Doc->ReadOnly && !$this->Doc->Upload->KeepFile) {
 				$this->Doc->Upload->DbValue = $rsold['Doc']; // Get original value
@@ -3360,6 +3504,8 @@ class t001_jo_list extends t001_jo
 		$hash .= GetFieldHash($rs->fields('Shipper')); // Shipper
 		$hash .= GetFieldHash($rs->fields('Qty')); // Qty
 		$hash .= GetFieldHash($rs->fields('Cont')); // Cont
+		$hash .= GetFieldHash($rs->fields('Tujuan')); // Tujuan
+		$hash .= GetFieldHash($rs->fields('Kapal')); // Kapal
 		$hash .= GetFieldHash($rs->fields('Doc')); // Doc
 		return md5($hash);
 	}
@@ -3404,6 +3550,12 @@ class t001_jo_list extends t001_jo
 
 		// Cont
 		$this->Cont->setDbValueDef($rsnew, $this->Cont->CurrentValue, NULL, FALSE);
+
+		// Tujuan
+		$this->Tujuan->setDbValueDef($rsnew, $this->Tujuan->CurrentValue, NULL, FALSE);
+
+		// Kapal
+		$this->Kapal->setDbValueDef($rsnew, $this->Kapal->CurrentValue, NULL, FALSE);
 
 		// Doc
 		if ($this->Doc->Visible && !$this->Doc->Upload->KeepFile) {

@@ -131,6 +131,26 @@ $t001_jo_view->showMessage();
 </td>
 	</tr>
 <?php } ?>
+<?php if ($t001_jo_view->Tujuan->Visible) { // Tujuan ?>
+	<tr id="r_Tujuan">
+		<td class="<?php echo $t001_jo_view->TableLeftColumnClass ?>"><span id="elh_t001_jo_Tujuan"><?php echo $t001_jo_view->Tujuan->caption() ?></span></td>
+		<td data-name="Tujuan" <?php echo $t001_jo_view->Tujuan->cellAttributes() ?>>
+<span id="el_t001_jo_Tujuan">
+<span<?php echo $t001_jo_view->Tujuan->viewAttributes() ?>><?php echo $t001_jo_view->Tujuan->getViewValue() ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t001_jo_view->Kapal->Visible) { // Kapal ?>
+	<tr id="r_Kapal">
+		<td class="<?php echo $t001_jo_view->TableLeftColumnClass ?>"><span id="elh_t001_jo_Kapal"><?php echo $t001_jo_view->Kapal->caption() ?></span></td>
+		<td data-name="Kapal" <?php echo $t001_jo_view->Kapal->cellAttributes() ?>>
+<span id="el_t001_jo_Kapal">
+<span<?php echo $t001_jo_view->Kapal->viewAttributes() ?>><?php echo $t001_jo_view->Kapal->getViewValue() ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
 <?php if ($t001_jo_view->Doc->Visible) { // Doc ?>
 	<tr id="r_Doc">
 		<td class="<?php echo $t001_jo_view->TableLeftColumnClass ?>"><span id="elh_t001_jo_Doc"><?php echo $t001_jo_view->Doc->caption() ?></span></td>

@@ -88,6 +88,16 @@ loadjs.ready("head", function() {
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->Cont->caption(), $t001_jo_addopt->Cont->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_jo_addopt->Tujuan->Required) { ?>
+				elm = this.getElements("x" + infix + "_Tujuan");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->Tujuan->caption(), $t001_jo_addopt->Tujuan->RequiredErrorMessage)) ?>");
+			<?php } ?>
+			<?php if ($t001_jo_addopt->Kapal->Required) { ?>
+				elm = this.getElements("x" + infix + "_Kapal");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->Kapal->caption(), $t001_jo_addopt->Kapal->RequiredErrorMessage)) ?>");
+			<?php } ?>
 			<?php if ($t001_jo_addopt->Doc->Required) { ?>
 				felm = this.getElements("x" + infix + "_Doc");
 				elm = this.getElements("fn_x" + infix + "_Doc");
@@ -185,6 +195,22 @@ $t001_jo_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_Cont"><?php echo $t001_jo_addopt->Cont->caption() ?><?php echo $t001_jo_addopt->Cont->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="t001_jo" data-field="x_Cont" name="x_Cont" id="x_Cont" size="10" maxlength="5" placeholder="<?php echo HtmlEncode($t001_jo_addopt->Cont->getPlaceHolder()) ?>" value="<?php echo $t001_jo_addopt->Cont->EditValue ?>"<?php echo $t001_jo_addopt->Cont->editAttributes() ?>>
+</div>
+	</div>
+<?php } ?>
+<?php if ($t001_jo_addopt->Tujuan->Visible) { // Tujuan ?>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label ew-label" for="x_Tujuan"><?php echo $t001_jo_addopt->Tujuan->caption() ?><?php echo $t001_jo_addopt->Tujuan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="col-sm-10">
+<input type="text" data-table="t001_jo" data-field="x_Tujuan" name="x_Tujuan" id="x_Tujuan" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_addopt->Tujuan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_addopt->Tujuan->EditValue ?>"<?php echo $t001_jo_addopt->Tujuan->editAttributes() ?>>
+</div>
+	</div>
+<?php } ?>
+<?php if ($t001_jo_addopt->Kapal->Visible) { // Kapal ?>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label ew-label" for="x_Kapal"><?php echo $t001_jo_addopt->Kapal->caption() ?><?php echo $t001_jo_addopt->Kapal->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="col-sm-10">
+<input type="text" data-table="t001_jo" data-field="x_Kapal" name="x_Kapal" id="x_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_addopt->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_addopt->Kapal->EditValue ?>"<?php echo $t001_jo_addopt->Kapal->editAttributes() ?>>
 </div>
 	</div>
 <?php } ?>

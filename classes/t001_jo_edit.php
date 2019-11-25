@@ -684,6 +684,8 @@ class t001_jo_edit extends t001_jo
 		$this->Shipper->setVisibility();
 		$this->Qty->setVisibility();
 		$this->Cont->setVisibility();
+		$this->Tujuan->setVisibility();
+		$this->Kapal->setVisibility();
 		$this->Doc->setVisibility();
 		$this->hideFieldsForAddEdit();
 
@@ -877,6 +879,24 @@ class t001_jo_edit extends t001_jo
 				$this->Cont->setFormValue($val);
 		}
 
+		// Check field name 'Tujuan' first before field var 'x_Tujuan'
+		$val = $CurrentForm->hasValue("Tujuan") ? $CurrentForm->getValue("Tujuan") : $CurrentForm->getValue("x_Tujuan");
+		if (!$this->Tujuan->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->Tujuan->Visible = FALSE; // Disable update for API request
+			else
+				$this->Tujuan->setFormValue($val);
+		}
+
+		// Check field name 'Kapal' first before field var 'x_Kapal'
+		$val = $CurrentForm->hasValue("Kapal") ? $CurrentForm->getValue("Kapal") : $CurrentForm->getValue("x_Kapal");
+		if (!$this->Kapal->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->Kapal->Visible = FALSE; // Disable update for API request
+			else
+				$this->Kapal->setFormValue($val);
+		}
+
 		// Check field name 'id' first before field var 'x_id'
 		$val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
 		if (!$this->id->IsDetailKey)
@@ -894,6 +914,8 @@ class t001_jo_edit extends t001_jo
 		$this->Shipper->CurrentValue = $this->Shipper->FormValue;
 		$this->Qty->CurrentValue = $this->Qty->FormValue;
 		$this->Cont->CurrentValue = $this->Cont->FormValue;
+		$this->Tujuan->CurrentValue = $this->Tujuan->FormValue;
+		$this->Kapal->CurrentValue = $this->Kapal->FormValue;
 	}
 
 	// Load row based on key values
@@ -938,6 +960,8 @@ class t001_jo_edit extends t001_jo
 		$this->Shipper->setDbValue($row['Shipper']);
 		$this->Qty->setDbValue($row['Qty']);
 		$this->Cont->setDbValue($row['Cont']);
+		$this->Tujuan->setDbValue($row['Tujuan']);
+		$this->Kapal->setDbValue($row['Kapal']);
 		$this->Doc->Upload->DbValue = $row['Doc'];
 		$this->Doc->setDbValue($this->Doc->Upload->DbValue);
 	}
@@ -953,6 +977,8 @@ class t001_jo_edit extends t001_jo
 		$row['Shipper'] = NULL;
 		$row['Qty'] = NULL;
 		$row['Cont'] = NULL;
+		$row['Tujuan'] = NULL;
+		$row['Kapal'] = NULL;
 		$row['Doc'] = NULL;
 		return $row;
 	}
@@ -1002,6 +1028,8 @@ class t001_jo_edit extends t001_jo
 		// Shipper
 		// Qty
 		// Cont
+		// Tujuan
+		// Kapal
 		// Doc
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
@@ -1040,6 +1068,14 @@ class t001_jo_edit extends t001_jo
 			$this->Cont->ViewValue = $this->Cont->CurrentValue;
 			$this->Cont->ViewCustomAttributes = "";
 
+			// Tujuan
+			$this->Tujuan->ViewValue = $this->Tujuan->CurrentValue;
+			$this->Tujuan->ViewCustomAttributes = "";
+
+			// Kapal
+			$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
+			$this->Kapal->ViewCustomAttributes = "";
+
 			// Doc
 			if (!EmptyValue($this->Doc->Upload->DbValue)) {
 				$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
@@ -1077,6 +1113,16 @@ class t001_jo_edit extends t001_jo
 			$this->Cont->LinkCustomAttributes = "";
 			$this->Cont->HrefValue = "";
 			$this->Cont->TooltipValue = "";
+
+			// Tujuan
+			$this->Tujuan->LinkCustomAttributes = "";
+			$this->Tujuan->HrefValue = "";
+			$this->Tujuan->TooltipValue = "";
+
+			// Kapal
+			$this->Kapal->LinkCustomAttributes = "";
+			$this->Kapal->HrefValue = "";
+			$this->Kapal->TooltipValue = "";
 
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
@@ -1131,6 +1177,22 @@ class t001_jo_edit extends t001_jo
 			$this->Cont->EditValue = HtmlEncode($this->Cont->CurrentValue);
 			$this->Cont->PlaceHolder = RemoveHtml($this->Cont->caption());
 
+			// Tujuan
+			$this->Tujuan->EditAttrs["class"] = "form-control";
+			$this->Tujuan->EditCustomAttributes = "";
+			if (!$this->Tujuan->Raw)
+				$this->Tujuan->CurrentValue = HtmlDecode($this->Tujuan->CurrentValue);
+			$this->Tujuan->EditValue = HtmlEncode($this->Tujuan->CurrentValue);
+			$this->Tujuan->PlaceHolder = RemoveHtml($this->Tujuan->caption());
+
+			// Kapal
+			$this->Kapal->EditAttrs["class"] = "form-control";
+			$this->Kapal->EditCustomAttributes = "";
+			if (!$this->Kapal->Raw)
+				$this->Kapal->CurrentValue = HtmlDecode($this->Kapal->CurrentValue);
+			$this->Kapal->EditValue = HtmlEncode($this->Kapal->CurrentValue);
+			$this->Kapal->PlaceHolder = RemoveHtml($this->Kapal->caption());
+
 			// Doc
 			$this->Doc->EditAttrs["class"] = "form-control";
 			$this->Doc->EditCustomAttributes = "";
@@ -1167,6 +1229,14 @@ class t001_jo_edit extends t001_jo
 			// Cont
 			$this->Cont->LinkCustomAttributes = "";
 			$this->Cont->HrefValue = "";
+
+			// Tujuan
+			$this->Tujuan->LinkCustomAttributes = "";
+			$this->Tujuan->HrefValue = "";
+
+			// Kapal
+			$this->Kapal->LinkCustomAttributes = "";
+			$this->Kapal->HrefValue = "";
 
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
@@ -1223,6 +1293,16 @@ class t001_jo_edit extends t001_jo
 		if ($this->Cont->Required) {
 			if (!$this->Cont->IsDetailKey && $this->Cont->FormValue != NULL && $this->Cont->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->Cont->caption(), $this->Cont->RequiredErrorMessage));
+			}
+		}
+		if ($this->Tujuan->Required) {
+			if (!$this->Tujuan->IsDetailKey && $this->Tujuan->FormValue != NULL && $this->Tujuan->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->Tujuan->caption(), $this->Tujuan->RequiredErrorMessage));
+			}
+		}
+		if ($this->Kapal->Required) {
+			if (!$this->Kapal->IsDetailKey && $this->Kapal->FormValue != NULL && $this->Kapal->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->Kapal->caption(), $this->Kapal->RequiredErrorMessage));
 			}
 		}
 		if ($this->Doc->Required) {
@@ -1303,6 +1383,12 @@ class t001_jo_edit extends t001_jo
 
 			// Cont
 			$this->Cont->setDbValueDef($rsnew, $this->Cont->CurrentValue, NULL, $this->Cont->ReadOnly);
+
+			// Tujuan
+			$this->Tujuan->setDbValueDef($rsnew, $this->Tujuan->CurrentValue, NULL, $this->Tujuan->ReadOnly);
+
+			// Kapal
+			$this->Kapal->setDbValueDef($rsnew, $this->Kapal->CurrentValue, NULL, $this->Kapal->ReadOnly);
 
 			// Doc
 			if ($this->Doc->Visible && !$this->Doc->ReadOnly && !$this->Doc->Upload->KeepFile) {

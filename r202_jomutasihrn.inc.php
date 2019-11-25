@@ -114,6 +114,8 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 									<div class="row">Qty.&nbsp;<b>'.$r_mutasi->fields('Qty').'</b></div>
 									<div class="row">Cont.&nbsp;<b>'.$r_mutasi->fields('Cont').'</b></div>
 									<div class="row">Status&nbsp;<b>'.$r_mutasi->fields('Status').'</b></div>
+									<div class="row">Tujuan&nbsp;<b>'.$r_mutasi->fields('Tujuan').'</b></div>
+									<div class="row">Kapal&nbsp;<b>'.$r_mutasi->fields('Kapal').'</b></div>
 									<div class="row">Doc&nbsp;<b><a target="_blank" href="files/'.$r_mutasi->fields('Doc').'">'.$r_mutasi->fields('Doc').'</a></b></div>
 								</div>
 								<div class="modal-footer">

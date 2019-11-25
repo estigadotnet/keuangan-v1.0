@@ -40,6 +40,8 @@ class t001_jo extends DbTable
 	public $Shipper;
 	public $Qty;
 	public $Cont;
+	public $Tujuan;
+	public $Kapal;
 	public $Doc;
 
 	// Constructor
@@ -122,6 +124,16 @@ class t001_jo extends DbTable
 		$this->Cont = new DbField('t001_jo', 't001_jo', 'x_Cont', 'Cont', '`Cont`', '`Cont`', 200, 5, -1, FALSE, '`Cont`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->Cont->Sortable = TRUE; // Allow sort
 		$this->fields['Cont'] = &$this->Cont;
+
+		// Tujuan
+		$this->Tujuan = new DbField('t001_jo', 't001_jo', 'x_Tujuan', 'Tujuan', '`Tujuan`', '`Tujuan`', 200, 100, -1, FALSE, '`Tujuan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Tujuan->Sortable = TRUE; // Allow sort
+		$this->fields['Tujuan'] = &$this->Tujuan;
+
+		// Kapal
+		$this->Kapal = new DbField('t001_jo', 't001_jo', 'x_Kapal', 'Kapal', '`Kapal`', '`Kapal`', 200, 100, -1, FALSE, '`Kapal`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Kapal->Sortable = TRUE; // Allow sort
+		$this->fields['Kapal'] = &$this->Kapal;
 
 		// Doc
 		$this->Doc = new DbField('t001_jo', 't001_jo', 'x_Doc', 'Doc', '`Doc`', '`Doc`', 200, 255, -1, TRUE, '`Doc`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
@@ -511,6 +523,8 @@ class t001_jo extends DbTable
 		$this->Shipper->DbValue = $row['Shipper'];
 		$this->Qty->DbValue = $row['Qty'];
 		$this->Cont->DbValue = $row['Cont'];
+		$this->Tujuan->DbValue = $row['Tujuan'];
+		$this->Kapal->DbValue = $row['Kapal'];
 		$this->Doc->Upload->DbValue = $row['Doc'];
 	}
 
@@ -754,6 +768,8 @@ class t001_jo extends DbTable
 		$this->Shipper->setDbValue($rs->fields('Shipper'));
 		$this->Qty->setDbValue($rs->fields('Qty'));
 		$this->Cont->setDbValue($rs->fields('Cont'));
+		$this->Tujuan->setDbValue($rs->fields('Tujuan'));
+		$this->Kapal->setDbValue($rs->fields('Kapal'));
 		$this->Doc->Upload->DbValue = $rs->fields('Doc');
 	}
 
@@ -773,6 +789,8 @@ class t001_jo extends DbTable
 		// Shipper
 		// Qty
 		// Cont
+		// Tujuan
+		// Kapal
 		// Doc
 		// id
 
@@ -808,6 +826,14 @@ class t001_jo extends DbTable
 		// Cont
 		$this->Cont->ViewValue = $this->Cont->CurrentValue;
 		$this->Cont->ViewCustomAttributes = "";
+
+		// Tujuan
+		$this->Tujuan->ViewValue = $this->Tujuan->CurrentValue;
+		$this->Tujuan->ViewCustomAttributes = "";
+
+		// Kapal
+		$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
+		$this->Kapal->ViewCustomAttributes = "";
 
 		// Doc
 		if (!EmptyValue($this->Doc->Upload->DbValue)) {
@@ -851,6 +877,16 @@ class t001_jo extends DbTable
 		$this->Cont->LinkCustomAttributes = "";
 		$this->Cont->HrefValue = "";
 		$this->Cont->TooltipValue = "";
+
+		// Tujuan
+		$this->Tujuan->LinkCustomAttributes = "";
+		$this->Tujuan->HrefValue = "";
+		$this->Tujuan->TooltipValue = "";
+
+		// Kapal
+		$this->Kapal->LinkCustomAttributes = "";
+		$this->Kapal->HrefValue = "";
+		$this->Kapal->TooltipValue = "";
 
 		// Doc
 		$this->Doc->LinkCustomAttributes = "";
@@ -925,6 +961,22 @@ class t001_jo extends DbTable
 		$this->Cont->EditValue = $this->Cont->CurrentValue;
 		$this->Cont->PlaceHolder = RemoveHtml($this->Cont->caption());
 
+		// Tujuan
+		$this->Tujuan->EditAttrs["class"] = "form-control";
+		$this->Tujuan->EditCustomAttributes = "";
+		if (!$this->Tujuan->Raw)
+			$this->Tujuan->CurrentValue = HtmlDecode($this->Tujuan->CurrentValue);
+		$this->Tujuan->EditValue = $this->Tujuan->CurrentValue;
+		$this->Tujuan->PlaceHolder = RemoveHtml($this->Tujuan->caption());
+
+		// Kapal
+		$this->Kapal->EditAttrs["class"] = "form-control";
+		$this->Kapal->EditCustomAttributes = "";
+		if (!$this->Kapal->Raw)
+			$this->Kapal->CurrentValue = HtmlDecode($this->Kapal->CurrentValue);
+		$this->Kapal->EditValue = $this->Kapal->CurrentValue;
+		$this->Kapal->PlaceHolder = RemoveHtml($this->Kapal->caption());
+
 		// Doc
 		$this->Doc->EditAttrs["class"] = "form-control";
 		$this->Doc->EditCustomAttributes = "";
@@ -969,6 +1021,8 @@ class t001_jo extends DbTable
 					$doc->exportCaption($this->Shipper);
 					$doc->exportCaption($this->Qty);
 					$doc->exportCaption($this->Cont);
+					$doc->exportCaption($this->Tujuan);
+					$doc->exportCaption($this->Kapal);
 					$doc->exportCaption($this->Doc);
 				} else {
 					$doc->exportCaption($this->id);
@@ -978,6 +1032,8 @@ class t001_jo extends DbTable
 					$doc->exportCaption($this->Shipper);
 					$doc->exportCaption($this->Qty);
 					$doc->exportCaption($this->Cont);
+					$doc->exportCaption($this->Tujuan);
+					$doc->exportCaption($this->Kapal);
 					$doc->exportCaption($this->Doc);
 				}
 				$doc->endExportRow();
@@ -1016,6 +1072,8 @@ class t001_jo extends DbTable
 						$doc->exportField($this->Shipper);
 						$doc->exportField($this->Qty);
 						$doc->exportField($this->Cont);
+						$doc->exportField($this->Tujuan);
+						$doc->exportField($this->Kapal);
 						$doc->exportField($this->Doc);
 					} else {
 						$doc->exportField($this->id);
@@ -1025,6 +1083,8 @@ class t001_jo extends DbTable
 						$doc->exportField($this->Shipper);
 						$doc->exportField($this->Qty);
 						$doc->exportField($this->Cont);
+						$doc->exportField($this->Tujuan);
+						$doc->exportField($this->Kapal);
 						$doc->exportField($this->Doc);
 					}
 					$doc->endExportRow($rowCnt);
