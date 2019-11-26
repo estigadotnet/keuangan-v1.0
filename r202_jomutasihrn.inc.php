@@ -246,6 +246,8 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 			<!-- menampilkan semua nilai TOTAL -->
 			<tr>
 				<th scope="col" style="text-align: right"><b>Total</b></th>
+				<th scope="col" style="text-align: right"><b>&nbsp;</b></th>
+				<th scope="col" style="text-align: right"><b>&nbsp;</b></th>
 				<th scope="col" style="text-align: right"><b><?php echo number_format($total_tagihan); ?></b></th>
 				<th scope="col" colspan="<?php echo --$jumlah_kolom; ?>">&nbsp;</th>
 				<th scope="col" style="text-align: right"><b><?php echo number_format($total_pengeluaran); ?></b></th>
