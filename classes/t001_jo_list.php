@@ -830,9 +830,9 @@ class t001_jo_list extends t001_jo
 		$this->Shipper->setVisibility();
 		$this->Qty->setVisibility();
 		$this->Cont->setVisibility();
+		$this->BM->setVisibility();
 		$this->Tujuan->setVisibility();
 		$this->Kapal->setVisibility();
-		$this->BM->setVisibility();
 		$this->Doc->setVisibility();
 		$this->hideFieldsForAddEdit();
 
@@ -1562,11 +1562,11 @@ class t001_jo_list extends t001_jo
 			return FALSE;
 		if ($CurrentForm->hasValue("x_Cont") && $CurrentForm->hasValue("o_Cont") && $this->Cont->CurrentValue != $this->Cont->OldValue)
 			return FALSE;
+		if ($CurrentForm->hasValue("x_BM") && $CurrentForm->hasValue("o_BM") && $this->BM->CurrentValue != $this->BM->OldValue)
+			return FALSE;
 		if ($CurrentForm->hasValue("x_Tujuan") && $CurrentForm->hasValue("o_Tujuan") && $this->Tujuan->CurrentValue != $this->Tujuan->OldValue)
 			return FALSE;
 		if ($CurrentForm->hasValue("x_Kapal") && $CurrentForm->hasValue("o_Kapal") && $this->Kapal->CurrentValue != $this->Kapal->OldValue)
-			return FALSE;
-		if ($CurrentForm->hasValue("x_BM") && $CurrentForm->hasValue("o_BM") && $this->BM->CurrentValue != $this->BM->OldValue)
 			return FALSE;
 		if (!EmptyValue($this->Doc->Upload->Value))
 			return FALSE;
@@ -1659,9 +1659,9 @@ class t001_jo_list extends t001_jo
 		$filterList = Concat($filterList, $this->Shipper->AdvancedSearch->toJson(), ","); // Field Shipper
 		$filterList = Concat($filterList, $this->Qty->AdvancedSearch->toJson(), ","); // Field Qty
 		$filterList = Concat($filterList, $this->Cont->AdvancedSearch->toJson(), ","); // Field Cont
+		$filterList = Concat($filterList, $this->BM->AdvancedSearch->toJson(), ","); // Field BM
 		$filterList = Concat($filterList, $this->Tujuan->AdvancedSearch->toJson(), ","); // Field Tujuan
 		$filterList = Concat($filterList, $this->Kapal->AdvancedSearch->toJson(), ","); // Field Kapal
-		$filterList = Concat($filterList, $this->BM->AdvancedSearch->toJson(), ","); // Field BM
 		$filterList = Concat($filterList, $this->Doc->AdvancedSearch->toJson(), ","); // Field Doc
 		if ($this->BasicSearch->Keyword != "") {
 			$wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
@@ -1757,6 +1757,14 @@ class t001_jo_list extends t001_jo
 		$this->Cont->AdvancedSearch->SearchOperator2 = @$filter["w_Cont"];
 		$this->Cont->AdvancedSearch->save();
 
+		// Field BM
+		$this->BM->AdvancedSearch->SearchValue = @$filter["x_BM"];
+		$this->BM->AdvancedSearch->SearchOperator = @$filter["z_BM"];
+		$this->BM->AdvancedSearch->SearchCondition = @$filter["v_BM"];
+		$this->BM->AdvancedSearch->SearchValue2 = @$filter["y_BM"];
+		$this->BM->AdvancedSearch->SearchOperator2 = @$filter["w_BM"];
+		$this->BM->AdvancedSearch->save();
+
 		// Field Tujuan
 		$this->Tujuan->AdvancedSearch->SearchValue = @$filter["x_Tujuan"];
 		$this->Tujuan->AdvancedSearch->SearchOperator = @$filter["z_Tujuan"];
@@ -1772,14 +1780,6 @@ class t001_jo_list extends t001_jo
 		$this->Kapal->AdvancedSearch->SearchValue2 = @$filter["y_Kapal"];
 		$this->Kapal->AdvancedSearch->SearchOperator2 = @$filter["w_Kapal"];
 		$this->Kapal->AdvancedSearch->save();
-
-		// Field BM
-		$this->BM->AdvancedSearch->SearchValue = @$filter["x_BM"];
-		$this->BM->AdvancedSearch->SearchOperator = @$filter["z_BM"];
-		$this->BM->AdvancedSearch->SearchCondition = @$filter["v_BM"];
-		$this->BM->AdvancedSearch->SearchValue2 = @$filter["y_BM"];
-		$this->BM->AdvancedSearch->SearchOperator2 = @$filter["w_BM"];
-		$this->BM->AdvancedSearch->save();
 
 		// Field Doc
 		$this->Doc->AdvancedSearch->SearchValue = @$filter["x_Doc"];
@@ -1971,9 +1971,9 @@ class t001_jo_list extends t001_jo
 			$this->updateSort($this->Shipper, $ctrl); // Shipper
 			$this->updateSort($this->Qty, $ctrl); // Qty
 			$this->updateSort($this->Cont, $ctrl); // Cont
+			$this->updateSort($this->BM, $ctrl); // BM
 			$this->updateSort($this->Tujuan, $ctrl); // Tujuan
 			$this->updateSort($this->Kapal, $ctrl); // Kapal
-			$this->updateSort($this->BM, $ctrl); // BM
 			$this->updateSort($this->Doc, $ctrl); // Doc
 			$this->setStartRecordNumber(1); // Reset start position
 		}
@@ -2018,9 +2018,9 @@ class t001_jo_list extends t001_jo
 				$this->Shipper->setSort("");
 				$this->Qty->setSort("");
 				$this->Cont->setSort("");
+				$this->BM->setSort("");
 				$this->Tujuan->setSort("");
 				$this->Kapal->setSort("");
-				$this->BM->setSort("");
 				$this->Doc->setSort("");
 			}
 
@@ -2518,12 +2518,12 @@ class t001_jo_list extends t001_jo
 		$this->Qty->OldValue = $this->Qty->CurrentValue;
 		$this->Cont->CurrentValue = NULL;
 		$this->Cont->OldValue = $this->Cont->CurrentValue;
+		$this->BM->CurrentValue = "-";
+		$this->BM->OldValue = $this->BM->CurrentValue;
 		$this->Tujuan->CurrentValue = NULL;
 		$this->Tujuan->OldValue = $this->Tujuan->CurrentValue;
 		$this->Kapal->CurrentValue = NULL;
 		$this->Kapal->OldValue = $this->Kapal->CurrentValue;
-		$this->BM->CurrentValue = "-";
-		$this->BM->OldValue = $this->BM->CurrentValue;
 		$this->Doc->Upload->DbValue = NULL;
 		$this->Doc->OldValue = $this->Doc->Upload->DbValue;
 	}
@@ -2605,6 +2605,16 @@ class t001_jo_list extends t001_jo
 		}
 		$this->Cont->setOldValue($CurrentForm->getValue("o_Cont"));
 
+		// Check field name 'BM' first before field var 'x_BM'
+		$val = $CurrentForm->hasValue("BM") ? $CurrentForm->getValue("BM") : $CurrentForm->getValue("x_BM");
+		if (!$this->BM->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->BM->Visible = FALSE; // Disable update for API request
+			else
+				$this->BM->setFormValue($val);
+		}
+		$this->BM->setOldValue($CurrentForm->getValue("o_BM"));
+
 		// Check field name 'Tujuan' first before field var 'x_Tujuan'
 		$val = $CurrentForm->hasValue("Tujuan") ? $CurrentForm->getValue("Tujuan") : $CurrentForm->getValue("x_Tujuan");
 		if (!$this->Tujuan->IsDetailKey) {
@@ -2625,16 +2635,6 @@ class t001_jo_list extends t001_jo
 		}
 		$this->Kapal->setOldValue($CurrentForm->getValue("o_Kapal"));
 
-		// Check field name 'BM' first before field var 'x_BM'
-		$val = $CurrentForm->hasValue("BM") ? $CurrentForm->getValue("BM") : $CurrentForm->getValue("x_BM");
-		if (!$this->BM->IsDetailKey) {
-			if (IsApi() && $val == NULL)
-				$this->BM->Visible = FALSE; // Disable update for API request
-			else
-				$this->BM->setFormValue($val);
-		}
-		$this->BM->setOldValue($CurrentForm->getValue("o_BM"));
-
 		// Check field name 'id' first before field var 'x_id'
 		$val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
 		if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
@@ -2653,9 +2653,9 @@ class t001_jo_list extends t001_jo
 		$this->Shipper->CurrentValue = $this->Shipper->FormValue;
 		$this->Qty->CurrentValue = $this->Qty->FormValue;
 		$this->Cont->CurrentValue = $this->Cont->FormValue;
+		$this->BM->CurrentValue = $this->BM->FormValue;
 		$this->Tujuan->CurrentValue = $this->Tujuan->FormValue;
 		$this->Kapal->CurrentValue = $this->Kapal->FormValue;
-		$this->BM->CurrentValue = $this->BM->FormValue;
 	}
 
 	// Load recordset
@@ -2729,9 +2729,9 @@ class t001_jo_list extends t001_jo
 		$this->Shipper->setDbValue($row['Shipper']);
 		$this->Qty->setDbValue($row['Qty']);
 		$this->Cont->setDbValue($row['Cont']);
+		$this->BM->setDbValue($row['BM']);
 		$this->Tujuan->setDbValue($row['Tujuan']);
 		$this->Kapal->setDbValue($row['Kapal']);
-		$this->BM->setDbValue($row['BM']);
 		$this->Doc->Upload->DbValue = $row['Doc'];
 		$this->Doc->setDbValue($this->Doc->Upload->DbValue);
 	}
@@ -2748,9 +2748,9 @@ class t001_jo_list extends t001_jo
 		$row['Shipper'] = $this->Shipper->CurrentValue;
 		$row['Qty'] = $this->Qty->CurrentValue;
 		$row['Cont'] = $this->Cont->CurrentValue;
+		$row['BM'] = $this->BM->CurrentValue;
 		$row['Tujuan'] = $this->Tujuan->CurrentValue;
 		$row['Kapal'] = $this->Kapal->CurrentValue;
-		$row['BM'] = $this->BM->CurrentValue;
 		$row['Doc'] = $this->Doc->Upload->DbValue;
 		return $row;
 	}
@@ -2806,9 +2806,9 @@ class t001_jo_list extends t001_jo
 		// Shipper
 		// Qty
 		// Cont
+		// BM
 		// Tujuan
 		// Kapal
-		// BM
 		// Doc
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
@@ -2847,14 +2847,6 @@ class t001_jo_list extends t001_jo
 			$this->Cont->ViewValue = $this->Cont->CurrentValue;
 			$this->Cont->ViewCustomAttributes = "";
 
-			// Tujuan
-			$this->Tujuan->ViewValue = $this->Tujuan->CurrentValue;
-			$this->Tujuan->ViewCustomAttributes = "";
-
-			// Kapal
-			$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
-			$this->Kapal->ViewCustomAttributes = "";
-
 			// BM
 			if (strval($this->BM->CurrentValue) != "") {
 				$this->BM->ViewValue = $this->BM->optionCaption($this->BM->CurrentValue);
@@ -2862,6 +2854,14 @@ class t001_jo_list extends t001_jo
 				$this->BM->ViewValue = NULL;
 			}
 			$this->BM->ViewCustomAttributes = "";
+
+			// Tujuan
+			$this->Tujuan->ViewValue = $this->Tujuan->CurrentValue;
+			$this->Tujuan->ViewCustomAttributes = "";
+
+			// Kapal
+			$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
+			$this->Kapal->ViewCustomAttributes = "";
 
 			// Doc
 			if (!EmptyValue($this->Doc->Upload->DbValue)) {
@@ -2901,6 +2901,11 @@ class t001_jo_list extends t001_jo
 			$this->Cont->HrefValue = "";
 			$this->Cont->TooltipValue = "";
 
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
+			$this->BM->TooltipValue = "";
+
 			// Tujuan
 			$this->Tujuan->LinkCustomAttributes = "";
 			$this->Tujuan->HrefValue = "";
@@ -2910,11 +2915,6 @@ class t001_jo_list extends t001_jo
 			$this->Kapal->LinkCustomAttributes = "";
 			$this->Kapal->HrefValue = "";
 			$this->Kapal->TooltipValue = "";
-
-			// BM
-			$this->BM->LinkCustomAttributes = "";
-			$this->BM->HrefValue = "";
-			$this->BM->TooltipValue = "";
 
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
@@ -2971,6 +2971,10 @@ class t001_jo_list extends t001_jo
 			$this->Cont->EditValue = HtmlEncode($this->Cont->CurrentValue);
 			$this->Cont->PlaceHolder = RemoveHtml($this->Cont->caption());
 
+			// BM
+			$this->BM->EditCustomAttributes = "";
+			$this->BM->EditValue = $this->BM->options(FALSE);
+
 			// Tujuan
 			$this->Tujuan->EditAttrs["class"] = "form-control";
 			$this->Tujuan->EditCustomAttributes = "";
@@ -2986,10 +2990,6 @@ class t001_jo_list extends t001_jo
 				$this->Kapal->CurrentValue = HtmlDecode($this->Kapal->CurrentValue);
 			$this->Kapal->EditValue = HtmlEncode($this->Kapal->CurrentValue);
 			$this->Kapal->PlaceHolder = RemoveHtml($this->Kapal->caption());
-
-			// BM
-			$this->BM->EditCustomAttributes = "";
-			$this->BM->EditValue = $this->BM->options(FALSE);
 
 			// Doc
 			$this->Doc->EditAttrs["class"] = "form-control";
@@ -3028,6 +3028,10 @@ class t001_jo_list extends t001_jo
 			$this->Cont->LinkCustomAttributes = "";
 			$this->Cont->HrefValue = "";
 
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
+
 			// Tujuan
 			$this->Tujuan->LinkCustomAttributes = "";
 			$this->Tujuan->HrefValue = "";
@@ -3035,10 +3039,6 @@ class t001_jo_list extends t001_jo
 			// Kapal
 			$this->Kapal->LinkCustomAttributes = "";
 			$this->Kapal->HrefValue = "";
-
-			// BM
-			$this->BM->LinkCustomAttributes = "";
-			$this->BM->HrefValue = "";
 
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
@@ -3094,6 +3094,10 @@ class t001_jo_list extends t001_jo
 			$this->Cont->EditValue = HtmlEncode($this->Cont->CurrentValue);
 			$this->Cont->PlaceHolder = RemoveHtml($this->Cont->caption());
 
+			// BM
+			$this->BM->EditCustomAttributes = "";
+			$this->BM->EditValue = $this->BM->options(FALSE);
+
 			// Tujuan
 			$this->Tujuan->EditAttrs["class"] = "form-control";
 			$this->Tujuan->EditCustomAttributes = "";
@@ -3109,10 +3113,6 @@ class t001_jo_list extends t001_jo
 				$this->Kapal->CurrentValue = HtmlDecode($this->Kapal->CurrentValue);
 			$this->Kapal->EditValue = HtmlEncode($this->Kapal->CurrentValue);
 			$this->Kapal->PlaceHolder = RemoveHtml($this->Kapal->caption());
-
-			// BM
-			$this->BM->EditCustomAttributes = "";
-			$this->BM->EditValue = $this->BM->options(FALSE);
 
 			// Doc
 			$this->Doc->EditAttrs["class"] = "form-control";
@@ -3151,6 +3151,10 @@ class t001_jo_list extends t001_jo
 			$this->Cont->LinkCustomAttributes = "";
 			$this->Cont->HrefValue = "";
 
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
+
 			// Tujuan
 			$this->Tujuan->LinkCustomAttributes = "";
 			$this->Tujuan->HrefValue = "";
@@ -3158,10 +3162,6 @@ class t001_jo_list extends t001_jo
 			// Kapal
 			$this->Kapal->LinkCustomAttributes = "";
 			$this->Kapal->HrefValue = "";
-
-			// BM
-			$this->BM->LinkCustomAttributes = "";
-			$this->BM->HrefValue = "";
 
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
@@ -3220,6 +3220,11 @@ class t001_jo_list extends t001_jo
 				AddMessage($FormError, str_replace("%s", $this->Cont->caption(), $this->Cont->RequiredErrorMessage));
 			}
 		}
+		if ($this->BM->Required) {
+			if ($this->BM->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->BM->caption(), $this->BM->RequiredErrorMessage));
+			}
+		}
 		if ($this->Tujuan->Required) {
 			if (!$this->Tujuan->IsDetailKey && $this->Tujuan->FormValue != NULL && $this->Tujuan->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->Tujuan->caption(), $this->Tujuan->RequiredErrorMessage));
@@ -3228,11 +3233,6 @@ class t001_jo_list extends t001_jo
 		if ($this->Kapal->Required) {
 			if (!$this->Kapal->IsDetailKey && $this->Kapal->FormValue != NULL && $this->Kapal->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->Kapal->caption(), $this->Kapal->RequiredErrorMessage));
-			}
-		}
-		if ($this->BM->Required) {
-			if ($this->BM->FormValue == "") {
-				AddMessage($FormError, str_replace("%s", $this->BM->caption(), $this->BM->RequiredErrorMessage));
 			}
 		}
 		if ($this->Doc->Required) {
@@ -3400,14 +3400,14 @@ class t001_jo_list extends t001_jo
 			// Cont
 			$this->Cont->setDbValueDef($rsnew, $this->Cont->CurrentValue, NULL, $this->Cont->ReadOnly);
 
+			// BM
+			$this->BM->setDbValueDef($rsnew, $this->BM->CurrentValue, "", $this->BM->ReadOnly);
+
 			// Tujuan
 			$this->Tujuan->setDbValueDef($rsnew, $this->Tujuan->CurrentValue, NULL, $this->Tujuan->ReadOnly);
 
 			// Kapal
 			$this->Kapal->setDbValueDef($rsnew, $this->Kapal->CurrentValue, NULL, $this->Kapal->ReadOnly);
-
-			// BM
-			$this->BM->setDbValueDef($rsnew, $this->BM->CurrentValue, "", $this->BM->ReadOnly);
 
 			// Doc
 			if ($this->Doc->Visible && !$this->Doc->ReadOnly && !$this->Doc->Upload->KeepFile) {
@@ -3575,9 +3575,9 @@ class t001_jo_list extends t001_jo
 		$hash .= GetFieldHash($rs->fields('Shipper')); // Shipper
 		$hash .= GetFieldHash($rs->fields('Qty')); // Qty
 		$hash .= GetFieldHash($rs->fields('Cont')); // Cont
+		$hash .= GetFieldHash($rs->fields('BM')); // BM
 		$hash .= GetFieldHash($rs->fields('Tujuan')); // Tujuan
 		$hash .= GetFieldHash($rs->fields('Kapal')); // Kapal
-		$hash .= GetFieldHash($rs->fields('BM')); // BM
 		$hash .= GetFieldHash($rs->fields('Doc')); // Doc
 		return md5($hash);
 	}
@@ -3623,14 +3623,14 @@ class t001_jo_list extends t001_jo
 		// Cont
 		$this->Cont->setDbValueDef($rsnew, $this->Cont->CurrentValue, NULL, FALSE);
 
+		// BM
+		$this->BM->setDbValueDef($rsnew, $this->BM->CurrentValue, "", strval($this->BM->CurrentValue) == "");
+
 		// Tujuan
 		$this->Tujuan->setDbValueDef($rsnew, $this->Tujuan->CurrentValue, NULL, FALSE);
 
 		// Kapal
 		$this->Kapal->setDbValueDef($rsnew, $this->Kapal->CurrentValue, NULL, FALSE);
-
-		// BM
-		$this->BM->setDbValueDef($rsnew, $this->BM->CurrentValue, "", strval($this->BM->CurrentValue) == "");
 
 		// Doc
 		if ($this->Doc->Visible && !$this->Doc->Upload->KeepFile) {

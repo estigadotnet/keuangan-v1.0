@@ -88,14 +88,14 @@ $t001_jo_delete->showMessage();
 <?php if ($t001_jo_delete->Cont->Visible) { // Cont ?>
 		<th class="<?php echo $t001_jo_delete->Cont->headerCellClass() ?>"><span id="elh_t001_jo_Cont" class="t001_jo_Cont"><?php echo $t001_jo_delete->Cont->caption() ?></span></th>
 <?php } ?>
+<?php if ($t001_jo_delete->BM->Visible) { // BM ?>
+		<th class="<?php echo $t001_jo_delete->BM->headerCellClass() ?>"><span id="elh_t001_jo_BM" class="t001_jo_BM"><?php echo $t001_jo_delete->BM->caption() ?></span></th>
+<?php } ?>
 <?php if ($t001_jo_delete->Tujuan->Visible) { // Tujuan ?>
 		<th class="<?php echo $t001_jo_delete->Tujuan->headerCellClass() ?>"><span id="elh_t001_jo_Tujuan" class="t001_jo_Tujuan"><?php echo $t001_jo_delete->Tujuan->caption() ?></span></th>
 <?php } ?>
 <?php if ($t001_jo_delete->Kapal->Visible) { // Kapal ?>
 		<th class="<?php echo $t001_jo_delete->Kapal->headerCellClass() ?>"><span id="elh_t001_jo_Kapal" class="t001_jo_Kapal"><?php echo $t001_jo_delete->Kapal->caption() ?></span></th>
-<?php } ?>
-<?php if ($t001_jo_delete->BM->Visible) { // BM ?>
-		<th class="<?php echo $t001_jo_delete->BM->headerCellClass() ?>"><span id="elh_t001_jo_BM" class="t001_jo_BM"><?php echo $t001_jo_delete->BM->caption() ?></span></th>
 <?php } ?>
 <?php if ($t001_jo_delete->Doc->Visible) { // Doc ?>
 		<th class="<?php echo $t001_jo_delete->Doc->headerCellClass() ?>"><span id="elh_t001_jo_Doc" class="t001_jo_Doc"><?php echo $t001_jo_delete->Doc->caption() ?></span></th>
@@ -163,6 +163,13 @@ while (!$t001_jo_delete->Recordset->EOF) {
 </span>
 </td>
 <?php } ?>
+<?php if ($t001_jo_delete->BM->Visible) { // BM ?>
+		<td <?php echo $t001_jo_delete->BM->cellAttributes() ?>>
+<span id="el<?php echo $t001_jo_delete->RowCount ?>_t001_jo_BM" class="t001_jo_BM">
+<span<?php echo $t001_jo_delete->BM->viewAttributes() ?>><?php echo $t001_jo_delete->BM->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
 <?php if ($t001_jo_delete->Tujuan->Visible) { // Tujuan ?>
 		<td <?php echo $t001_jo_delete->Tujuan->cellAttributes() ?>>
 <span id="el<?php echo $t001_jo_delete->RowCount ?>_t001_jo_Tujuan" class="t001_jo_Tujuan">
@@ -174,13 +181,6 @@ while (!$t001_jo_delete->Recordset->EOF) {
 		<td <?php echo $t001_jo_delete->Kapal->cellAttributes() ?>>
 <span id="el<?php echo $t001_jo_delete->RowCount ?>_t001_jo_Kapal" class="t001_jo_Kapal">
 <span<?php echo $t001_jo_delete->Kapal->viewAttributes() ?>><?php echo $t001_jo_delete->Kapal->getViewValue() ?></span>
-</span>
-</td>
-<?php } ?>
-<?php if ($t001_jo_delete->BM->Visible) { // BM ?>
-		<td <?php echo $t001_jo_delete->BM->cellAttributes() ?>>
-<span id="el<?php echo $t001_jo_delete->RowCount ?>_t001_jo_BM" class="t001_jo_BM">
-<span<?php echo $t001_jo_delete->BM->viewAttributes() ?>><?php echo $t001_jo_delete->BM->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

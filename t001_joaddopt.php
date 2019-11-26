@@ -88,6 +88,11 @@ loadjs.ready("head", function() {
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->Cont->caption(), $t001_jo_addopt->Cont->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_jo_addopt->BM->Required) { ?>
+				elm = this.getElements("x" + infix + "_BM");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->BM->caption(), $t001_jo_addopt->BM->RequiredErrorMessage)) ?>");
+			<?php } ?>
 			<?php if ($t001_jo_addopt->Tujuan->Required) { ?>
 				elm = this.getElements("x" + infix + "_Tujuan");
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -97,11 +102,6 @@ loadjs.ready("head", function() {
 				elm = this.getElements("x" + infix + "_Kapal");
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->Kapal->caption(), $t001_jo_addopt->Kapal->RequiredErrorMessage)) ?>");
-			<?php } ?>
-			<?php if ($t001_jo_addopt->BM->Required) { ?>
-				elm = this.getElements("x" + infix + "_BM");
-				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->BM->caption(), $t001_jo_addopt->BM->RequiredErrorMessage)) ?>");
 			<?php } ?>
 			<?php if ($t001_jo_addopt->Doc->Required) { ?>
 				felm = this.getElements("x" + infix + "_Doc");
@@ -206,6 +206,17 @@ $t001_jo_addopt->showMessage();
 </div>
 	</div>
 <?php } ?>
+<?php if ($t001_jo_addopt->BM->Visible) { // BM ?>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label ew-label"><?php echo $t001_jo_addopt->BM->caption() ?><?php echo $t001_jo_addopt->BM->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="col-sm-10">
+<div id="tp_x_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_addopt->BM->displayValueSeparatorAttribute() ?>" name="x_BM" id="x_BM" value="{value}"<?php echo $t001_jo_addopt->BM->editAttributes() ?>></div>
+<div id="dsl_x_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $t001_jo_addopt->BM->radioButtonListHtml(FALSE, "x_BM") ?>
+</div></div>
+</div>
+	</div>
+<?php } ?>
 <?php if ($t001_jo_addopt->Tujuan->Visible) { // Tujuan ?>
 	<div class="form-group row">
 		<label class="col-sm-2 col-form-label ew-label" for="x_Tujuan"><?php echo $t001_jo_addopt->Tujuan->caption() ?><?php echo $t001_jo_addopt->Tujuan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -219,17 +230,6 @@ $t001_jo_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_Kapal"><?php echo $t001_jo_addopt->Kapal->caption() ?><?php echo $t001_jo_addopt->Kapal->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="t001_jo" data-field="x_Kapal" name="x_Kapal" id="x_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_addopt->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_addopt->Kapal->EditValue ?>"<?php echo $t001_jo_addopt->Kapal->editAttributes() ?>>
-</div>
-	</div>
-<?php } ?>
-<?php if ($t001_jo_addopt->BM->Visible) { // BM ?>
-	<div class="form-group row">
-		<label class="col-sm-2 col-form-label ew-label"><?php echo $t001_jo_addopt->BM->caption() ?><?php echo $t001_jo_addopt->BM->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="col-sm-10">
-<div id="tp_x_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_addopt->BM->displayValueSeparatorAttribute() ?>" name="x_BM" id="x_BM" value="{value}"<?php echo $t001_jo_addopt->BM->editAttributes() ?>></div>
-<div id="dsl_x_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $t001_jo_addopt->BM->radioButtonListHtml(FALSE, "x_BM") ?>
-</div></div>
 </div>
 	</div>
 <?php } ?>

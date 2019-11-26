@@ -94,6 +94,11 @@ loadjs.ready("head", function() {
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_list->Cont->caption(), $t001_jo_list->Cont->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_jo_list->BM->Required) { ?>
+				elm = this.getElements("x" + infix + "_BM");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_list->BM->caption(), $t001_jo_list->BM->RequiredErrorMessage)) ?>");
+			<?php } ?>
 			<?php if ($t001_jo_list->Tujuan->Required) { ?>
 				elm = this.getElements("x" + infix + "_Tujuan");
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -103,11 +108,6 @@ loadjs.ready("head", function() {
 				elm = this.getElements("x" + infix + "_Kapal");
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_list->Kapal->caption(), $t001_jo_list->Kapal->RequiredErrorMessage)) ?>");
-			<?php } ?>
-			<?php if ($t001_jo_list->BM->Required) { ?>
-				elm = this.getElements("x" + infix + "_BM");
-				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_list->BM->caption(), $t001_jo_list->BM->RequiredErrorMessage)) ?>");
 			<?php } ?>
 			<?php if ($t001_jo_list->Doc->Required) { ?>
 				felm = this.getElements("x" + infix + "_Doc");
@@ -137,9 +137,9 @@ loadjs.ready("head", function() {
 		if (ew.valueChanged(fobj, infix, "Shipper", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Qty", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Cont", false)) return false;
+		if (ew.valueChanged(fobj, infix, "BM", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Tujuan", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Kapal", false)) return false;
-		if (ew.valueChanged(fobj, infix, "BM", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Doc", false)) return false;
 		return true;
 	}
@@ -325,6 +325,15 @@ $t001_jo_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
+<?php if ($t001_jo_list->BM->Visible) { // BM ?>
+	<?php if ($t001_jo_list->SortUrl($t001_jo_list->BM) == "") { ?>
+		<th data-name="BM" class="<?php echo $t001_jo_list->BM->headerCellClass() ?>"><div id="elh_t001_jo_BM" class="t001_jo_BM"><div class="ew-table-header-caption"><?php echo $t001_jo_list->BM->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="BM" class="<?php echo $t001_jo_list->BM->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->BM) ?>', 2);"><div id="elh_t001_jo_BM" class="t001_jo_BM">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->BM->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->BM->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->BM->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php if ($t001_jo_list->Tujuan->Visible) { // Tujuan ?>
 	<?php if ($t001_jo_list->SortUrl($t001_jo_list->Tujuan) == "") { ?>
 		<th data-name="Tujuan" class="<?php echo $t001_jo_list->Tujuan->headerCellClass() ?>"><div id="elh_t001_jo_Tujuan" class="t001_jo_Tujuan"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Tujuan->caption() ?></div></div></th>
@@ -340,15 +349,6 @@ $t001_jo_list->ListOptions->render("header", "left");
 	<?php } else { ?>
 		<th data-name="Kapal" class="<?php echo $t001_jo_list->Kapal->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->Kapal) ?>', 2);"><div id="elh_t001_jo_Kapal" class="t001_jo_Kapal">
 			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Kapal->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Kapal->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Kapal->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
-		</div></div></th>
-	<?php } ?>
-<?php } ?>
-<?php if ($t001_jo_list->BM->Visible) { // BM ?>
-	<?php if ($t001_jo_list->SortUrl($t001_jo_list->BM) == "") { ?>
-		<th data-name="BM" class="<?php echo $t001_jo_list->BM->headerCellClass() ?>"><div id="elh_t001_jo_BM" class="t001_jo_BM"><div class="ew-table-header-caption"><?php echo $t001_jo_list->BM->caption() ?></div></div></th>
-	<?php } else { ?>
-		<th data-name="BM" class="<?php echo $t001_jo_list->BM->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->BM) ?>', 2);"><div id="elh_t001_jo_BM" class="t001_jo_BM">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->BM->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->BM->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->BM->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -450,6 +450,17 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 <input type="hidden" data-table="t001_jo" data-field="x_Cont" name="o<?php echo $t001_jo_list->RowIndex ?>_Cont" id="o<?php echo $t001_jo_list->RowIndex ?>_Cont" value="<?php echo HtmlEncode($t001_jo_list->Cont->OldValue) ?>">
 </td>
 	<?php } ?>
+	<?php if ($t001_jo_list->BM->Visible) { // BM ?>
+		<td data-name="BM">
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_BM" class="form-group t001_jo_BM">
+<div id="tp_x<?php echo $t001_jo_list->RowIndex ?>_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_list->BM->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_BM" id="x<?php echo $t001_jo_list->RowIndex ?>_BM" value="{value}"<?php echo $t001_jo_list->BM->editAttributes() ?>></div>
+<div id="dsl_x<?php echo $t001_jo_list->RowIndex ?>_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $t001_jo_list->BM->radioButtonListHtml(FALSE, "x{$t001_jo_list->RowIndex}_BM") ?>
+</div></div>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_BM" name="o<?php echo $t001_jo_list->RowIndex ?>_BM" id="o<?php echo $t001_jo_list->RowIndex ?>_BM" value="<?php echo HtmlEncode($t001_jo_list->BM->OldValue) ?>">
+</td>
+	<?php } ?>
 	<?php if ($t001_jo_list->Tujuan->Visible) { // Tujuan ?>
 		<td data-name="Tujuan">
 <span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Tujuan" class="form-group t001_jo_Tujuan">
@@ -464,17 +475,6 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 <input type="text" data-table="t001_jo" data-field="x_Kapal" name="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Kapal->EditValue ?>"<?php echo $t001_jo_list->Kapal->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_Kapal" name="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" value="<?php echo HtmlEncode($t001_jo_list->Kapal->OldValue) ?>">
-</td>
-	<?php } ?>
-	<?php if ($t001_jo_list->BM->Visible) { // BM ?>
-		<td data-name="BM">
-<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_BM" class="form-group t001_jo_BM">
-<div id="tp_x<?php echo $t001_jo_list->RowIndex ?>_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_list->BM->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_BM" id="x<?php echo $t001_jo_list->RowIndex ?>_BM" value="{value}"<?php echo $t001_jo_list->BM->editAttributes() ?>></div>
-<div id="dsl_x<?php echo $t001_jo_list->RowIndex ?>_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $t001_jo_list->BM->radioButtonListHtml(FALSE, "x{$t001_jo_list->RowIndex}_BM") ?>
-</div></div>
-</span>
-<input type="hidden" data-table="t001_jo" data-field="x_BM" name="o<?php echo $t001_jo_list->RowIndex ?>_BM" id="o<?php echo $t001_jo_list->RowIndex ?>_BM" value="<?php echo HtmlEncode($t001_jo_list->BM->OldValue) ?>">
 </td>
 	<?php } ?>
 	<?php if ($t001_jo_list->Doc->Visible) { // Doc ?>
@@ -759,6 +759,32 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 <?php } ?>
 </td>
 	<?php } ?>
+	<?php if ($t001_jo_list->BM->Visible) { // BM ?>
+		<td data-name="BM" <?php echo $t001_jo_list->BM->cellAttributes() ?>>
+<?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_BM" class="form-group">
+<div id="tp_x<?php echo $t001_jo_list->RowIndex ?>_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_list->BM->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_BM" id="x<?php echo $t001_jo_list->RowIndex ?>_BM" value="{value}"<?php echo $t001_jo_list->BM->editAttributes() ?>></div>
+<div id="dsl_x<?php echo $t001_jo_list->RowIndex ?>_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $t001_jo_list->BM->radioButtonListHtml(FALSE, "x{$t001_jo_list->RowIndex}_BM") ?>
+</div></div>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_BM" name="o<?php echo $t001_jo_list->RowIndex ?>_BM" id="o<?php echo $t001_jo_list->RowIndex ?>_BM" value="<?php echo HtmlEncode($t001_jo_list->BM->OldValue) ?>">
+<?php } ?>
+<?php if ($t001_jo->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_BM" class="form-group">
+<div id="tp_x<?php echo $t001_jo_list->RowIndex ?>_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_list->BM->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_BM" id="x<?php echo $t001_jo_list->RowIndex ?>_BM" value="{value}"<?php echo $t001_jo_list->BM->editAttributes() ?>></div>
+<div id="dsl_x<?php echo $t001_jo_list->RowIndex ?>_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $t001_jo_list->BM->radioButtonListHtml(FALSE, "x{$t001_jo_list->RowIndex}_BM") ?>
+</div></div>
+</span>
+<?php } ?>
+<?php if ($t001_jo->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_BM">
+<span<?php echo $t001_jo_list->BM->viewAttributes() ?>><?php echo $t001_jo_list->BM->getViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
 	<?php if ($t001_jo_list->Tujuan->Visible) { // Tujuan ?>
 		<td data-name="Tujuan" <?php echo $t001_jo_list->Tujuan->cellAttributes() ?>>
 <?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -795,32 +821,6 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 <?php if ($t001_jo->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_Kapal">
 <span<?php echo $t001_jo_list->Kapal->viewAttributes() ?>><?php echo $t001_jo_list->Kapal->getViewValue() ?></span>
-</span>
-<?php } ?>
-</td>
-	<?php } ?>
-	<?php if ($t001_jo_list->BM->Visible) { // BM ?>
-		<td data-name="BM" <?php echo $t001_jo_list->BM->cellAttributes() ?>>
-<?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
-<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_BM" class="form-group">
-<div id="tp_x<?php echo $t001_jo_list->RowIndex ?>_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_list->BM->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_BM" id="x<?php echo $t001_jo_list->RowIndex ?>_BM" value="{value}"<?php echo $t001_jo_list->BM->editAttributes() ?>></div>
-<div id="dsl_x<?php echo $t001_jo_list->RowIndex ?>_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $t001_jo_list->BM->radioButtonListHtml(FALSE, "x{$t001_jo_list->RowIndex}_BM") ?>
-</div></div>
-</span>
-<input type="hidden" data-table="t001_jo" data-field="x_BM" name="o<?php echo $t001_jo_list->RowIndex ?>_BM" id="o<?php echo $t001_jo_list->RowIndex ?>_BM" value="<?php echo HtmlEncode($t001_jo_list->BM->OldValue) ?>">
-<?php } ?>
-<?php if ($t001_jo->RowType == ROWTYPE_EDIT) { // Edit record ?>
-<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_BM" class="form-group">
-<div id="tp_x<?php echo $t001_jo_list->RowIndex ?>_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_list->BM->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_BM" id="x<?php echo $t001_jo_list->RowIndex ?>_BM" value="{value}"<?php echo $t001_jo_list->BM->editAttributes() ?>></div>
-<div id="dsl_x<?php echo $t001_jo_list->RowIndex ?>_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $t001_jo_list->BM->radioButtonListHtml(FALSE, "x{$t001_jo_list->RowIndex}_BM") ?>
-</div></div>
-</span>
-<?php } ?>
-<?php if ($t001_jo->RowType == ROWTYPE_VIEW) { // View record ?>
-<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_BM">
-<span<?php echo $t001_jo_list->BM->viewAttributes() ?>><?php echo $t001_jo_list->BM->getViewValue() ?></span>
 </span>
 <?php } ?>
 </td>
@@ -968,6 +968,17 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowIndex);
 <input type="hidden" data-table="t001_jo" data-field="x_Cont" name="o<?php echo $t001_jo_list->RowIndex ?>_Cont" id="o<?php echo $t001_jo_list->RowIndex ?>_Cont" value="<?php echo HtmlEncode($t001_jo_list->Cont->OldValue) ?>">
 </td>
 	<?php } ?>
+	<?php if ($t001_jo_list->BM->Visible) { // BM ?>
+		<td data-name="BM">
+<span id="el$rowindex$_t001_jo_BM" class="form-group t001_jo_BM">
+<div id="tp_x<?php echo $t001_jo_list->RowIndex ?>_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_list->BM->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_BM" id="x<?php echo $t001_jo_list->RowIndex ?>_BM" value="{value}"<?php echo $t001_jo_list->BM->editAttributes() ?>></div>
+<div id="dsl_x<?php echo $t001_jo_list->RowIndex ?>_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $t001_jo_list->BM->radioButtonListHtml(FALSE, "x{$t001_jo_list->RowIndex}_BM") ?>
+</div></div>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_BM" name="o<?php echo $t001_jo_list->RowIndex ?>_BM" id="o<?php echo $t001_jo_list->RowIndex ?>_BM" value="<?php echo HtmlEncode($t001_jo_list->BM->OldValue) ?>">
+</td>
+	<?php } ?>
 	<?php if ($t001_jo_list->Tujuan->Visible) { // Tujuan ?>
 		<td data-name="Tujuan">
 <span id="el$rowindex$_t001_jo_Tujuan" class="form-group t001_jo_Tujuan">
@@ -982,17 +993,6 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowIndex);
 <input type="text" data-table="t001_jo" data-field="x_Kapal" name="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="x<?php echo $t001_jo_list->RowIndex ?>_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_list->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Kapal->EditValue ?>"<?php echo $t001_jo_list->Kapal->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_Kapal" name="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" id="o<?php echo $t001_jo_list->RowIndex ?>_Kapal" value="<?php echo HtmlEncode($t001_jo_list->Kapal->OldValue) ?>">
-</td>
-	<?php } ?>
-	<?php if ($t001_jo_list->BM->Visible) { // BM ?>
-		<td data-name="BM">
-<span id="el$rowindex$_t001_jo_BM" class="form-group t001_jo_BM">
-<div id="tp_x<?php echo $t001_jo_list->RowIndex ?>_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_list->BM->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_BM" id="x<?php echo $t001_jo_list->RowIndex ?>_BM" value="{value}"<?php echo $t001_jo_list->BM->editAttributes() ?>></div>
-<div id="dsl_x<?php echo $t001_jo_list->RowIndex ?>_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $t001_jo_list->BM->radioButtonListHtml(FALSE, "x{$t001_jo_list->RowIndex}_BM") ?>
-</div></div>
-</span>
-<input type="hidden" data-table="t001_jo" data-field="x_BM" name="o<?php echo $t001_jo_list->RowIndex ?>_BM" id="o<?php echo $t001_jo_list->RowIndex ?>_BM" value="<?php echo HtmlEncode($t001_jo_list->BM->OldValue) ?>">
 </td>
 	<?php } ?>
 	<?php if ($t001_jo_list->Doc->Visible) { // Doc ?>

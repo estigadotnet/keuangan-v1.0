@@ -944,12 +944,6 @@
       <field id="cont">
         <phrase id="fldcaption" value="Cont" />
       </field>
-      <field id="tujuan">
-        <phrase id="fldcaption" value="Tujuan" />
-      </field>
-      <field id="kapal">
-        <phrase id="fldcaption" value="Kapal" />
-      </field>
       <field id="bm">
         <phrase id="fldcaption" value="BM" />
         <phrase id="fldtagvalue1" value="BALEN" />
@@ -958,6 +952,12 @@
         <phrase id="fldtagcaption2" value="MURNI" />
         <phrase id="fldtagvalue3" value="-" />
         <phrase id="fldtagcaption3" value="-" />
+      </field>
+      <field id="tujuan">
+        <phrase id="fldcaption" value="Tujuan" />
+      </field>
+      <field id="kapal">
+        <phrase id="fldcaption" value="Kapal" />
       </field>
       <field id="doc">
         <phrase id="fldcaption" value="Doc" />

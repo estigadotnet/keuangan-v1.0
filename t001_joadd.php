@@ -89,6 +89,11 @@ loadjs.ready("head", function() {
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_add->Cont->caption(), $t001_jo_add->Cont->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_jo_add->BM->Required) { ?>
+				elm = this.getElements("x" + infix + "_BM");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_add->BM->caption(), $t001_jo_add->BM->RequiredErrorMessage)) ?>");
+			<?php } ?>
 			<?php if ($t001_jo_add->Tujuan->Required) { ?>
 				elm = this.getElements("x" + infix + "_Tujuan");
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -98,11 +103,6 @@ loadjs.ready("head", function() {
 				elm = this.getElements("x" + infix + "_Kapal");
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
 					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_add->Kapal->caption(), $t001_jo_add->Kapal->RequiredErrorMessage)) ?>");
-			<?php } ?>
-			<?php if ($t001_jo_add->BM->Required) { ?>
-				elm = this.getElements("x" + infix + "_BM");
-				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
-					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_add->BM->caption(), $t001_jo_add->BM->RequiredErrorMessage)) ?>");
 			<?php } ?>
 			<?php if ($t001_jo_add->Doc->Required) { ?>
 				felm = this.getElements("x" + infix + "_Doc");
@@ -229,6 +229,19 @@ $t001_jo_add->showMessage();
 <?php echo $t001_jo_add->Cont->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
+<?php if ($t001_jo_add->BM->Visible) { // BM ?>
+	<div id="r_BM" class="form-group row">
+		<label id="elh_t001_jo_BM" class="<?php echo $t001_jo_add->LeftColumnClass ?>"><?php echo $t001_jo_add->BM->caption() ?><?php echo $t001_jo_add->BM->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $t001_jo_add->RightColumnClass ?>"><div <?php echo $t001_jo_add->BM->cellAttributes() ?>>
+<span id="el_t001_jo_BM">
+<div id="tp_x_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_add->BM->displayValueSeparatorAttribute() ?>" name="x_BM" id="x_BM" value="{value}"<?php echo $t001_jo_add->BM->editAttributes() ?>></div>
+<div id="dsl_x_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $t001_jo_add->BM->radioButtonListHtml(FALSE, "x_BM") ?>
+</div></div>
+</span>
+<?php echo $t001_jo_add->BM->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
 <?php if ($t001_jo_add->Tujuan->Visible) { // Tujuan ?>
 	<div id="r_Tujuan" class="form-group row">
 		<label id="elh_t001_jo_Tujuan" for="x_Tujuan" class="<?php echo $t001_jo_add->LeftColumnClass ?>"><?php echo $t001_jo_add->Tujuan->caption() ?><?php echo $t001_jo_add->Tujuan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
@@ -247,19 +260,6 @@ $t001_jo_add->showMessage();
 <input type="text" data-table="t001_jo" data-field="x_Kapal" name="x_Kapal" id="x_Kapal" size="30" maxlength="100" placeholder="<?php echo HtmlEncode($t001_jo_add->Kapal->getPlaceHolder()) ?>" value="<?php echo $t001_jo_add->Kapal->EditValue ?>"<?php echo $t001_jo_add->Kapal->editAttributes() ?>>
 </span>
 <?php echo $t001_jo_add->Kapal->CustomMsg ?></div></div>
-	</div>
-<?php } ?>
-<?php if ($t001_jo_add->BM->Visible) { // BM ?>
-	<div id="r_BM" class="form-group row">
-		<label id="elh_t001_jo_BM" class="<?php echo $t001_jo_add->LeftColumnClass ?>"><?php echo $t001_jo_add->BM->caption() ?><?php echo $t001_jo_add->BM->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
-		<div class="<?php echo $t001_jo_add->RightColumnClass ?>"><div <?php echo $t001_jo_add->BM->cellAttributes() ?>>
-<span id="el_t001_jo_BM">
-<div id="tp_x_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_add->BM->displayValueSeparatorAttribute() ?>" name="x_BM" id="x_BM" value="{value}"<?php echo $t001_jo_add->BM->editAttributes() ?>></div>
-<div id="dsl_x_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
-<?php echo $t001_jo_add->BM->radioButtonListHtml(FALSE, "x_BM") ?>
-</div></div>
-</span>
-<?php echo $t001_jo_add->BM->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 <?php if ($t001_jo_add->Doc->Visible) { // Doc ?>
