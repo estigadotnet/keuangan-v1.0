@@ -1414,6 +1414,10 @@ class t304_audittrail_edit extends t304_audittrail
 			$this->Row_Updated($rsold, $rsnew);
 		$rs->close();
 
+		// Clean upload path if any
+		if ($editRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $editRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);

@@ -1485,10 +1485,8 @@ class r201_mutasi_summary extends r201_mutasi
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_jo_id":
-					$conn = Conn("");
 					break;
 				case "x_jenis_id":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";
@@ -1567,7 +1565,7 @@ class r201_mutasi_summary extends r201_mutasi
 		$html = CheckHtml($html);
 		if (Config("DEBUG")) // Add debug message
 			$html = str_replace("</body>", GetDebugMessage() . "</body>", $html);
-		$dompdf = new \Dompdf\Dompdf(["pdf_backend" => "Cpdf"]);
+		$dompdf = new \Dompdf\Dompdf(["pdf_backend" => "CPDF"]);
 		$doc = new \DOMDocument("1.0", "utf-8");
 		@$doc->loadHTML('<?xml encoding="uft-8">' . ConvertToUtf8($html)); // Convert to utf-8
 		$spans = $doc->getElementsByTagName("span");

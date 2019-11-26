@@ -1103,6 +1103,10 @@ class t002_jenis_edit extends t002_jenis
 			$this->Row_Updated($rsold, $rsnew);
 		$rs->close();
 
+		// Clean upload path if any
+		if ($editRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $editRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);

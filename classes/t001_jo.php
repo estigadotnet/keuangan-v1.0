@@ -99,7 +99,7 @@ class t001_jo extends DbTable
 		$this->Status->UsePleaseSelect = TRUE; // Use PleaseSelect by default
 		$this->Status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
 		$this->Status->Lookup = new Lookup('Status', 't001_jo', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
-		$this->Status->OptionCount = 4;
+		$this->Status->OptionCount = 6;
 		$this->Status->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['Status'] = &$this->Status;
 

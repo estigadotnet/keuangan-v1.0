@@ -1899,7 +1899,7 @@ class t301_employees_list extends t301_employees
 				while (!$rs->EOF) {
 					$this->SelectedIndex++;
 					$row = $rs->fields;
-					$user = $row['Username'];
+					$user = GetUserInfo(Config("LOGIN_USERNAME_FIELD_NAME"), $row);
 					if ($userlist != "")
 						$userlist .= ",";
 					$userlist .= $user;
@@ -2646,10 +2646,8 @@ class t301_employees_list extends t301_employees
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_UserLevel":
-					$conn = Conn("");
 					break;
 				case "x_Activated":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";

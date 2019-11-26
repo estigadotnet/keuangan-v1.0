@@ -1014,7 +1014,6 @@ class t001_jo_delete extends t001_jo
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_Status":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";

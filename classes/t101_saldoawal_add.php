@@ -1113,6 +1113,10 @@ class t101_saldoawal_add extends t101_saldoawal
 			$this->Row_Inserted($rs, $rsnew);
 		}
 
+		// Clean upload path if any
+		if ($addRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $addRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);

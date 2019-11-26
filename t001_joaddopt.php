@@ -146,6 +146,7 @@ $t001_jo_addopt->showMessage();
 <?php } ?>
 <input type="hidden" name="<?php echo Config("API_ACTION_NAME") ?>" id="<?php echo Config("API_ACTION_NAME") ?>" value="<?php echo Config("API_ADD_ACTION") ?>">
 <input type="hidden" name="<?php echo Config("API_OBJECT_NAME") ?>" id="<?php echo Config("API_OBJECT_NAME") ?>" value="<?php echo $t001_jo_addopt->TableVar ?>">
+<input type="hidden" name="addopt" id="addopt" value="1">
 <?php if ($t001_jo_addopt->NoJO->Visible) { // NoJO ?>
 	<div class="form-group row">
 		<label class="col-sm-2 col-form-label ew-label" for="x_NoJO"><?php echo $t001_jo_addopt->NoJO->caption() ?><?php echo $t001_jo_addopt->NoJO->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

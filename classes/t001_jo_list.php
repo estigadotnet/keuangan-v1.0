@@ -2952,7 +2952,7 @@ class t001_jo_list extends t001_jo
 			} else {
 				$this->Doc->EditValue = "";
 			}
-			if (is_numeric($this->RowIndex) && !$this->EventCancelled)
+			if (is_numeric($this->RowIndex))
 				RenderUploadField($this->Doc, $this->RowIndex);
 
 			// Add refer script
@@ -3067,7 +3067,7 @@ class t001_jo_list extends t001_jo
 			} else {
 				$this->Doc->EditValue = "";
 			}
-			if (is_numeric($this->RowIndex) && !$this->EventCancelled)
+			if (is_numeric($this->RowIndex))
 				RenderUploadField($this->Doc, $this->RowIndex);
 
 			// Edit refer script
@@ -3464,11 +3464,15 @@ class t001_jo_list extends t001_jo
 			$this->Row_Updated($rsold, $rsnew);
 		$rs->close();
 
-		// Doc
-		if ($this->Doc->Upload->FileToken != "")
-			CleanUploadTempPath($this->Doc->Upload->FileToken, $this->Doc->Upload->Index);
-		else
-			CleanUploadTempPath($this->Doc, $this->Doc->Upload->Index);
+		// Clean upload path if any
+		if ($editRow) {
+
+			// Doc
+			if ($this->Doc->Upload->FileToken != "")
+				CleanUploadTempPath($this->Doc->Upload->FileToken, $this->Doc->Upload->Index);
+			else
+				CleanUploadTempPath($this->Doc, $this->Doc->Upload->Index);
+		}
 
 		// Write JSON for API request
 		if (IsApi() && $editRow) {
@@ -3663,11 +3667,15 @@ class t001_jo_list extends t001_jo
 			$this->Row_Inserted($rs, $rsnew);
 		}
 
-		// Doc
-		if ($this->Doc->Upload->FileToken != "")
-			CleanUploadTempPath($this->Doc->Upload->FileToken, $this->Doc->Upload->Index);
-		else
-			CleanUploadTempPath($this->Doc, $this->Doc->Upload->Index);
+		// Clean upload path if any
+		if ($addRow) {
+
+			// Doc
+			if ($this->Doc->Upload->FileToken != "")
+				CleanUploadTempPath($this->Doc->Upload->FileToken, $this->Doc->Upload->Index);
+			else
+				CleanUploadTempPath($this->Doc, $this->Doc->Upload->Index);
+		}
 
 		// Write JSON for API request
 		if (IsApi() && $addRow) {
@@ -3934,7 +3942,6 @@ class t001_jo_list extends t001_jo
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_Status":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";

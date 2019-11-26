@@ -1136,6 +1136,10 @@ class t101_saldoawal_edit extends t101_saldoawal
 			$this->Row_Updated($rsold, $rsnew);
 		$rs->close();
 
+		// Clean upload path if any
+		if ($editRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $editRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);

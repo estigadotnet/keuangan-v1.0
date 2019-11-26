@@ -1060,10 +1060,8 @@ class t102_mutasi_view extends t102_mutasi
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_jo_id":
-					$conn = Conn("");
 					break;
 				case "x_jenis_id":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";

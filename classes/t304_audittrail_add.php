@@ -1393,6 +1393,10 @@ class t304_audittrail_add extends t304_audittrail
 			$this->Row_Inserted($rs, $rsnew);
 		}
 
+		// Clean upload path if any
+		if ($addRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $addRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);

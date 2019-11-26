@@ -469,13 +469,18 @@ class changepwd extends t301_employees
 		$postBack = IsPost();
 		$validate = TRUE;
 		if ($postBack) {
-			$oldPassword = Post("opwd");
-			$newPassword = Post("npwd");
-			$confirmedPassword = Post("cpwd");
-			$validate = $this->validateForm($oldPassword, $newPassword, $confirmedPassword);
-			if (!$validate) {
-				$this->setFailureMessage($FormError);
+			if (Config("ENCRYPTED_PASSWORD")) { // Encrypted password, use raw value
+				$oldPassword = Post("opwd");
+				$newPassword = Post("npwd");
+				$confirmedPassword = Post("cpwd");
+			} else {
+				$oldPassword = RemoveXss(Post("opwd"));
+				$newPassword = RemoveXss(Post("npwd"));
+				$confirmedPassword = RemoveXss(Post("cpwd"));
 			}
+			$validate = $this->validateForm($oldPassword, $newPassword, $confirmedPassword);
+			if (!$validate)
+				$this->setFailureMessage($FormError);
 		}
 		$pwdUpdated = FALSE;
 		if ($postBack && $validate) {
@@ -484,7 +489,7 @@ class changepwd extends t301_employees
 			$userName = $Security->currentUserName();
 			if (IsPasswordReset())
 				$userName = $_SESSION[SESSION_USER_PROFILE_USER_NAME];
-			$filter = str_replace("%u", AdjustSql($userName, Config("USER_TABLE_DBID")), Config("USER_NAME_FILTER"));
+			$filter = GetUserFilter(Config("LOGIN_USERNAME_FIELD_NAME"),  $userName);
 
 			// Set up filter (WHERE Clause)
 			$this->CurrentFilter = $filter;
@@ -492,12 +497,12 @@ class changepwd extends t301_employees
 			if ($rs = Conn($UserTable->Dbid)->execute($sql)) {
 				if (!$rs->EOF) {
 					$rsold = $rs->fields;
-					if (IsPasswordReset() || ComparePassword($rsold['Password'], $oldPassword)) {
+					if (IsPasswordReset() || ComparePassword(GetUserInfo(Config("LOGIN_PASSWORD_FIELD_NAME"), $rsold), $oldPassword)) {
 						$validPwd = TRUE;
 						if (!IsPasswordReset())
 							$validPwd = $this->User_ChangePassword($rsold, $userName, $oldPassword, $newPassword);
 						if ($validPwd) {
-							$rsnew = ['Password' => $newPassword]; // Change Password
+							$rsnew = [Config("LOGIN_PASSWORD_FIELD_NAME") => $newPassword]; // Change Password
 							$rs->close();
 							Conn($UserTable->Dbid)->raiseErrorFn = Config("ERROR_FUNC");
 							$validPwd = $this->update($rsnew);

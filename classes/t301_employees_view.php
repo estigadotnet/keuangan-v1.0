@@ -1237,10 +1237,8 @@ class t301_employees_view extends t301_employees
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_UserLevel":
-					$conn = Conn("");
 					break;
 				case "x_Activated":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";

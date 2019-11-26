@@ -1465,7 +1465,7 @@ class ExportPdf extends ExportBase
 		$txt = $this->Text;
 		if (Config("DEBUG")) // Add debug message
 			$txt = str_replace("</body>", GetDebugMessage() . "</body>", $txt);
-		$dompdf = new \Dompdf\Dompdf(["pdf_backend" => "Cpdf"]);
+		$dompdf = new \Dompdf\Dompdf(["pdf_backend" => "CPDF"]);
 		$dompdf->load_html($txt);
 		$dompdf->set_paper($this->Table->ExportPageSize, $this->Table->ExportPageOrientation);
 		$dompdf->render();
@@ -1743,7 +1743,7 @@ class Pager
 	{
 		global $Language;
 		$html = "";
-		if ($this->PageSize > 1 && $this->RecordCount > 0) {
+		if ($this->Visible && $this->RecordCount > 0) {
 
 			// Record nos.
 			$html .= <<<RECORD
@@ -1753,7 +1753,7 @@ class Pager
 RECORD;
 			// Page size selector
 
-			if ($this->UsePageSizeSelector && !empty($this->PageSizes) && (!$this->AutoHidePageSizeSelector || $this->Visible)) {
+			if ($this->UsePageSizeSelector && !empty($this->PageSizes) && !($this->AutoHidePageSizeSelector && $this->RecordCount <= $this->PageSize)) {
 				if (CurrentPage()->UseTokenInUrl)
 					$hiddenTag = '<input type="hidden" name="t" value="' . CurrentPage()->TableVar . '">';
 				else
@@ -3153,10 +3153,11 @@ class DbField
 		$encrypt = $this->IsEncrypt && ($this->DataType == DATATYPE_STRING || $this->DataType == DATATYPE_MEMO) &&
 			!$this->IsPrimaryKey && !$this->IsAutoIncrement && !$this->IsForeignKey;
 
-		// Do not encrypt username/password/userid/userlevel/profile/activate/email fields in user table
+		// Do not encrypt username/password/userid/parent userid/userlevel/profile/activate fields in user table
 		if ($encrypt && ($this->TableName == Config("USER_TABLE_NAME") && in_array($this->Name, [Config("LOGIN_USERNAME_FIELD_NAME"),
-			Config("LOGIN_PASSWORD_FIELD_NAME"), Config("USER_ID_FIELD_NAME"), Config("USER_LEVEL_FIELD_NAME"),
-			Config("USER_PROFILE_FIELD_NAME"), Config("REGISTER_ACTIVATE_FIELD_NAME"), Config("USER_EMAIL_FIELD_NAME")])))
+			Config("LOGIN_PASSWORD_FIELD_NAME"), Config("USER_ID_FIELD_NAME"),
+			Config("PARENT_USER_ID_FIELD_NAME"), Config("USER_LEVEL_FIELD_NAME"),
+			Config("USER_PROFILE_FIELD_NAME"), Config("REGISTER_ACTIVATE_FIELD_NAME")])))
 			$encrypt = FALSE;
 		return $encrypt;
 	}
@@ -4228,8 +4229,11 @@ class Lookup
 							$displayField = @$renderer->fields[$displayField];
 							if ($displayField) {
 								$sfx = $i > 1 ? $i : "";
-								if ($render)
-									$row[$i] = $displayField->getViewValue();
+								if ($render) {
+									$viewValue = $displayField->getViewValue();
+									if (!EmptyString($viewValue)) // Make sure that ViewValue is not empty
+										$row[$i] = $viewValue;
+								}
 								$row["df" . $sfx] = $row[$i];
 							}
 						}
@@ -6194,7 +6198,9 @@ class HttpUpload
 		$this->Value = NULL; // Reset first
 
 		// Get file from token or FormData for API request
-		if (IsApi()) {
+		// - NOTE: for add option, use normal path as file is already uploaded in session
+
+		if (IsApi() && Post("addopt") != "1") {
 			if (Post($this->Parent->Name) !== NULL) {
 				$this->KeepFile = FALSE;
 				$this->FileToken = Post($this->Parent->Name);
@@ -7007,7 +7013,7 @@ class AdvancedSecurity
 
 		// Check other users
 		if (!$valid) {
-			$filter = str_replace("%u", AdjustSql($usr, Config("USER_TABLE_DBID")), Config("USER_NAME_FILTER"));
+			$filter = GetUserFilter(Config("LOGIN_USERNAME_FIELD_NAME"), $usr);
 
 			// User table object (t301_employees)
 			$UserTable = $UserTable ?: new t301_employees();
@@ -7016,24 +7022,25 @@ class AdvancedSecurity
 			$sql = $UserTable->getSql($filter);
 			if ($rs = Conn($UserTable->Dbid)->execute($sql)) {
 				if (!$rs->EOF) {
-					$valid = $customValid || ComparePassword($rs->fields('Password'), $pwd);
+					$row = $rs->fields;
+					$valid = $customValid || ComparePassword(GetUserInfo(Config("LOGIN_PASSWORD_FIELD_NAME"), $row), $pwd);
 					if ($valid) {
 						$this->_isLoggedIn = TRUE;
 						$_SESSION[SESSION_STATUS] = "login";
 						$_SESSION[SESSION_SYS_ADMIN] = 0; // Non System Administrator
-						$this->setCurrentUserName($rs->fields('Username')); // Load user name
-						$this->setSessionUserID($rs->fields('EmployeeID')); // Load User ID
-						if ($rs->fields('UserLevel') == NULL) {
+						$this->setCurrentUserName(GetUserInfo(Config("LOGIN_USERNAME_FIELD_NAME"), $row)); // Load user name
+						$this->setSessionUserID(GetUserInfo(Config("USER_ID_FIELD_NAME"), $row)); // Load User ID
+						if (GetUserInfo(Config("USER_LEVEL_FIELD_NAME"), $row) == NULL) {
 							$this->setSessionUserLevelID(0);
 						} else {
-							$this->setSessionUserLevelID((int)$rs->fields('UserLevel')); // Load User Level
+							$this->setSessionUserLevelID((int)GetUserInfo(Config("USER_LEVEL_FIELD_NAME"), $row)); // Load User Level
 						}
 						$this->setupUserLevel();
 
 						// Call User Validated event
 						$row = $rs->fields;
 						$UserProfile->assign($row);
-						$UserProfile->delete('Password'); // Delete password
+						$UserProfile->delete(Config("LOGIN_PASSWORD_FIELD_NAME")); // Delete password
 						$valid = $this->User_Validated($row) !== FALSE; // For backward compatibility
 					}
 				} else { // User not found in user table
@@ -7165,13 +7172,13 @@ class AdvancedSecurity
 			$sql = "SELECT COUNT(*) FROM " . Config("USER_LEVEL_PRIV_TABLE") . " WHERE EXISTS(SELECT * FROM " .
 				Config("USER_LEVEL_PRIV_TABLE") . " WHERE " . Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . " LIKE '" . AdjustSql($relatedProjectID, Config("USER_LEVEL_PRIV_DBID")) . "%')";
 			if (ExecuteScalar($sql, $conn) > 0) {
-				$ar = array_map(function($t) {
+				$ar = array_map(function($t) use ($relatedProjectID) {
 					return "'" . AdjustSql($relatedProjectID . $t[0], Config("USER_LEVEL_PRIV_DBID")) . "'";
 				}, $arTable);
 				$sql = "UPDATE " . Config("USER_LEVEL_PRIV_TABLE") . " SET " .
 					Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . " = " . $conn->concat("'" . AdjustSql($projectID, Config("USER_LEVEL_PRIV_DBID")) . "'", Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD")) . " WHERE " .
 					Config("USER_LEVEL_PRIV_TABLE_NAME_FIELD") . " IN (" . implode(",", $ar) . ")";
-				if ($conn->execute($Sql))
+				if ($conn->execute($sql))
 					$reloadUserPriv += $conn->Affected_Rows();
 			}
 		}
@@ -7582,26 +7589,15 @@ class AdvancedSecurity
 	{
 		global $UserTable;
 		$info = NULL;
-		$info = $this->getUserInfo($fldname, $this->CurrentUserID);
-		return $info;
-	}
-
-	// Get user info
-	public function getUserInfo($fieldName, $userID)
-	{
-		global $UserTable;
-		if (strval($userID) != "") {
-
-			// Get SQL from getSql() method in <UserTable> class
-			$filter = str_replace("%u", AdjustSql($userID, Config("USER_TABLE_DBID")), Config("USER_ID_FILTER"));
-			$sql = $UserTable->getSql($filter);
-			if (($rsUser = Conn($UserTable->Dbid)->execute($sql)) && !$rsUser->EOF) {
-				$info = $rsUser->fields($fieldName);
-				$rsUser->close();
-				return $info;
+		if (Config("USER_TABLE") && !$this->isSysAdmin()) {
+			$filter = GetUserFilter(Config("USER_ID_FIELD_NAME"), $this->CurrentUserID);
+			if ($filter != "") {
+				$sql = $UserTable->getSql($filter);
+				if ($row = ExecuteRow($sql, $UserTable->Dbid))
+					$info = GetUserInfo($fldname, $row);
 			}
 		}
-		return NULL;
+		return $info;
 	}
 
 	// Get User ID by user name
@@ -7609,10 +7605,11 @@ class AdvancedSecurity
 	{
 		global $UserTable;
 		if (strval($userName) != "") {
-			$filter = str_replace("%u", AdjustSql($userName, Config("USER_TABLE_DBID")), Config("USER_NAME_FILTER"));
+			$filter = GetUserFilter(Config("LOGIN_USERNAME_FIELD_NAME"), $userName);
 			$sql = $UserTable->getSql($filter);
 			if (($rsUser = Conn($UserTable->Dbid)->execute($sql)) && !$rsUser->EOF) {
-				$userID = $rsUser->fields('EmployeeID');
+				$row = $rsUser->fields;
+				$userID = GetUserInfo(Config("USER_ID_FIELD_NAME"), $row);
 				$rsUser->close();
 				return $userID;
 			}
@@ -7637,7 +7634,8 @@ class AdvancedSecurity
 			$sql = $UserTable->getSql($filter);
 			if ($rsUser = Conn($UserTable->Dbid)->execute($sql)) {
 				while (!$rsUser->EOF) {
-					$this->addUserID($rsUser->fields('EmployeeID'));
+					$row = $rsUser->fields;
+					$this->addUserID(GetUserInfo(Config("USER_ID_FIELD_NAME"), $row));
 					$rsUser->moveNext();
 				}
 				$rsUser->close();
@@ -10376,19 +10374,53 @@ function CurrentUserLevelList() {
 
 // Get Current user info
 function CurrentUserInfo($fldname) {
-	global $Security;
+	global $Security, $UserTable;
 	$value = Profile($fldname);
 	if ($value != NULL) {
 		return $value;
 	} elseif (isset($Security)) {
 		return $Security->currentUserInfo($fldname);
 	} elseif (Config("USER_TABLE") && !IsSysAdmin()) {
-		$user = CurrentUserName();
-		if (strval($user) != "")
-			return ExecuteScalar("SELECT " . QuotedName($fldname, Config("USER_TABLE_DBID")) . " FROM " . Config("USER_TABLE") . " WHERE " .
-				str_replace("%u", AdjustSql($user, Config("USER_TABLE_DBID")), Config("USER_NAME_FILTER")), Config("USER_TABLE_DBID"));
+		$info = NULL;
+		$filter = GetUserFilter(Config("LOGIN_USERNAME_FIELD_NAME"), CurrentUserName());
+		if ($filter != "") {
+			$sql = $UserTable->getSql($filter);
+			if (($rs = Conn($UserTable->Dbid)->execute($sql)) && !$rs->EOF) {
+				$row = $rs->fields;
+				$info = GetUserInfo($fldname, $row);
+				$rs->close();
+			}
+		}
+		return $info;
 	}
 	return NULL;
+}
+
+// Get user info
+function GetUserInfo($fieldName, $row) {
+	global $UserTable;
+	$UserTable = $UserTable ?: new t301_employees();
+	$info = NULL;
+	if ($row) {
+		$info = @$row[$fieldName];
+		if (($fld = @$UserTable->fields[$fieldName]) && $fld->isEncrypt()) {
+			try {
+				$info = PhpDecrypt(strval($info), Config("ENCRYPTION_KEY"));
+			} catch (\Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException $e) {}
+		}
+		if ($fieldName == Config("LOGIN_PASSWORD_FIELD_NAME") && !Config("ENCRYPTED_PASSWORD")) // Password is saved html-encoded
+			$info = HtmlDecode($info);
+	}
+	return $info;
+}
+
+// Get user filter
+function GetUserFilter($fieldName, $val) {
+	global $UserTable;
+	$UserTable = $UserTable ?: new t301_employees();
+	if ($fld = @$UserTable->fields[$fieldName])
+		return "(" . QuotedName($fld->Name, Config("USER_TABLE_DBID")) . " = " . QuotedValue($val, $fld->DataType, Config("USER_TABLE_DBID")) . ")";
+	return "(0=1)"; // Show no records
 }
 
 // Get current page ID
@@ -10921,7 +10953,7 @@ class UserProfile
 	protected function isSystemAdmin($usr)
 	{
 		global $Language;
-		$adminUserName = Config("ENCRYPTION_ENABLED") ? PhpDecrypt(Config("ADMIN_USER_NAME"), Config("ENCRYPTION_KEY")): Config("ADMIN_USER_NAME");
+		$adminUserName = Config("ENCRYPTION_ENABLED") ? PhpDecrypt(Config("ADMIN_USER_NAME"), Config("ENCRYPTION_KEY")) : Config("ADMIN_USER_NAME");
 		return $usr == "" || $usr == $adminUserName || $usr == $Language->phrase("UserAdministrator");
 	}
 

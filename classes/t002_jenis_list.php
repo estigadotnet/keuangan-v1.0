@@ -2836,6 +2836,10 @@ class t002_jenis_list extends t002_jenis
 			$this->Row_Updated($rsold, $rsnew);
 		$rs->close();
 
+		// Clean upload path if any
+		if ($editRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $editRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
@@ -2913,6 +2917,10 @@ class t002_jenis_list extends t002_jenis
 			// Call Row Inserted event
 			$rs = ($rsold) ? $rsold->fields : NULL;
 			$this->Row_Inserted($rs, $rsnew);
+		}
+
+		// Clean upload path if any
+		if ($addRow) {
 		}
 
 		// Write JSON for API request

@@ -503,7 +503,7 @@ class t301_employees extends DbTable
 		foreach ($rs as $name => $value) {
 			if (!isset($this->fields[$name]) || $this->fields[$name]->IsCustom)
 				continue;
-			if (Config("ENCRYPTED_PASSWORD") && $name == 'Password')
+			if (Config("ENCRYPTED_PASSWORD") && $name == Config("LOGIN_PASSWORD_FIELD_NAME"))
 				$value = Config("CASE_SENSITIVE_PASSWORD") ? EncryptPassword($value) : EncryptPassword(strtolower($value));
 			$names .= $this->fields[$name]->Expression . ",";
 			$values .= QuotedValue($value, $this->fields[$name]->DataType, $this->Dbid) . ",";
@@ -534,7 +534,7 @@ class t301_employees extends DbTable
 		foreach ($rs as $name => $value) {
 			if (!isset($this->fields[$name]) || $this->fields[$name]->IsCustom || $this->fields[$name]->IsAutoIncrement)
 				continue;
-			if (Config("ENCRYPTED_PASSWORD") && $name == 'Password') {
+			if (Config("ENCRYPTED_PASSWORD") && $name == Config("LOGIN_PASSWORD_FIELD_NAME")) {
 				if ($value == $this->fields[$name]->OldValue) // No need to update hashed password if not changed
 					continue;
 				$value = Config("CASE_SENSITIVE_PASSWORD") ? EncryptPassword($value) : EncryptPassword(strtolower($value));

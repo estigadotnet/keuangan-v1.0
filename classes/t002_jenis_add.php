@@ -1087,6 +1087,10 @@ class t002_jenis_add extends t002_jenis
 			$this->Row_Inserted($rs, $rsnew);
 		}
 
+		// Clean upload path if any
+		if ($addRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $addRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);

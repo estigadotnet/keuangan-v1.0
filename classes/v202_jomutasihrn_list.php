@@ -2349,10 +2349,8 @@ class v202_jomutasihrn_list extends v202_jomutasihrn
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_Periode":
-					$conn = Conn("");
 					break;
 				case "x_NoJO":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";

@@ -1064,7 +1064,7 @@ class t001_jo_addopt extends t001_jo
 			} else {
 				$this->Doc->EditValue = "";
 			}
-			if ($this->isShow() && !$this->EventCancelled)
+			if ($this->isShow())
 				RenderUploadField($this->Doc);
 
 			// Add refer script
@@ -1339,11 +1339,15 @@ class t001_jo_addopt extends t001_jo
 			$this->Row_Inserted($rs, $rsnew);
 		}
 
-		// Doc
-		if ($this->Doc->Upload->FileToken != "")
-			CleanUploadTempPath($this->Doc->Upload->FileToken, $this->Doc->Upload->Index);
-		else
-			CleanUploadTempPath($this->Doc, $this->Doc->Upload->Index);
+		// Clean upload path if any
+		if ($addRow) {
+
+			// Doc
+			if ($this->Doc->Upload->FileToken != "")
+				CleanUploadTempPath($this->Doc->Upload->FileToken, $this->Doc->Upload->Index);
+			else
+				CleanUploadTempPath($this->Doc, $this->Doc->Upload->Index);
+		}
 
 		// Write JSON for API request
 		if (IsApi() && $addRow) {
@@ -1379,7 +1383,6 @@ class t001_jo_addopt extends t001_jo
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_Status":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";

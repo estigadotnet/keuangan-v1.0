@@ -3731,6 +3731,10 @@ class t102_mutasi_list extends t102_mutasi
 			$this->Row_Updated($rsold, $rsnew);
 		$rs->close();
 
+		// Clean upload path if any
+		if ($editRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $editRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
@@ -3828,6 +3832,10 @@ class t102_mutasi_list extends t102_mutasi
 			// Call Row Inserted event
 			$rs = ($rsold) ? $rsold->fields : NULL;
 			$this->Row_Inserted($rs, $rsnew);
+		}
+
+		// Clean upload path if any
+		if ($addRow) {
 		}
 
 		// Write JSON for API request
@@ -4116,10 +4124,8 @@ class t102_mutasi_list extends t102_mutasi
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_jo_id":
-					$conn = Conn("");
 					break;
 				case "x_jenis_id":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";

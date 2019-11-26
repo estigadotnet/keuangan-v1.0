@@ -108,6 +108,7 @@ $t002_jenis_addopt->showMessage();
 <?php } ?>
 <input type="hidden" name="<?php echo Config("API_ACTION_NAME") ?>" id="<?php echo Config("API_ACTION_NAME") ?>" value="<?php echo Config("API_ADD_ACTION") ?>">
 <input type="hidden" name="<?php echo Config("API_OBJECT_NAME") ?>" id="<?php echo Config("API_OBJECT_NAME") ?>" value="<?php echo $t002_jenis_addopt->TableVar ?>">
+<input type="hidden" name="addopt" id="addopt" value="1">
 <?php if ($t002_jenis_addopt->Nama->Visible) { // Nama ?>
 	<div class="form-group row">
 		<label class="col-sm-2 col-form-label ew-label" for="x_Nama"><?php echo $t002_jenis_addopt->Nama->caption() ?><?php echo $t002_jenis_addopt->Nama->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>

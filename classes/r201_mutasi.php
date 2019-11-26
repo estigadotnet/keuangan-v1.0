@@ -435,6 +435,19 @@ class r201_mutasi extends ReportTable
 		return $cnt;
 	}
 
+	// Record filter WHERE clause
+	protected function sqlKeyFilter()
+	{
+		return "";
+	}
+
+	// Get record filter
+	public function getRecordFilter($row = NULL)
+	{
+		$keyFilter = $this->sqlKeyFilter();
+		return $keyFilter;
+	}
+
 	// Return page URL
 	public function getReturnUrl()
 	{

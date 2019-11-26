@@ -1116,6 +1116,10 @@ class t302_userlevels_add extends t302_userlevels
 			$rs = ($rsold) ? $rsold->fields : NULL;
 			$this->Row_Inserted($rs, $rsnew);
 		}
+
+		// Clean upload path if any
+		if ($addRow) {
+		}
 		if ($addRow) {
 
 			// Add User Level priv

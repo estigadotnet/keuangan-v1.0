@@ -85,7 +85,7 @@ define(PROJECT_NAMESPACE . "ALLOW_LOOKUP", 256); // Lookup
 define(PROJECT_NAMESPACE . "ALLOW_ALL", 511); // All (1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256)
 
 // Product version
-define(PROJECT_NAMESPACE . "PRODUCT_VERSION", "16.0.6");
+define(PROJECT_NAMESPACE . "PRODUCT_VERSION", "16.0.7");
 
 // Project
 define(PROJECT_NAMESPACE . "PROJECT_NAME", "p_keuangan_v1_0"); // Project name
@@ -161,7 +161,7 @@ $CONFIG = [
 
 	// General
 	"UNFORMAT_YEAR" => 50, // Unformat year
-	"RANDOM_KEY" => '0b0qc3QXbw7jrVsJ', // Random key for encryption
+	"RANDOM_KEY" => 'jkuvryxnqVvfzgP0', // Random key for encryption
 	"ENCRYPTION_KEY" => '', // Encryption key for data protection
 	"PROJECT_STYLESHEET_FILENAME" => "css/p_keuangan_v1_0.css", // Project stylesheet file name
 	"PROJECT_CHARSET" => "utf-8", // Project charset
@@ -174,7 +174,7 @@ $CONFIG = [
 	"LAZY_LOAD" => TRUE, // Lazy loading of images
 	"BODY_CLASS" => "hold-transition sidebar-collapse ew-layout-top-nav",
 	"SIDEBAR_CLASS" => "main-sidebar sidebar-dark-danger",
-	"NAVBAR_CLASS" => "main-header navbar navbar-expand navbar-dark bg-danger border-bottom",
+	"NAVBAR_CLASS" => "main-header navbar navbar-expand navbar-dark bg-danger",
 
 	// Check Token
 	"CHECK_TOKEN" => TRUE,
@@ -358,6 +358,7 @@ $CONFIG = [
 	"LOGIN_USERNAME_FIELD_NAME" => "Username",
 	"LOGIN_PASSWORD_FIELD_NAME" => "Password",
 	"USER_ID_FIELD_NAME" => "EmployeeID",
+	"PARENT_USER_ID_FIELD_NAME" => "",
 	"USER_LEVEL_FIELD_NAME" => "UserLevel",
 	"USER_PROFILE_FIELD_NAME" => "",
 	"REGISTER_ACTIVATE_FIELD_NAME" => "",

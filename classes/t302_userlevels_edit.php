@@ -1091,6 +1091,10 @@ class t302_userlevels_edit extends t302_userlevels
 			$Security->setupUserLevel();
 		$rs->close();
 
+		// Clean upload path if any
+		if ($editRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $editRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);

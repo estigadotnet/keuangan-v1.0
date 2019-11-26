@@ -448,14 +448,14 @@ class personaldata
 		global $UserTable;
 		$result = [];
 		$fldNames = [];
-		$filter = str_replace("%u", AdjustSql(CurrentUserName(), Config("USER_TABLE_DBID")), Config("USER_NAME_FILTER"));
 		$UserTable = $UserTable ?: new t301_employees();
+		$filter = GetUserFilter(Config("LOGIN_USERNAME_FIELD_NAME"), CurrentUserName());
 		$sql = $UserTable->getSql($filter);
 		if (($rs = Conn($UserTable->Dbid)->execute($sql)) && !$rs->EOF) {
 			$row = &$rs->fields;
 			foreach ($fldNames as $fldName)
 				if (array_key_exists($fldName, $row))
-					$result[$fldName] = $row[$fldName];
+					$result[$fldName] = GetUserInfo($fldName, $row);
 
 			// Call PersonalData_Downloading event
 			PersonalData_Downloading($result);
@@ -477,13 +477,13 @@ class personaldata
 	protected function deletePersonalData()
 	{
 		global $UserTable, $Language;
-		$filter = str_replace("%u", AdjustSql(CurrentUserName(), Config("USER_TABLE_DBID")), Config("USER_NAME_FILTER"));
 		$UserTable = $UserTable ?: new t301_employees();
+		$filter = GetUserFilter(Config("LOGIN_USERNAME_FIELD_NAME"), CurrentUserName());
 		$sql = $UserTable->getSql($filter);
 		$pwd = Post("password", "");
 		if (($rs = Conn($UserTable->Dbid)->execute($sql)) && !$rs->EOF) {
 			$row = &$rs->fields;
-			if (ComparePassword($row[Config("LOGIN_PASSWORD_FIELD_NAME")], $pwd)) {
+			if (ComparePassword(GetUserInfo(Config("LOGIN_PASSWORD_FIELD_NAME"), $row), $pwd)) {
 				if (Config("DELETE_UPLOADED_FILES")) // Delete old files
 					$UserTable->deleteUploadedFiles($row);
 				if ($UserTable->delete($row)) {

@@ -2075,6 +2075,10 @@ class t301_employees_add extends t301_employees
 			$this->Row_Inserted($rs, $rsnew);
 		}
 
+		// Clean upload path if any
+		if ($addRow) {
+		}
+
 		// Write JSON for API request
 		if (IsApi() && $addRow) {
 			$row = $this->getRecordsFromRecordset([$rsnew], TRUE);
@@ -2118,10 +2122,8 @@ class t301_employees_add extends t301_employees
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_UserLevel":
-					$conn = Conn("");
 					break;
 				case "x_Activated":
-					$conn = Conn("");
 					break;
 				default:
 					$lookupFilter = "";
