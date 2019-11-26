@@ -1002,7 +1002,7 @@
         <phrase id="fldcaption" value="No. JO" />
       </field>
       <field id="jenis_id">
-        <phrase id="fldcaption" value="Jenis" />
+        <phrase id="fldcaption" value="Jenis Pengeluaran" />
       </field>
       <field id="comment">
         <phrase id="fldcaption" value="Comment" />
@@ -1222,7 +1222,7 @@
         <phrase id="fldcaption" value="No. JO" />
       </field>
       <field id="jenis_id">
-        <phrase id="fldcaption" value="Keterangan" />
+        <phrase id="fldcaption" value="Jenis Pengeluaran" />
       </field>
       <field id="comment">
         <phrase id="fldcaption" value="Comment" />
