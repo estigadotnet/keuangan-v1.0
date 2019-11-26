@@ -50,6 +50,8 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 			<tr>
 
 				<th scope="col" rowspan="2" style="vertical-align: top">Job Order</th>
+				<th scope="col" rowspan="2" style="vertical-align: top">Shipper</th>
+				<th scope="col" rowspan="2" style="vertical-align: top">Qty.</th>
 				<th scope="col" rowspan="2" style="text-align: right; vertical-align: top;">Tagihan</th>
 
 				<!-- menghitung jumlah banyaknya JENIS PENGELUARAN -->
@@ -92,8 +94,13 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 			while (!$r_mutasi->EOF) { // looping data MUTASI
 
 				$NoJO           = $r_mutasi->fields('NoJO'); // data Nomor Job Order
+				$Shipper        = $r_mutasi->fields('Shipper'); // data Shipper
+				$Qty            = $r_mutasi->fields('Qty'); // data Qty
 				$tagihan        = $r_mutasi->fields('Tagihan'); // data Jumlah Tagihan
 				$total_tagihan += $tagihan; // proses akumulasi jumlah TAGIHAN, untuk menampilkan total TAGIHAN
+
+									// <div class="row">Shipper&nbsp;<b>'.$r_mutasi->fields('Shipper').'</b></div>
+									// <div class="row">Qty.&nbsp;<b>'.$r_mutasi->fields('Qty').'</b></div>
 
 				echo '<tr>';
 				echo '<th scope="row"><a href="#" data-toggle="modal" data-target="#id'.$id.'" style="text-decoration: none; color: inherit;">'.$NoJO.'</a></th>';
@@ -121,8 +128,7 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 									</button>
 								</div>
 								<div class="modal-body">
-									<div class="row">Shipper&nbsp;<b>'.$r_mutasi->fields('Shipper').'</b></div>
-									<div class="row">Qty.&nbsp;<b>'.$r_mutasi->fields('Qty').'</b></div>
+									
 									<div class="row">Cont.&nbsp;<b>'.$r_mutasi->fields('Cont').'</b></div>
 									<div class="row">Status&nbsp;<b>'.$status.'</b></div>
 									<div class="row">Tujuan&nbsp;<b>'.$r_mutasi->fields('Tujuan').'</b></div>
@@ -136,6 +142,9 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 						</div>
 					</div>';
 				// end data modal
+
+				echo '<th scope="row">'.$Shipper.'</th>';
+				echo '<th scope="row">'.$Qty.'</th>';
 
 				echo '<td align="right"><b>'.number_format($tagihan).'</b></td>'; // tampilkan data JUMLAH TAGIHAN
 
