@@ -99,6 +99,17 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 				echo '<th scope="row"><a href="#" data-toggle="modal" data-target="#id'.$id.'" style="text-decoration: none; color: inherit;">'.$NoJO.'</a></th>';
 
 				// data modal per JOB ORDER
+				switch($r_mutasi->fields('Status')) {
+					case 1:
+						$status = 'Export';
+						break;
+					case 2:
+						$status = 'Import';
+						break;
+					case 3:
+						$status = 'Domestik';
+						break;
+				}
 				echo '
 					<div class="modal fade" id="id'.$id++.'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 						<div class="modal-dialog" role="document">
@@ -113,9 +124,10 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 									<div class="row">Shipper&nbsp;<b>'.$r_mutasi->fields('Shipper').'</b></div>
 									<div class="row">Qty.&nbsp;<b>'.$r_mutasi->fields('Qty').'</b></div>
 									<div class="row">Cont.&nbsp;<b>'.$r_mutasi->fields('Cont').'</b></div>
-									<div class="row">Status&nbsp;<b>'.$r_mutasi->fields('Status').'</b></div>
+									<div class="row">Status&nbsp;<b>'.$status.'</b></div>
 									<div class="row">Tujuan&nbsp;<b>'.$r_mutasi->fields('Tujuan').'</b></div>
 									<div class="row">Kapal&nbsp;<b>'.$r_mutasi->fields('Kapal').'</b></div>
+									<div class="row">B/M&nbsp;<b>'.$r_mutasi->fields('BM').'</b></div>
 									<div class="row">Doc&nbsp;<b><a target="_blank" href="files/'.$r_mutasi->fields('Doc').'">'.$r_mutasi->fields('Doc').'</a></b></div>
 								</div>
 								<div class="modal-footer">

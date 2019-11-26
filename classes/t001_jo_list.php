@@ -833,6 +833,7 @@ class t001_jo_list extends t001_jo
 		$this->Tujuan->setVisibility();
 		$this->Kapal->setVisibility();
 		$this->Doc->setVisibility();
+		$this->BM->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -1567,6 +1568,8 @@ class t001_jo_list extends t001_jo
 			return FALSE;
 		if (!EmptyValue($this->Doc->Upload->Value))
 			return FALSE;
+		if ($CurrentForm->hasValue("x_BM") && $CurrentForm->hasValue("o_BM") && $this->BM->CurrentValue != $this->BM->OldValue)
+			return FALSE;
 		return TRUE;
 	}
 
@@ -1659,6 +1662,7 @@ class t001_jo_list extends t001_jo
 		$filterList = Concat($filterList, $this->Tujuan->AdvancedSearch->toJson(), ","); // Field Tujuan
 		$filterList = Concat($filterList, $this->Kapal->AdvancedSearch->toJson(), ","); // Field Kapal
 		$filterList = Concat($filterList, $this->Doc->AdvancedSearch->toJson(), ","); // Field Doc
+		$filterList = Concat($filterList, $this->BM->AdvancedSearch->toJson(), ","); // Field BM
 		if ($this->BasicSearch->Keyword != "") {
 			$wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
 			$filterList = Concat($filterList, $wrk, ",");
@@ -1776,6 +1780,14 @@ class t001_jo_list extends t001_jo
 		$this->Doc->AdvancedSearch->SearchValue2 = @$filter["y_Doc"];
 		$this->Doc->AdvancedSearch->SearchOperator2 = @$filter["w_Doc"];
 		$this->Doc->AdvancedSearch->save();
+
+		// Field BM
+		$this->BM->AdvancedSearch->SearchValue = @$filter["x_BM"];
+		$this->BM->AdvancedSearch->SearchOperator = @$filter["z_BM"];
+		$this->BM->AdvancedSearch->SearchCondition = @$filter["v_BM"];
+		$this->BM->AdvancedSearch->SearchValue2 = @$filter["y_BM"];
+		$this->BM->AdvancedSearch->SearchOperator2 = @$filter["w_BM"];
+		$this->BM->AdvancedSearch->save();
 		$this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
 		$this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
 	}
@@ -1962,6 +1974,7 @@ class t001_jo_list extends t001_jo
 			$this->updateSort($this->Tujuan, $ctrl); // Tujuan
 			$this->updateSort($this->Kapal, $ctrl); // Kapal
 			$this->updateSort($this->Doc, $ctrl); // Doc
+			$this->updateSort($this->BM, $ctrl); // BM
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -2008,6 +2021,7 @@ class t001_jo_list extends t001_jo
 				$this->Tujuan->setSort("");
 				$this->Kapal->setSort("");
 				$this->Doc->setSort("");
+				$this->BM->setSort("");
 			}
 
 			// Reset start position
@@ -2510,6 +2524,8 @@ class t001_jo_list extends t001_jo
 		$this->Kapal->OldValue = $this->Kapal->CurrentValue;
 		$this->Doc->Upload->DbValue = NULL;
 		$this->Doc->OldValue = $this->Doc->Upload->DbValue;
+		$this->BM->CurrentValue = "-";
+		$this->BM->OldValue = $this->BM->CurrentValue;
 	}
 
 	// Load basic search values
@@ -2609,6 +2625,16 @@ class t001_jo_list extends t001_jo
 		}
 		$this->Kapal->setOldValue($CurrentForm->getValue("o_Kapal"));
 
+		// Check field name 'BM' first before field var 'x_BM'
+		$val = $CurrentForm->hasValue("BM") ? $CurrentForm->getValue("BM") : $CurrentForm->getValue("x_BM");
+		if (!$this->BM->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->BM->Visible = FALSE; // Disable update for API request
+			else
+				$this->BM->setFormValue($val);
+		}
+		$this->BM->setOldValue($CurrentForm->getValue("o_BM"));
+
 		// Check field name 'id' first before field var 'x_id'
 		$val = $CurrentForm->hasValue("id") ? $CurrentForm->getValue("id") : $CurrentForm->getValue("x_id");
 		if (!$this->id->IsDetailKey && !$this->isGridAdd() && !$this->isAdd())
@@ -2629,6 +2655,7 @@ class t001_jo_list extends t001_jo
 		$this->Cont->CurrentValue = $this->Cont->FormValue;
 		$this->Tujuan->CurrentValue = $this->Tujuan->FormValue;
 		$this->Kapal->CurrentValue = $this->Kapal->FormValue;
+		$this->BM->CurrentValue = $this->BM->FormValue;
 	}
 
 	// Load recordset
@@ -2706,6 +2733,7 @@ class t001_jo_list extends t001_jo
 		$this->Kapal->setDbValue($row['Kapal']);
 		$this->Doc->Upload->DbValue = $row['Doc'];
 		$this->Doc->setDbValue($this->Doc->Upload->DbValue);
+		$this->BM->setDbValue($row['BM']);
 	}
 
 	// Return a row with default values
@@ -2723,6 +2751,7 @@ class t001_jo_list extends t001_jo
 		$row['Tujuan'] = $this->Tujuan->CurrentValue;
 		$row['Kapal'] = $this->Kapal->CurrentValue;
 		$row['Doc'] = $this->Doc->Upload->DbValue;
+		$row['BM'] = $this->BM->CurrentValue;
 		return $row;
 	}
 
@@ -2780,6 +2809,7 @@ class t001_jo_list extends t001_jo
 		// Tujuan
 		// Kapal
 		// Doc
+		// BM
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -2833,6 +2863,14 @@ class t001_jo_list extends t001_jo
 			}
 			$this->Doc->ViewCustomAttributes = "";
 
+			// BM
+			if (strval($this->BM->CurrentValue) != "") {
+				$this->BM->ViewValue = $this->BM->optionCaption($this->BM->CurrentValue);
+			} else {
+				$this->BM->ViewValue = NULL;
+			}
+			$this->BM->ViewCustomAttributes = "";
+
 			// NoJO
 			$this->NoJO->LinkCustomAttributes = "";
 			$this->NoJO->HrefValue = "";
@@ -2878,6 +2916,11 @@ class t001_jo_list extends t001_jo
 			$this->Doc->HrefValue = "";
 			$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
 			$this->Doc->TooltipValue = "";
+
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
+			$this->BM->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// NoJO
@@ -2955,6 +2998,10 @@ class t001_jo_list extends t001_jo
 			if (is_numeric($this->RowIndex))
 				RenderUploadField($this->Doc, $this->RowIndex);
 
+			// BM
+			$this->BM->EditCustomAttributes = "";
+			$this->BM->EditValue = $this->BM->options(FALSE);
+
 			// Add refer script
 			// NoJO
 
@@ -2993,6 +3040,10 @@ class t001_jo_list extends t001_jo
 			$this->Doc->LinkCustomAttributes = "";
 			$this->Doc->HrefValue = "";
 			$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
+
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
 
 			// NoJO
@@ -3070,6 +3121,10 @@ class t001_jo_list extends t001_jo
 			if (is_numeric($this->RowIndex))
 				RenderUploadField($this->Doc, $this->RowIndex);
 
+			// BM
+			$this->BM->EditCustomAttributes = "";
+			$this->BM->EditValue = $this->BM->options(FALSE);
+
 			// Edit refer script
 			// NoJO
 
@@ -3108,6 +3163,10 @@ class t001_jo_list extends t001_jo
 			$this->Doc->LinkCustomAttributes = "";
 			$this->Doc->HrefValue = "";
 			$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
+
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -3174,6 +3233,11 @@ class t001_jo_list extends t001_jo
 		if ($this->Doc->Required) {
 			if ($this->Doc->Upload->FileName == "" && !$this->Doc->Upload->KeepFile) {
 				AddMessage($FormError, str_replace("%s", $this->Doc->caption(), $this->Doc->RequiredErrorMessage));
+			}
+		}
+		if ($this->BM->Required) {
+			if ($this->BM->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->BM->caption(), $this->BM->RequiredErrorMessage));
 			}
 		}
 
@@ -3351,6 +3415,9 @@ class t001_jo_list extends t001_jo
 					$rsnew['Doc'] = $this->Doc->Upload->FileName;
 				}
 			}
+
+			// BM
+			$this->BM->setDbValueDef($rsnew, $this->BM->CurrentValue, "", $this->BM->ReadOnly);
 			if ($this->Doc->Visible && !$this->Doc->Upload->KeepFile) {
 				$oldFiles = EmptyValue($this->Doc->Upload->DbValue) ? [] : [$this->Doc->htmlDecode($this->Doc->Upload->DbValue)];
 				if (!EmptyValue($this->Doc->Upload->FileName)) {
@@ -3511,6 +3578,7 @@ class t001_jo_list extends t001_jo
 		$hash .= GetFieldHash($rs->fields('Tujuan')); // Tujuan
 		$hash .= GetFieldHash($rs->fields('Kapal')); // Kapal
 		$hash .= GetFieldHash($rs->fields('Doc')); // Doc
+		$hash .= GetFieldHash($rs->fields('BM')); // BM
 		return md5($hash);
 	}
 
@@ -3570,6 +3638,9 @@ class t001_jo_list extends t001_jo
 				$rsnew['Doc'] = $this->Doc->Upload->FileName;
 			}
 		}
+
+		// BM
+		$this->BM->setDbValueDef($rsnew, $this->BM->CurrentValue, "", strval($this->BM->CurrentValue) == "");
 		if ($this->Doc->Visible && !$this->Doc->Upload->KeepFile) {
 			$oldFiles = EmptyValue($this->Doc->Upload->DbValue) ? [] : [$this->Doc->htmlDecode($this->Doc->Upload->DbValue)];
 			if (!EmptyValue($this->Doc->Upload->FileName)) {
@@ -3942,6 +4013,8 @@ class t001_jo_list extends t001_jo
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_Status":
+					break;
+				case "x_BM":
 					break;
 				default:
 					$lookupFilter = "";

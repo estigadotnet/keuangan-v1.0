@@ -97,6 +97,9 @@ $t001_jo_delete->showMessage();
 <?php if ($t001_jo_delete->Doc->Visible) { // Doc ?>
 		<th class="<?php echo $t001_jo_delete->Doc->headerCellClass() ?>"><span id="elh_t001_jo_Doc" class="t001_jo_Doc"><?php echo $t001_jo_delete->Doc->caption() ?></span></th>
 <?php } ?>
+<?php if ($t001_jo_delete->BM->Visible) { // BM ?>
+		<th class="<?php echo $t001_jo_delete->BM->headerCellClass() ?>"><span id="elh_t001_jo_BM" class="t001_jo_BM"><?php echo $t001_jo_delete->BM->caption() ?></span></th>
+<?php } ?>
 	</tr>
 	</thead>
 	<tbody>
@@ -178,6 +181,13 @@ while (!$t001_jo_delete->Recordset->EOF) {
 		<td <?php echo $t001_jo_delete->Doc->cellAttributes() ?>>
 <span id="el<?php echo $t001_jo_delete->RowCount ?>_t001_jo_Doc" class="t001_jo_Doc">
 <span<?php echo $t001_jo_delete->Doc->viewAttributes() ?>><?php echo GetFileViewTag($t001_jo_delete->Doc, $t001_jo_delete->Doc->getViewValue(), FALSE) ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($t001_jo_delete->BM->Visible) { // BM ?>
+		<td <?php echo $t001_jo_delete->BM->cellAttributes() ?>>
+<span id="el<?php echo $t001_jo_delete->RowCount ?>_t001_jo_BM" class="t001_jo_BM">
+<span<?php echo $t001_jo_delete->BM->viewAttributes() ?>><?php echo $t001_jo_delete->BM->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

@@ -105,6 +105,11 @@ loadjs.ready("head", function() {
 				if (felm && elm && !ew.hasValue(elm))
 					return this.onError(felm, "<?php echo JsEncode(str_replace("%s", $t001_jo_edit->Doc->caption(), $t001_jo_edit->Doc->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_jo_edit->BM->Required) { ?>
+				elm = this.getElements("x" + infix + "_BM");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_edit->BM->caption(), $t001_jo_edit->BM->RequiredErrorMessage)) ?>");
+			<?php } ?>
 
 				// Call Form_CustomValidate event
 				if (!this.Form_CustomValidate(fobj))
@@ -135,6 +140,8 @@ loadjs.ready("head", function() {
 	// Dynamic selection lists
 	ft001_joedit.lists["x_Status"] = <?php echo $t001_jo_edit->Status->Lookup->toClientList($t001_jo_edit) ?>;
 	ft001_joedit.lists["x_Status"].options = <?php echo JsonEncode($t001_jo_edit->Status->options(FALSE, TRUE)) ?>;
+	ft001_joedit.lists["x_BM"] = <?php echo $t001_jo_edit->BM->Lookup->toClientList($t001_jo_edit) ?>;
+	ft001_joedit.lists["x_BM"].options = <?php echo JsonEncode($t001_jo_edit->BM->options(FALSE, TRUE)) ?>;
 	loadjs.done("ft001_joedit");
 });
 </script>
@@ -263,6 +270,19 @@ $t001_jo_edit->showMessage();
 <table id="ft_x_Doc" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
 </span>
 <?php echo $t001_jo_edit->Doc->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t001_jo_edit->BM->Visible) { // BM ?>
+	<div id="r_BM" class="form-group row">
+		<label id="elh_t001_jo_BM" class="<?php echo $t001_jo_edit->LeftColumnClass ?>"><?php echo $t001_jo_edit->BM->caption() ?><?php echo $t001_jo_edit->BM->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $t001_jo_edit->RightColumnClass ?>"><div <?php echo $t001_jo_edit->BM->cellAttributes() ?>>
+<span id="el_t001_jo_BM">
+<div id="tp_x_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_edit->BM->displayValueSeparatorAttribute() ?>" name="x_BM" id="x_BM" value="{value}"<?php echo $t001_jo_edit->BM->editAttributes() ?>></div>
+<div id="dsl_x_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $t001_jo_edit->BM->radioButtonListHtml(FALSE, "x_BM") ?>
+</div></div>
+</span>
+<?php echo $t001_jo_edit->BM->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 </div><!-- /page* -->

@@ -104,6 +104,11 @@ loadjs.ready("head", function() {
 				if (felm && elm && !ew.hasValue(elm))
 					return this.onError(felm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->Doc->caption(), $t001_jo_addopt->Doc->RequiredErrorMessage)) ?>");
 			<?php } ?>
+			<?php if ($t001_jo_addopt->BM->Required) { ?>
+				elm = this.getElements("x" + infix + "_BM");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->BM->caption(), $t001_jo_addopt->BM->RequiredErrorMessage)) ?>");
+			<?php } ?>
 
 				// Call Form_CustomValidate event
 				if (!this.Form_CustomValidate(fobj))
@@ -125,6 +130,8 @@ loadjs.ready("head", function() {
 	// Dynamic selection lists
 	ft001_joaddopt.lists["x_Status"] = <?php echo $t001_jo_addopt->Status->Lookup->toClientList($t001_jo_addopt) ?>;
 	ft001_joaddopt.lists["x_Status"].options = <?php echo JsonEncode($t001_jo_addopt->Status->options(FALSE, TRUE)) ?>;
+	ft001_joaddopt.lists["x_BM"] = <?php echo $t001_jo_addopt->BM->Lookup->toClientList($t001_jo_addopt) ?>;
+	ft001_joaddopt.lists["x_BM"].options = <?php echo JsonEncode($t001_jo_addopt->BM->options(FALSE, TRUE)) ?>;
 	loadjs.done("ft001_joaddopt");
 });
 </script>
@@ -233,6 +240,17 @@ $t001_jo_addopt->showMessage();
 <input type="hidden" name="fm_x_Doc" id= "fm_x_Doc" value="<?php echo $t001_jo_addopt->Doc->UploadMaxFileSize ?>">
 </div>
 <table id="ft_x_Doc" class="table table-sm float-left ew-upload-table"><tbody class="files"></tbody></table>
+</div>
+	</div>
+<?php } ?>
+<?php if ($t001_jo_addopt->BM->Visible) { // BM ?>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label ew-label"><?php echo $t001_jo_addopt->BM->caption() ?><?php echo $t001_jo_addopt->BM->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="col-sm-10">
+<div id="tp_x_BM" class="ew-template"><input type="radio" class="custom-control-input" data-table="t001_jo" data-field="x_BM" data-value-separator="<?php echo $t001_jo_addopt->BM->displayValueSeparatorAttribute() ?>" name="x_BM" id="x_BM" value="{value}"<?php echo $t001_jo_addopt->BM->editAttributes() ?>></div>
+<div id="dsl_x_BM" data-repeatcolumn="5" class="ew-item-list d-none"><div>
+<?php echo $t001_jo_addopt->BM->radioButtonListHtml(FALSE, "x_BM") ?>
+</div></div>
 </div>
 	</div>
 <?php } ?>

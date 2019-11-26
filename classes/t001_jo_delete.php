@@ -594,6 +594,7 @@ class t001_jo_delete extends t001_jo
 		$this->Tujuan->setVisibility();
 		$this->Kapal->setVisibility();
 		$this->Doc->setVisibility();
+		$this->BM->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -743,6 +744,7 @@ class t001_jo_delete extends t001_jo
 		$this->Kapal->setDbValue($row['Kapal']);
 		$this->Doc->Upload->DbValue = $row['Doc'];
 		$this->Doc->setDbValue($this->Doc->Upload->DbValue);
+		$this->BM->setDbValue($row['BM']);
 	}
 
 	// Return a row with default values
@@ -759,6 +761,7 @@ class t001_jo_delete extends t001_jo
 		$row['Tujuan'] = NULL;
 		$row['Kapal'] = NULL;
 		$row['Doc'] = NULL;
+		$row['BM'] = NULL;
 		return $row;
 	}
 
@@ -787,6 +790,7 @@ class t001_jo_delete extends t001_jo
 		// Tujuan
 		// Kapal
 		// Doc
+		// BM
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -840,6 +844,14 @@ class t001_jo_delete extends t001_jo
 			}
 			$this->Doc->ViewCustomAttributes = "";
 
+			// BM
+			if (strval($this->BM->CurrentValue) != "") {
+				$this->BM->ViewValue = $this->BM->optionCaption($this->BM->CurrentValue);
+			} else {
+				$this->BM->ViewValue = NULL;
+			}
+			$this->BM->ViewCustomAttributes = "";
+
 			// NoJO
 			$this->NoJO->LinkCustomAttributes = "";
 			$this->NoJO->HrefValue = "";
@@ -885,6 +897,11 @@ class t001_jo_delete extends t001_jo
 			$this->Doc->HrefValue = "";
 			$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
 			$this->Doc->TooltipValue = "";
+
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
+			$this->BM->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
@@ -1014,6 +1031,8 @@ class t001_jo_delete extends t001_jo
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
 				case "x_Status":
+					break;
+				case "x_BM":
 					break;
 				default:
 					$lookupFilter = "";

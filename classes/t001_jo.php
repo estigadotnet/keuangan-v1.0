@@ -43,6 +43,7 @@ class t001_jo extends DbTable
 	public $Tujuan;
 	public $Kapal;
 	public $Doc;
+	public $BM;
 
 	// Constructor
 	public function __construct()
@@ -99,7 +100,7 @@ class t001_jo extends DbTable
 		$this->Status->UsePleaseSelect = TRUE; // Use PleaseSelect by default
 		$this->Status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
 		$this->Status->Lookup = new Lookup('Status', 't001_jo', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
-		$this->Status->OptionCount = 6;
+		$this->Status->OptionCount = 4;
 		$this->Status->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['Status'] = &$this->Status;
 
@@ -139,6 +140,14 @@ class t001_jo extends DbTable
 		$this->Doc = new DbField('t001_jo', 't001_jo', 'x_Doc', 'Doc', '`Doc`', '`Doc`', 200, 255, -1, TRUE, '`Doc`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
 		$this->Doc->Sortable = TRUE; // Allow sort
 		$this->fields['Doc'] = &$this->Doc;
+
+		// BM
+		$this->BM = new DbField('t001_jo', 't001_jo', 'x_BM', 'BM', '`BM`', '`BM`', 202, 5, -1, FALSE, '`BM`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
+		$this->BM->Nullable = FALSE; // NOT NULL field
+		$this->BM->Sortable = TRUE; // Allow sort
+		$this->BM->Lookup = new Lookup('BM', 't001_jo', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
+		$this->BM->OptionCount = 3;
+		$this->fields['BM'] = &$this->BM;
 	}
 
 	// Field Visibility
@@ -526,6 +535,7 @@ class t001_jo extends DbTable
 		$this->Tujuan->DbValue = $row['Tujuan'];
 		$this->Kapal->DbValue = $row['Kapal'];
 		$this->Doc->Upload->DbValue = $row['Doc'];
+		$this->BM->DbValue = $row['BM'];
 	}
 
 	// Delete uploaded files
@@ -771,6 +781,7 @@ class t001_jo extends DbTable
 		$this->Tujuan->setDbValue($rs->fields('Tujuan'));
 		$this->Kapal->setDbValue($rs->fields('Kapal'));
 		$this->Doc->Upload->DbValue = $rs->fields('Doc');
+		$this->BM->setDbValue($rs->fields('BM'));
 	}
 
 	// Render list row values
@@ -792,6 +803,7 @@ class t001_jo extends DbTable
 		// Tujuan
 		// Kapal
 		// Doc
+		// BM
 		// id
 
 		$this->id->ViewValue = $this->id->CurrentValue;
@@ -843,6 +855,14 @@ class t001_jo extends DbTable
 		}
 		$this->Doc->ViewCustomAttributes = "";
 
+		// BM
+		if (strval($this->BM->CurrentValue) != "") {
+			$this->BM->ViewValue = $this->BM->optionCaption($this->BM->CurrentValue);
+		} else {
+			$this->BM->ViewValue = NULL;
+		}
+		$this->BM->ViewCustomAttributes = "";
+
 		// id
 		$this->id->LinkCustomAttributes = "";
 		$this->id->HrefValue = "";
@@ -893,6 +913,11 @@ class t001_jo extends DbTable
 		$this->Doc->HrefValue = "";
 		$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
 		$this->Doc->TooltipValue = "";
+
+		// BM
+		$this->BM->LinkCustomAttributes = "";
+		$this->BM->HrefValue = "";
+		$this->BM->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -986,6 +1011,10 @@ class t001_jo extends DbTable
 			$this->Doc->EditValue = "";
 		}
 
+		// BM
+		$this->BM->EditCustomAttributes = "";
+		$this->BM->EditValue = $this->BM->options(FALSE);
+
 		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
@@ -1024,6 +1053,7 @@ class t001_jo extends DbTable
 					$doc->exportCaption($this->Tujuan);
 					$doc->exportCaption($this->Kapal);
 					$doc->exportCaption($this->Doc);
+					$doc->exportCaption($this->BM);
 				} else {
 					$doc->exportCaption($this->id);
 					$doc->exportCaption($this->NoJO);
@@ -1035,6 +1065,7 @@ class t001_jo extends DbTable
 					$doc->exportCaption($this->Tujuan);
 					$doc->exportCaption($this->Kapal);
 					$doc->exportCaption($this->Doc);
+					$doc->exportCaption($this->BM);
 				}
 				$doc->endExportRow();
 			}
@@ -1075,6 +1106,7 @@ class t001_jo extends DbTable
 						$doc->exportField($this->Tujuan);
 						$doc->exportField($this->Kapal);
 						$doc->exportField($this->Doc);
+						$doc->exportField($this->BM);
 					} else {
 						$doc->exportField($this->id);
 						$doc->exportField($this->NoJO);
@@ -1086,6 +1118,7 @@ class t001_jo extends DbTable
 						$doc->exportField($this->Tujuan);
 						$doc->exportField($this->Kapal);
 						$doc->exportField($this->Doc);
+						$doc->exportField($this->BM);
 					}
 					$doc->endExportRow($rowCnt);
 				}

@@ -161,6 +161,16 @@ $t001_jo_view->showMessage();
 </td>
 	</tr>
 <?php } ?>
+<?php if ($t001_jo_view->BM->Visible) { // BM ?>
+	<tr id="r_BM">
+		<td class="<?php echo $t001_jo_view->TableLeftColumnClass ?>"><span id="elh_t001_jo_BM"><?php echo $t001_jo_view->BM->caption() ?></span></td>
+		<td data-name="BM" <?php echo $t001_jo_view->BM->cellAttributes() ?>>
+<span id="el_t001_jo_BM">
+<span<?php echo $t001_jo_view->BM->viewAttributes() ?>><?php echo $t001_jo_view->BM->getViewValue() ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
 </table>
 </form>
 <?php

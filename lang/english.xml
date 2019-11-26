@@ -931,10 +931,6 @@
         <phrase id="fldtagcaption3" value="Domestik" />
         <phrase id="fldtagvalue4" value="4" />
         <phrase id="fldtagcaption4" value="Non-JO" />
-        <phrase id="fldtagvalue5" value="5" />
-        <phrase id="fldtagcaption5" value="Export Balen" />
-        <phrase id="fldtagvalue6" value="6" />
-        <phrase id="fldtagcaption6" value="Export Murni" />
       </field>
       <field id="tagihan">
         <phrase id="fldcaption" value="Tagihan" />
@@ -956,6 +952,15 @@
       </field>
       <field id="doc">
         <phrase id="fldcaption" value="Doc" />
+      </field>
+      <field id="bm">
+        <phrase id="fldcaption" value="BM" />
+        <phrase id="fldtagvalue1" value="BALEN" />
+        <phrase id="fldtagcaption1" value="BALEN" />
+        <phrase id="fldtagvalue2" value="MURNI" />
+        <phrase id="fldtagcaption2" value="MURNI" />
+        <phrase id="fldtagvalue3" value="-" />
+        <phrase id="fldtagcaption3" value="-" />
       </field>
     </table>
     <table id="t002_jenis">
