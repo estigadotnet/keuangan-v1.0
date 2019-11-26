@@ -662,8 +662,8 @@ class t001_jo_addopt extends t001_jo
 		$this->Cont->setVisibility();
 		$this->Tujuan->setVisibility();
 		$this->Kapal->setVisibility();
-		$this->Doc->setVisibility();
 		$this->BM->setVisibility();
+		$this->Doc->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -726,9 +726,9 @@ class t001_jo_addopt extends t001_jo
 		$this->Tujuan->OldValue = $this->Tujuan->CurrentValue;
 		$this->Kapal->CurrentValue = NULL;
 		$this->Kapal->OldValue = $this->Kapal->CurrentValue;
+		$this->BM->CurrentValue = "-";
 		$this->Doc->Upload->DbValue = NULL;
 		$this->Doc->OldValue = $this->Doc->Upload->DbValue;
-		$this->BM->CurrentValue = "-";
 	}
 
 	// Load form values
@@ -856,9 +856,9 @@ class t001_jo_addopt extends t001_jo
 		$this->Cont->setDbValue($row['Cont']);
 		$this->Tujuan->setDbValue($row['Tujuan']);
 		$this->Kapal->setDbValue($row['Kapal']);
+		$this->BM->setDbValue($row['BM']);
 		$this->Doc->Upload->DbValue = $row['Doc'];
 		$this->Doc->setDbValue($this->Doc->Upload->DbValue);
-		$this->BM->setDbValue($row['BM']);
 	}
 
 	// Return a row with default values
@@ -875,8 +875,8 @@ class t001_jo_addopt extends t001_jo
 		$row['Cont'] = $this->Cont->CurrentValue;
 		$row['Tujuan'] = $this->Tujuan->CurrentValue;
 		$row['Kapal'] = $this->Kapal->CurrentValue;
-		$row['Doc'] = $this->Doc->Upload->DbValue;
 		$row['BM'] = $this->BM->CurrentValue;
+		$row['Doc'] = $this->Doc->Upload->DbValue;
 		return $row;
 	}
 
@@ -904,8 +904,8 @@ class t001_jo_addopt extends t001_jo
 		// Cont
 		// Tujuan
 		// Kapal
-		// Doc
 		// BM
+		// Doc
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -951,14 +951,6 @@ class t001_jo_addopt extends t001_jo
 			$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
 			$this->Kapal->ViewCustomAttributes = "";
 
-			// Doc
-			if (!EmptyValue($this->Doc->Upload->DbValue)) {
-				$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
-			} else {
-				$this->Doc->ViewValue = "";
-			}
-			$this->Doc->ViewCustomAttributes = "";
-
 			// BM
 			if (strval($this->BM->CurrentValue) != "") {
 				$this->BM->ViewValue = $this->BM->optionCaption($this->BM->CurrentValue);
@@ -966,6 +958,14 @@ class t001_jo_addopt extends t001_jo
 				$this->BM->ViewValue = NULL;
 			}
 			$this->BM->ViewCustomAttributes = "";
+
+			// Doc
+			if (!EmptyValue($this->Doc->Upload->DbValue)) {
+				$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
+			} else {
+				$this->Doc->ViewValue = "";
+			}
+			$this->Doc->ViewCustomAttributes = "";
 
 			// NoJO
 			$this->NoJO->LinkCustomAttributes = "";
@@ -1007,16 +1007,16 @@ class t001_jo_addopt extends t001_jo
 			$this->Kapal->HrefValue = "";
 			$this->Kapal->TooltipValue = "";
 
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
+			$this->BM->TooltipValue = "";
+
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
 			$this->Doc->HrefValue = "";
 			$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
 			$this->Doc->TooltipValue = "";
-
-			// BM
-			$this->BM->LinkCustomAttributes = "";
-			$this->BM->HrefValue = "";
-			$this->BM->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// NoJO
@@ -1081,6 +1081,10 @@ class t001_jo_addopt extends t001_jo
 			$this->Kapal->EditValue = HtmlEncode($this->Kapal->CurrentValue);
 			$this->Kapal->PlaceHolder = RemoveHtml($this->Kapal->caption());
 
+			// BM
+			$this->BM->EditCustomAttributes = "";
+			$this->BM->EditValue = $this->BM->options(FALSE);
+
 			// Doc
 			$this->Doc->EditAttrs["class"] = "form-control";
 			$this->Doc->EditCustomAttributes = "";
@@ -1091,10 +1095,6 @@ class t001_jo_addopt extends t001_jo
 			}
 			if ($this->isShow())
 				RenderUploadField($this->Doc);
-
-			// BM
-			$this->BM->EditCustomAttributes = "";
-			$this->BM->EditValue = $this->BM->options(FALSE);
 
 			// Add refer script
 			// NoJO
@@ -1130,14 +1130,14 @@ class t001_jo_addopt extends t001_jo
 			$this->Kapal->LinkCustomAttributes = "";
 			$this->Kapal->HrefValue = "";
 
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
+
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
 			$this->Doc->HrefValue = "";
 			$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
-
-			// BM
-			$this->BM->LinkCustomAttributes = "";
-			$this->BM->HrefValue = "";
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -1201,14 +1201,14 @@ class t001_jo_addopt extends t001_jo
 				AddMessage($FormError, str_replace("%s", $this->Kapal->caption(), $this->Kapal->RequiredErrorMessage));
 			}
 		}
-		if ($this->Doc->Required) {
-			if ($this->Doc->Upload->FileName == "" && !$this->Doc->Upload->KeepFile) {
-				AddMessage($FormError, str_replace("%s", $this->Doc->caption(), $this->Doc->RequiredErrorMessage));
-			}
-		}
 		if ($this->BM->Required) {
 			if ($this->BM->FormValue == "") {
 				AddMessage($FormError, str_replace("%s", $this->BM->caption(), $this->BM->RequiredErrorMessage));
+			}
+		}
+		if ($this->Doc->Required) {
+			if ($this->Doc->Upload->FileName == "" && !$this->Doc->Upload->KeepFile) {
+				AddMessage($FormError, str_replace("%s", $this->Doc->caption(), $this->Doc->RequiredErrorMessage));
 			}
 		}
 
@@ -1271,6 +1271,9 @@ class t001_jo_addopt extends t001_jo
 		// Kapal
 		$this->Kapal->setDbValueDef($rsnew, $this->Kapal->CurrentValue, NULL, FALSE);
 
+		// BM
+		$this->BM->setDbValueDef($rsnew, $this->BM->CurrentValue, "", strval($this->BM->CurrentValue) == "");
+
 		// Doc
 		if ($this->Doc->Visible && !$this->Doc->Upload->KeepFile) {
 			$this->Doc->Upload->DbValue = ""; // No need to delete old file
@@ -1280,9 +1283,6 @@ class t001_jo_addopt extends t001_jo
 				$rsnew['Doc'] = $this->Doc->Upload->FileName;
 			}
 		}
-
-		// BM
-		$this->BM->setDbValueDef($rsnew, $this->BM->CurrentValue, "", strval($this->BM->CurrentValue) == "");
 		if ($this->Doc->Visible && !$this->Doc->Upload->KeepFile) {
 			$oldFiles = EmptyValue($this->Doc->Upload->DbValue) ? [] : [$this->Doc->htmlDecode($this->Doc->Upload->DbValue)];
 			if (!EmptyValue($this->Doc->Upload->FileName)) {

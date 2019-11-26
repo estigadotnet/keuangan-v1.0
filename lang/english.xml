@@ -950,9 +950,6 @@
       <field id="kapal">
         <phrase id="fldcaption" value="Kapal" />
       </field>
-      <field id="doc">
-        <phrase id="fldcaption" value="Doc" />
-      </field>
       <field id="bm">
         <phrase id="fldcaption" value="BM" />
         <phrase id="fldtagvalue1" value="BALEN" />
@@ -961,6 +958,9 @@
         <phrase id="fldtagcaption2" value="MURNI" />
         <phrase id="fldtagvalue3" value="-" />
         <phrase id="fldtagcaption3" value="-" />
+      </field>
+      <field id="doc">
+        <phrase id="fldcaption" value="Doc" />
       </field>
     </table>
     <table id="t002_jenis">

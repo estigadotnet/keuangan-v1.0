@@ -151,22 +151,22 @@ $t001_jo_view->showMessage();
 </td>
 	</tr>
 <?php } ?>
-<?php if ($t001_jo_view->Doc->Visible) { // Doc ?>
-	<tr id="r_Doc">
-		<td class="<?php echo $t001_jo_view->TableLeftColumnClass ?>"><span id="elh_t001_jo_Doc"><?php echo $t001_jo_view->Doc->caption() ?></span></td>
-		<td data-name="Doc" <?php echo $t001_jo_view->Doc->cellAttributes() ?>>
-<span id="el_t001_jo_Doc">
-<span<?php echo $t001_jo_view->Doc->viewAttributes() ?>><?php echo GetFileViewTag($t001_jo_view->Doc, $t001_jo_view->Doc->getViewValue(), FALSE) ?></span>
-</span>
-</td>
-	</tr>
-<?php } ?>
 <?php if ($t001_jo_view->BM->Visible) { // BM ?>
 	<tr id="r_BM">
 		<td class="<?php echo $t001_jo_view->TableLeftColumnClass ?>"><span id="elh_t001_jo_BM"><?php echo $t001_jo_view->BM->caption() ?></span></td>
 		<td data-name="BM" <?php echo $t001_jo_view->BM->cellAttributes() ?>>
 <span id="el_t001_jo_BM">
 <span<?php echo $t001_jo_view->BM->viewAttributes() ?>><?php echo $t001_jo_view->BM->getViewValue() ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
+<?php if ($t001_jo_view->Doc->Visible) { // Doc ?>
+	<tr id="r_Doc">
+		<td class="<?php echo $t001_jo_view->TableLeftColumnClass ?>"><span id="elh_t001_jo_Doc"><?php echo $t001_jo_view->Doc->caption() ?></span></td>
+		<td data-name="Doc" <?php echo $t001_jo_view->Doc->cellAttributes() ?>>
+<span id="el_t001_jo_Doc">
+<span<?php echo $t001_jo_view->Doc->viewAttributes() ?>><?php echo GetFileViewTag($t001_jo_view->Doc, $t001_jo_view->Doc->getViewValue(), FALSE) ?></span>
 </span>
 </td>
 	</tr>

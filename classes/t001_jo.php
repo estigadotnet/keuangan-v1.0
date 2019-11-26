@@ -42,8 +42,8 @@ class t001_jo extends DbTable
 	public $Cont;
 	public $Tujuan;
 	public $Kapal;
-	public $Doc;
 	public $BM;
+	public $Doc;
 
 	// Constructor
 	public function __construct()
@@ -136,11 +136,6 @@ class t001_jo extends DbTable
 		$this->Kapal->Sortable = TRUE; // Allow sort
 		$this->fields['Kapal'] = &$this->Kapal;
 
-		// Doc
-		$this->Doc = new DbField('t001_jo', 't001_jo', 'x_Doc', 'Doc', '`Doc`', '`Doc`', 200, 255, -1, TRUE, '`Doc`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
-		$this->Doc->Sortable = TRUE; // Allow sort
-		$this->fields['Doc'] = &$this->Doc;
-
 		// BM
 		$this->BM = new DbField('t001_jo', 't001_jo', 'x_BM', 'BM', '`BM`', '`BM`', 202, 5, -1, FALSE, '`BM`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
 		$this->BM->Nullable = FALSE; // NOT NULL field
@@ -148,6 +143,11 @@ class t001_jo extends DbTable
 		$this->BM->Lookup = new Lookup('BM', 't001_jo', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
 		$this->BM->OptionCount = 3;
 		$this->fields['BM'] = &$this->BM;
+
+		// Doc
+		$this->Doc = new DbField('t001_jo', 't001_jo', 'x_Doc', 'Doc', '`Doc`', '`Doc`', 200, 255, -1, TRUE, '`Doc`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
+		$this->Doc->Sortable = TRUE; // Allow sort
+		$this->fields['Doc'] = &$this->Doc;
 	}
 
 	// Field Visibility
@@ -534,8 +534,8 @@ class t001_jo extends DbTable
 		$this->Cont->DbValue = $row['Cont'];
 		$this->Tujuan->DbValue = $row['Tujuan'];
 		$this->Kapal->DbValue = $row['Kapal'];
-		$this->Doc->Upload->DbValue = $row['Doc'];
 		$this->BM->DbValue = $row['BM'];
+		$this->Doc->Upload->DbValue = $row['Doc'];
 	}
 
 	// Delete uploaded files
@@ -780,8 +780,8 @@ class t001_jo extends DbTable
 		$this->Cont->setDbValue($rs->fields('Cont'));
 		$this->Tujuan->setDbValue($rs->fields('Tujuan'));
 		$this->Kapal->setDbValue($rs->fields('Kapal'));
-		$this->Doc->Upload->DbValue = $rs->fields('Doc');
 		$this->BM->setDbValue($rs->fields('BM'));
+		$this->Doc->Upload->DbValue = $rs->fields('Doc');
 	}
 
 	// Render list row values
@@ -802,8 +802,8 @@ class t001_jo extends DbTable
 		// Cont
 		// Tujuan
 		// Kapal
-		// Doc
 		// BM
+		// Doc
 		// id
 
 		$this->id->ViewValue = $this->id->CurrentValue;
@@ -847,14 +847,6 @@ class t001_jo extends DbTable
 		$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
 		$this->Kapal->ViewCustomAttributes = "";
 
-		// Doc
-		if (!EmptyValue($this->Doc->Upload->DbValue)) {
-			$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
-		} else {
-			$this->Doc->ViewValue = "";
-		}
-		$this->Doc->ViewCustomAttributes = "";
-
 		// BM
 		if (strval($this->BM->CurrentValue) != "") {
 			$this->BM->ViewValue = $this->BM->optionCaption($this->BM->CurrentValue);
@@ -862,6 +854,14 @@ class t001_jo extends DbTable
 			$this->BM->ViewValue = NULL;
 		}
 		$this->BM->ViewCustomAttributes = "";
+
+		// Doc
+		if (!EmptyValue($this->Doc->Upload->DbValue)) {
+			$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
+		} else {
+			$this->Doc->ViewValue = "";
+		}
+		$this->Doc->ViewCustomAttributes = "";
 
 		// id
 		$this->id->LinkCustomAttributes = "";
@@ -908,16 +908,16 @@ class t001_jo extends DbTable
 		$this->Kapal->HrefValue = "";
 		$this->Kapal->TooltipValue = "";
 
+		// BM
+		$this->BM->LinkCustomAttributes = "";
+		$this->BM->HrefValue = "";
+		$this->BM->TooltipValue = "";
+
 		// Doc
 		$this->Doc->LinkCustomAttributes = "";
 		$this->Doc->HrefValue = "";
 		$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
 		$this->Doc->TooltipValue = "";
-
-		// BM
-		$this->BM->LinkCustomAttributes = "";
-		$this->BM->HrefValue = "";
-		$this->BM->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1002,6 +1002,10 @@ class t001_jo extends DbTable
 		$this->Kapal->EditValue = $this->Kapal->CurrentValue;
 		$this->Kapal->PlaceHolder = RemoveHtml($this->Kapal->caption());
 
+		// BM
+		$this->BM->EditCustomAttributes = "";
+		$this->BM->EditValue = $this->BM->options(FALSE);
+
 		// Doc
 		$this->Doc->EditAttrs["class"] = "form-control";
 		$this->Doc->EditCustomAttributes = "";
@@ -1010,10 +1014,6 @@ class t001_jo extends DbTable
 		} else {
 			$this->Doc->EditValue = "";
 		}
-
-		// BM
-		$this->BM->EditCustomAttributes = "";
-		$this->BM->EditValue = $this->BM->options(FALSE);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1052,8 +1052,8 @@ class t001_jo extends DbTable
 					$doc->exportCaption($this->Cont);
 					$doc->exportCaption($this->Tujuan);
 					$doc->exportCaption($this->Kapal);
-					$doc->exportCaption($this->Doc);
 					$doc->exportCaption($this->BM);
+					$doc->exportCaption($this->Doc);
 				} else {
 					$doc->exportCaption($this->id);
 					$doc->exportCaption($this->NoJO);
@@ -1064,8 +1064,8 @@ class t001_jo extends DbTable
 					$doc->exportCaption($this->Cont);
 					$doc->exportCaption($this->Tujuan);
 					$doc->exportCaption($this->Kapal);
-					$doc->exportCaption($this->Doc);
 					$doc->exportCaption($this->BM);
+					$doc->exportCaption($this->Doc);
 				}
 				$doc->endExportRow();
 			}
@@ -1105,8 +1105,8 @@ class t001_jo extends DbTable
 						$doc->exportField($this->Cont);
 						$doc->exportField($this->Tujuan);
 						$doc->exportField($this->Kapal);
-						$doc->exportField($this->Doc);
 						$doc->exportField($this->BM);
+						$doc->exportField($this->Doc);
 					} else {
 						$doc->exportField($this->id);
 						$doc->exportField($this->NoJO);
@@ -1117,8 +1117,8 @@ class t001_jo extends DbTable
 						$doc->exportField($this->Cont);
 						$doc->exportField($this->Tujuan);
 						$doc->exportField($this->Kapal);
-						$doc->exportField($this->Doc);
 						$doc->exportField($this->BM);
+						$doc->exportField($this->Doc);
 					}
 					$doc->endExportRow($rowCnt);
 				}

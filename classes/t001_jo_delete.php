@@ -593,8 +593,8 @@ class t001_jo_delete extends t001_jo
 		$this->Cont->setVisibility();
 		$this->Tujuan->setVisibility();
 		$this->Kapal->setVisibility();
-		$this->Doc->setVisibility();
 		$this->BM->setVisibility();
+		$this->Doc->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Do not use lookup cache
@@ -742,9 +742,9 @@ class t001_jo_delete extends t001_jo
 		$this->Cont->setDbValue($row['Cont']);
 		$this->Tujuan->setDbValue($row['Tujuan']);
 		$this->Kapal->setDbValue($row['Kapal']);
+		$this->BM->setDbValue($row['BM']);
 		$this->Doc->Upload->DbValue = $row['Doc'];
 		$this->Doc->setDbValue($this->Doc->Upload->DbValue);
-		$this->BM->setDbValue($row['BM']);
 	}
 
 	// Return a row with default values
@@ -760,8 +760,8 @@ class t001_jo_delete extends t001_jo
 		$row['Cont'] = NULL;
 		$row['Tujuan'] = NULL;
 		$row['Kapal'] = NULL;
-		$row['Doc'] = NULL;
 		$row['BM'] = NULL;
+		$row['Doc'] = NULL;
 		return $row;
 	}
 
@@ -789,8 +789,8 @@ class t001_jo_delete extends t001_jo
 		// Cont
 		// Tujuan
 		// Kapal
-		// Doc
 		// BM
+		// Doc
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -836,14 +836,6 @@ class t001_jo_delete extends t001_jo
 			$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
 			$this->Kapal->ViewCustomAttributes = "";
 
-			// Doc
-			if (!EmptyValue($this->Doc->Upload->DbValue)) {
-				$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
-			} else {
-				$this->Doc->ViewValue = "";
-			}
-			$this->Doc->ViewCustomAttributes = "";
-
 			// BM
 			if (strval($this->BM->CurrentValue) != "") {
 				$this->BM->ViewValue = $this->BM->optionCaption($this->BM->CurrentValue);
@@ -851,6 +843,14 @@ class t001_jo_delete extends t001_jo
 				$this->BM->ViewValue = NULL;
 			}
 			$this->BM->ViewCustomAttributes = "";
+
+			// Doc
+			if (!EmptyValue($this->Doc->Upload->DbValue)) {
+				$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
+			} else {
+				$this->Doc->ViewValue = "";
+			}
+			$this->Doc->ViewCustomAttributes = "";
 
 			// NoJO
 			$this->NoJO->LinkCustomAttributes = "";
@@ -892,16 +892,16 @@ class t001_jo_delete extends t001_jo
 			$this->Kapal->HrefValue = "";
 			$this->Kapal->TooltipValue = "";
 
+			// BM
+			$this->BM->LinkCustomAttributes = "";
+			$this->BM->HrefValue = "";
+			$this->BM->TooltipValue = "";
+
 			// Doc
 			$this->Doc->LinkCustomAttributes = "";
 			$this->Doc->HrefValue = "";
 			$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
 			$this->Doc->TooltipValue = "";
-
-			// BM
-			$this->BM->LinkCustomAttributes = "";
-			$this->BM->HrefValue = "";
-			$this->BM->TooltipValue = "";
 		}
 
 		// Call Row Rendered event
