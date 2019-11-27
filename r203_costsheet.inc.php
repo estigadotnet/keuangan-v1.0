@@ -121,22 +121,28 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 
 			<?php
 
-			$subtotal_masuk  = 0;
-			$subtotal_keluar = 0;
+			// $subtotal_masuk  = 0;
+			// $subtotal_keluar = 0;
+			$subtotal = 0;
 
 			while (!$r_costsheet->EOF) { // looping data MUTASI
+
+				$nilai = ($r_costsheet->fields('Masuk') - $r_costsheet->fields('Keluar')) * -1;
 
 				echo '<tr>';
 				echo '  <td scope="row">'.$r_costsheet->fields('jns_nama').'</td>';
 				echo '  <td scope="row">'.$r_costsheet->fields('Comment').'</td>';
-				echo '  <td scope="row" align="right">'.number_format($r_costsheet->fields('Masuk')).'</td>';
-				echo '  <td scope="row" align="right">'.number_format($r_costsheet->fields('Keluar')).'</td>';
+				//echo '  <td scope="row" align="right">'.number_format($r_costsheet->fields('Masuk')).'</td>';
+				echo '  <td scope="row">&nbsp;</td>';
+				//echo '  <td scope="row" align="right">'.number_format($r_costsheet->fields('Keluar')).'</td>';
+				echo '  <td scope="row" align="right">'.number_format($nilai).'</td>';
 				echo '  <td scope="row">&nbsp;</td>';
 				echo '  <td scope="row">&nbsp;</td>';
 				echo '</tr>';
 
-				$subtotal_masuk  += $r_costsheet->fields('Masuk');
-				$subtotal_keluar += $r_costsheet->fields('Keluar');
+				//$subtotal_masuk  += $r_costsheet->fields('Masuk');
+				//$subtotal_keluar += $r_costsheet->fields('Keluar');
+				$subtotal += $nilai
 
 				$r_costsheet->MoveNext();
 			}
@@ -145,8 +151,9 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 
 			<tr>
 				<th scope="row" colspan="2" style="text-align: right">GRAND TOTAL</th>
-				<th scope="row" style="text-align: right"><?php echo number_format($subtotal_masuk) ?></th>
-				<th scope="row" style="text-align: right"><?php echo number_format($subtotal_keluar) ?></th>
+				<!-- <th scope="row" style="text-align: right"><?php echo number_format($subtotal_masuk) ?></th> -->
+				<th scope="row">&nbsp;</th>
+				<th scope="row" style="text-align: right"><?php echo number_format($subtotal) ?></th>
 				<th scope="row">&nbsp;</th>
 				<th scope="row">&nbsp;</th>
 			</tr>
