@@ -142,7 +142,7 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 
 				//$subtotal_masuk  += $r_costsheet->fields('Masuk');
 				//$subtotal_keluar += $r_costsheet->fields('Keluar');
-				$subtotal += $nilai
+				$subtotal += $nilai;
 
 				$r_costsheet->MoveNext();
 			}
