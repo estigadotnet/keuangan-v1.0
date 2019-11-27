@@ -709,8 +709,9 @@ class t001_jo_edit extends t001_jo
 		$this->createToken();
 
 		// Set up lookup cache
-		// Check modal
+		$this->setupLookupOptions($this->NoJO);
 
+		// Check modal
 		if ($this->IsModal)
 			$SkipHeaderFooter = TRUE;
 		$this->IsMobileOrModal = IsMobile() || $this->IsModal;
@@ -750,6 +751,9 @@ class t001_jo_edit extends t001_jo
 		// Process form if post back
 		if ($postBack) {
 			$this->loadFormValues(); // Get form values
+
+			// Set up detail parameters
+			$this->setupDetailParms();
 		}
 
 		// Validate form if post back
@@ -775,9 +779,15 @@ class t001_jo_edit extends t001_jo
 						$this->setFailureMessage($Language->phrase("NoRecord")); // No record found
 					$this->terminate("t001_jolist.php"); // No matching record, return to list
 				}
+
+				// Set up detail parameters
+				$this->setupDetailParms();
 				break;
 			case "update": // Update
-				$returnUrl = $this->getReturnUrl();
+				if ($this->getCurrentDetailTable() != "") // Master/detail edit
+					$returnUrl = $this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $this->getCurrentDetailTable()); // Master/Detail view page
+				else
+					$returnUrl = $this->getReturnUrl();
 				if (GetPageName($returnUrl) == "t001_jolist.php")
 					$returnUrl = $this->addMasterUrl($returnUrl); // List page, return to List page with correct master key if necessary
 				$this->SendEmail = TRUE; // Send email on update success
@@ -798,6 +808,9 @@ class t001_jo_edit extends t001_jo
 				} else {
 					$this->EventCancelled = TRUE; // Event cancelled
 					$this->restoreFormValues(); // Restore form values if update failed
+
+					// Set up detail parameters
+					$this->setupDetailParms();
 				}
 		}
 
@@ -1053,7 +1066,9 @@ class t001_jo_edit extends t001_jo
 			$this->id->ViewCustomAttributes = "";
 
 			// NoJO
-			$this->NoJO->ViewValue = $this->NoJO->CurrentValue;
+			$arwrk = [];
+			$arwrk[1] = $this->NoJO->CurrentValue;
+			$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
 			$this->NoJO->ViewCustomAttributes = "";
 
 			// Status
@@ -1159,12 +1174,36 @@ class t001_jo_edit extends t001_jo
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
 
 			// NoJO
-			$this->NoJO->EditAttrs["class"] = "form-control";
 			$this->NoJO->EditCustomAttributes = "";
-			if (!$this->NoJO->Raw)
-				$this->NoJO->CurrentValue = HtmlDecode($this->NoJO->CurrentValue);
-			$this->NoJO->EditValue = HtmlEncode($this->NoJO->CurrentValue);
-			$this->NoJO->PlaceHolder = RemoveHtml($this->NoJO->caption());
+			$curVal = trim(strval($this->NoJO->CurrentValue));
+			if ($curVal != "")
+				$this->NoJO->ViewValue = $this->NoJO->lookupCacheOption($curVal);
+			else
+				$this->NoJO->ViewValue = $this->NoJO->Lookup !== NULL && is_array($this->NoJO->Lookup->Options) ? $curVal : NULL;
+			if ($this->NoJO->ViewValue !== NULL) { // Load from cache
+				$this->NoJO->EditValue = array_values($this->NoJO->Lookup->Options);
+				if ($this->NoJO->ViewValue == "")
+					$this->NoJO->ViewValue = $Language->phrase("PleaseSelect");
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$filterWrk = "`NoJO`" . SearchString("=", $this->NoJO->CurrentValue, DATATYPE_STRING, "");
+				}
+				$sqlWrk = $this->NoJO->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = [];
+					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+					$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
+				} else {
+					$this->NoJO->ViewValue = $Language->phrase("PleaseSelect");
+				}
+				$arwrk = $rswrk ? $rswrk->getRows() : [];
+				if ($rswrk)
+					$rswrk->close();
+				$this->NoJO->EditValue = $arwrk;
+			}
 
 			// Status
 			$this->Status->EditAttrs["class"] = "form-control";
@@ -1351,6 +1390,14 @@ class t001_jo_edit extends t001_jo
 			}
 		}
 
+		// Validate detail grid
+		$detailTblVar = explode(",", $this->getCurrentDetailTable());
+		if (in_array("t102_mutasi", $detailTblVar) && $GLOBALS["t102_mutasi"]->DetailEdit) {
+			if (!isset($GLOBALS["t102_mutasi_grid"]))
+				$GLOBALS["t102_mutasi_grid"] = new t102_mutasi_grid(); // Get detail page object
+			$GLOBALS["t102_mutasi_grid"]->validateGridForm();
+		}
+
 		// Return validate result
 		$validateForm = ($FormError == "");
 
@@ -1400,6 +1447,10 @@ class t001_jo_edit extends t001_jo
 			$this->setFailureMessage($Language->phrase("NoRecord")); // Set no record message
 			$editRow = FALSE; // Update Failed
 		} else {
+
+			// Begin transaction
+			if ($this->getCurrentDetailTable() != "")
+				$conn->beginTrans();
 
 			// Save old values
 			$rsold = &$rs->fields;
@@ -1536,6 +1587,27 @@ class t001_jo_edit extends t001_jo
 						}
 					}
 				}
+
+				// Update detail records
+				$detailTblVar = explode(",", $this->getCurrentDetailTable());
+				if ($editRow) {
+					if (in_array("t102_mutasi", $detailTblVar) && $GLOBALS["t102_mutasi"]->DetailEdit) {
+						if (!isset($GLOBALS["t102_mutasi_grid"]))
+							$GLOBALS["t102_mutasi_grid"] = new t102_mutasi_grid(); // Get detail page object
+						$Security->loadCurrentUserLevel($this->ProjectID . "t102_mutasi"); // Load user level of detail table
+						$editRow = $GLOBALS["t102_mutasi_grid"]->gridUpdate();
+						$Security->loadCurrentUserLevel($this->ProjectID . $this->TableName); // Restore user level of master table
+					}
+				}
+
+				// Commit/Rollback transaction
+				if ($this->getCurrentDetailTable() != "") {
+					if ($editRow) {
+						$conn->commitTrans(); // Commit transaction
+					} else {
+						$conn->rollbackTrans(); // Rollback transaction
+					}
+				}
 			} else {
 				if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
 
@@ -1573,6 +1645,37 @@ class t001_jo_edit extends t001_jo
 		return $editRow;
 	}
 
+	// Set up detail parms based on QueryString
+	protected function setupDetailParms()
+	{
+
+		// Get the keys for master table
+		$detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
+		if ($detailTblVar !== NULL) {
+			$this->setCurrentDetailTable($detailTblVar);
+		} else {
+			$detailTblVar = $this->getCurrentDetailTable();
+		}
+		if ($detailTblVar != "") {
+			$detailTblVar = explode(",", $detailTblVar);
+			if (in_array("t102_mutasi", $detailTblVar)) {
+				if (!isset($GLOBALS["t102_mutasi_grid"]))
+					$GLOBALS["t102_mutasi_grid"] = new t102_mutasi_grid();
+				if ($GLOBALS["t102_mutasi_grid"]->DetailEdit) {
+					$GLOBALS["t102_mutasi_grid"]->CurrentMode = "edit";
+					$GLOBALS["t102_mutasi_grid"]->CurrentAction = "gridedit";
+
+					// Save current master table to detail table
+					$GLOBALS["t102_mutasi_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t102_mutasi_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t102_mutasi_grid"]->jo_id->IsDetailKey = TRUE;
+					$GLOBALS["t102_mutasi_grid"]->jo_id->CurrentValue = $this->id->CurrentValue;
+					$GLOBALS["t102_mutasi_grid"]->jo_id->setSessionValue($GLOBALS["t102_mutasi_grid"]->jo_id->CurrentValue);
+				}
+			}
+		}
+	}
+
 	// Set up Breadcrumb
 	protected function setupBreadcrumb()
 	{
@@ -1598,6 +1701,8 @@ class t001_jo_edit extends t001_jo
 
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
+				case "x_NoJO":
+					break;
 				case "x_Status":
 					break;
 				case "x_BM":
@@ -1622,6 +1727,8 @@ class t001_jo_edit extends t001_jo
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x_NoJO":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();

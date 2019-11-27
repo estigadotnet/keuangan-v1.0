@@ -355,6 +355,10 @@ class t102_mutasi_edit extends t102_mutasi
 			$GLOBALS["Table"] = &$GLOBALS["t102_mutasi"];
 		}
 
+		// Table object (t001_jo)
+		if (!isset($GLOBALS['t001_jo']))
+			$GLOBALS['t001_jo'] = new t001_jo();
+
 		// Table object (t301_employees)
 		if (!isset($GLOBALS['t301_employees']))
 			$GLOBALS['t301_employees'] = new t301_employees();
@@ -742,6 +746,9 @@ class t102_mutasi_edit extends t102_mutasi
 				$this->id->CurrentValue = NULL;
 			}
 		}
+
+		// Set up master detail parameters
+		$this->setupMasterParms();
 
 		// Load current record
 		$loaded = $this->loadRow();
@@ -1145,34 +1152,58 @@ class t102_mutasi_edit extends t102_mutasi
 
 			// jo_id
 			$this->jo_id->EditCustomAttributes = "";
-			$curVal = trim(strval($this->jo_id->CurrentValue));
-			if ($curVal != "")
-				$this->jo_id->ViewValue = $this->jo_id->lookupCacheOption($curVal);
-			else
-				$this->jo_id->ViewValue = $this->jo_id->Lookup !== NULL && is_array($this->jo_id->Lookup->Options) ? $curVal : NULL;
-			if ($this->jo_id->ViewValue !== NULL) { // Load from cache
-				$this->jo_id->EditValue = array_values($this->jo_id->Lookup->Options);
-				if ($this->jo_id->ViewValue == "")
-					$this->jo_id->ViewValue = $Language->phrase("PleaseSelect");
-			} else { // Lookup from database
-				if ($curVal == "") {
-					$filterWrk = "0=1";
+			if ($this->jo_id->getSessionValue() != "") {
+				$this->jo_id->CurrentValue = $this->jo_id->getSessionValue();
+				$curVal = strval($this->jo_id->CurrentValue);
+				if ($curVal != "") {
+					$this->jo_id->ViewValue = $this->jo_id->lookupCacheOption($curVal);
+					if ($this->jo_id->ViewValue === NULL) { // Lookup from database
+						$filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+						$sqlWrk = $this->jo_id->Lookup->getSql(FALSE, $filterWrk, '', $this);
+						$rswrk = Conn()->execute($sqlWrk);
+						if ($rswrk && !$rswrk->EOF) { // Lookup values found
+							$arwrk = [];
+							$arwrk[1] = $rswrk->fields('df');
+							$this->jo_id->ViewValue = $this->jo_id->displayValue($arwrk);
+							$rswrk->Close();
+						} else {
+							$this->jo_id->ViewValue = $this->jo_id->CurrentValue;
+						}
+					}
 				} else {
-					$filterWrk = "`id`" . SearchString("=", $this->jo_id->CurrentValue, DATATYPE_NUMBER, "");
+					$this->jo_id->ViewValue = NULL;
 				}
-				$sqlWrk = $this->jo_id->Lookup->getSql(TRUE, $filterWrk, '', $this);
-				$rswrk = Conn()->execute($sqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$arwrk = [];
-					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-					$this->jo_id->ViewValue = $this->jo_id->displayValue($arwrk);
-				} else {
-					$this->jo_id->ViewValue = $Language->phrase("PleaseSelect");
+				$this->jo_id->ViewCustomAttributes = "";
+			} else {
+				$curVal = trim(strval($this->jo_id->CurrentValue));
+				if ($curVal != "")
+					$this->jo_id->ViewValue = $this->jo_id->lookupCacheOption($curVal);
+				else
+					$this->jo_id->ViewValue = $this->jo_id->Lookup !== NULL && is_array($this->jo_id->Lookup->Options) ? $curVal : NULL;
+				if ($this->jo_id->ViewValue !== NULL) { // Load from cache
+					$this->jo_id->EditValue = array_values($this->jo_id->Lookup->Options);
+					if ($this->jo_id->ViewValue == "")
+						$this->jo_id->ViewValue = $Language->phrase("PleaseSelect");
+				} else { // Lookup from database
+					if ($curVal == "") {
+						$filterWrk = "0=1";
+					} else {
+						$filterWrk = "`id`" . SearchString("=", $this->jo_id->CurrentValue, DATATYPE_NUMBER, "");
+					}
+					$sqlWrk = $this->jo_id->Lookup->getSql(TRUE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = [];
+						$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+						$this->jo_id->ViewValue = $this->jo_id->displayValue($arwrk);
+					} else {
+						$this->jo_id->ViewValue = $Language->phrase("PleaseSelect");
+					}
+					$arwrk = $rswrk ? $rswrk->getRows() : [];
+					if ($rswrk)
+						$rswrk->close();
+					$this->jo_id->EditValue = $arwrk;
 				}
-				$arwrk = $rswrk ? $rswrk->getRows() : [];
-				if ($rswrk)
-					$rswrk->close();
-				$this->jo_id->EditValue = $arwrk;
 			}
 
 			// jenis_id
@@ -1385,6 +1416,29 @@ class t102_mutasi_edit extends t102_mutasi
 			// Keluar
 			$this->Keluar->setDbValueDef($rsnew, $this->Keluar->CurrentValue, 0, $this->Keluar->ReadOnly);
 
+			// Check referential integrity for master table 't001_jo'
+			$validMasterRecord = TRUE;
+			$masterFilter = $this->sqlMasterFilter_t001_jo();
+			$keyValue = isset($rsnew['jo_id']) ? $rsnew['jo_id'] : $rsold['jo_id'];
+			if (strval($keyValue) != "") {
+				$masterFilter = str_replace("@id@", AdjustSql($keyValue), $masterFilter);
+			} else {
+				$validMasterRecord = FALSE;
+			}
+			if ($validMasterRecord) {
+				if (!isset($GLOBALS["t001_jo"]))
+					$GLOBALS["t001_jo"] = new t001_jo();
+				$rsmaster = $GLOBALS["t001_jo"]->loadRs($masterFilter);
+				$validMasterRecord = ($rsmaster && !$rsmaster->EOF);
+				$rsmaster->close();
+			}
+			if (!$validMasterRecord) {
+				$relatedRecordMsg = str_replace("%t", "t001_jo", $Language->phrase("RelatedRecordRequired"));
+				$this->setFailureMessage($relatedRecordMsg);
+				$rs->close();
+				return FALSE;
+			}
+
 			// Call Row Updating event
 			$updateRow = $this->Row_Updating($rsold, $rsnew);
 
@@ -1439,6 +1493,73 @@ class t102_mutasi_edit extends t102_mutasi
 			WriteJson(["success" => TRUE, $this->TableVar => $row]);
 		}
 		return $editRow;
+	}
+
+	// Set up master/detail based on QueryString
+	protected function setupMasterParms()
+	{
+		$validMaster = FALSE;
+
+		// Get the keys for master table
+		if (Get(Config("TABLE_SHOW_MASTER")) !== NULL) {
+			$masterTblVar = Get(Config("TABLE_SHOW_MASTER"));
+			if ($masterTblVar == "") {
+				$validMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($masterTblVar == "t001_jo") {
+				$validMaster = TRUE;
+				if (Get("fk_id") !== NULL) {
+					$GLOBALS["t001_jo"]->id->setQueryStringValue(Get("fk_id"));
+					$this->jo_id->setQueryStringValue($GLOBALS["t001_jo"]->id->QueryStringValue);
+					$this->jo_id->setSessionValue($this->jo_id->QueryStringValue);
+					if (!is_numeric($GLOBALS["t001_jo"]->id->QueryStringValue))
+						$validMaster = FALSE;
+				} else {
+					$validMaster = FALSE;
+				}
+			}
+		} elseif (Post(Config("TABLE_SHOW_MASTER")) !== NULL) {
+			$masterTblVar = Post(Config("TABLE_SHOW_MASTER"));
+			if ($masterTblVar == "") {
+				$validMaster = TRUE;
+				$this->DbMasterFilter = "";
+				$this->DbDetailFilter = "";
+			}
+			if ($masterTblVar == "t001_jo") {
+				$validMaster = TRUE;
+				if (Post("fk_id") !== NULL) {
+					$GLOBALS["t001_jo"]->id->setFormValue(Post("fk_id"));
+					$this->jo_id->setFormValue($GLOBALS["t001_jo"]->id->FormValue);
+					$this->jo_id->setSessionValue($this->jo_id->FormValue);
+					if (!is_numeric($GLOBALS["t001_jo"]->id->FormValue))
+						$validMaster = FALSE;
+				} else {
+					$validMaster = FALSE;
+				}
+			}
+		}
+		if ($validMaster) {
+
+			// Save current master table
+			$this->setCurrentMasterTable($masterTblVar);
+			$this->setSessionWhere($this->getDetailFilter());
+
+			// Reset start record counter (new master key)
+			if (!$this->isAddOrEdit()) {
+				$this->StartRecord = 1;
+				$this->setStartRecordNumber($this->StartRecord);
+			}
+
+			// Clear previous master key from Session
+			if ($masterTblVar != "t001_jo") {
+				if ($this->jo_id->CurrentValue == "")
+					$this->jo_id->setSessionValue("");
+			}
+		}
+		$this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
+		$this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
 	}
 
 	// Set up Breadcrumb

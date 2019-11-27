@@ -128,6 +128,8 @@ loadjs.ready("head", function() {
 	ft001_joaddopt.validateRequired = <?php echo Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
 	// Dynamic selection lists
+	ft001_joaddopt.lists["x_NoJO"] = <?php echo $t001_jo_addopt->NoJO->Lookup->toClientList($t001_jo_addopt) ?>;
+	ft001_joaddopt.lists["x_NoJO"].options = <?php echo JsonEncode($t001_jo_addopt->NoJO->lookupOptions()) ?>;
 	ft001_joaddopt.lists["x_Status"] = <?php echo $t001_jo_addopt->Status->Lookup->toClientList($t001_jo_addopt) ?>;
 	ft001_joaddopt.lists["x_Status"].options = <?php echo JsonEncode($t001_jo_addopt->Status->options(FALSE, TRUE)) ?>;
 	ft001_joaddopt.lists["x_BM"] = <?php echo $t001_jo_addopt->BM->Lookup->toClientList($t001_jo_addopt) ?>;
@@ -158,7 +160,14 @@ $t001_jo_addopt->showMessage();
 	<div class="form-group row">
 		<label class="col-sm-2 col-form-label ew-label" for="x_NoJO"><?php echo $t001_jo_addopt->NoJO->caption() ?><?php echo $t001_jo_addopt->NoJO->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
-<input type="text" data-table="t001_jo" data-field="x_NoJO" name="x_NoJO" id="x_NoJO" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_addopt->NoJO->getPlaceHolder()) ?>" value="<?php echo $t001_jo_addopt->NoJO->EditValue ?>"<?php echo $t001_jo_addopt->NoJO->editAttributes() ?>>
+<div class="input-group ew-lookup-list">
+	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x_NoJO"><?php echo EmptyValue(strval($t001_jo_addopt->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_addopt->NoJO->ViewValue ?></div>
+	<div class="input-group-append">
+		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_addopt->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_addopt->NoJO->ReadOnly || $t001_jo_addopt->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+	</div>
+</div>
+<?php echo $t001_jo_addopt->NoJO->Lookup->getParamTag($t001_jo_addopt, "p_x_NoJO") ?>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_addopt->NoJO->displayValueSeparatorAttribute() ?>" name="x_NoJO" id="x_NoJO" value="<?php echo $t001_jo_addopt->NoJO->CurrentValue ?>"<?php echo $t001_jo_addopt->NoJO->editAttributes() ?>>
 </div>
 	</div>
 <?php } ?>

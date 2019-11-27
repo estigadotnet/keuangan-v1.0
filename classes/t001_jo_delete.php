@@ -616,8 +616,9 @@ class t001_jo_delete extends t001_jo
 		$this->createToken();
 
 		// Set up lookup cache
-		// Set up Breadcrumb
+		$this->setupLookupOptions($this->NoJO);
 
+		// Set up Breadcrumb
 		$this->setupBreadcrumb();
 
 		// Load key parameters
@@ -799,7 +800,9 @@ class t001_jo_delete extends t001_jo
 			$this->id->ViewCustomAttributes = "";
 
 			// NoJO
-			$this->NoJO->ViewValue = $this->NoJO->CurrentValue;
+			$arwrk = [];
+			$arwrk[1] = $this->NoJO->CurrentValue;
+			$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
 			$this->NoJO->ViewCustomAttributes = "";
 
 			// Status
@@ -1030,6 +1033,8 @@ class t001_jo_delete extends t001_jo
 
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
+				case "x_NoJO":
+					break;
 				case "x_Status":
 					break;
 				case "x_BM":
@@ -1054,6 +1059,8 @@ class t001_jo_delete extends t001_jo
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x_NoJO":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();

@@ -695,8 +695,9 @@ class t001_jo_view extends t001_jo
 		$this->createToken();
 
 		// Set up lookup cache
-		// Check modal
+		$this->setupLookupOptions($this->NoJO);
 
+		// Check modal
 		if ($this->IsModal)
 			$SkipHeaderFooter = TRUE;
 
@@ -760,6 +761,9 @@ class t001_jo_view extends t001_jo
 		$this->resetAttributes();
 		$this->renderRow();
 
+		// Set up detail parameters
+		$this->setupDetailParms();
+
 		// Normal return
 		if (IsApi()) {
 			$rows = $this->getRecordsFromRecordset($this->Recordset, TRUE); // Get current record only
@@ -810,6 +814,86 @@ class t001_jo_view extends t001_jo
 		else
 			$item->Body = "<a class=\"ew-action ew-delete\" title=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("ViewPageDeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("ViewPageDeleteLink") . "</a>";
 		$item->Visible = ($this->DeleteUrl != "" && $Security->canDelete());
+		$option = $options["detail"];
+		$detailTableLink = "";
+		$detailViewTblVar = "";
+		$detailCopyTblVar = "";
+		$detailEditTblVar = "";
+
+		// "detail_t102_mutasi"
+		$item = &$option->add("detail_t102_mutasi");
+		$body = $Language->phrase("ViewPageDetailLink") . $Language->TablePhrase("t102_mutasi", "TblCaption");
+		$body = "<a class=\"btn btn-default ew-row-link ew-detail\" data-action=\"list\" href=\"" . HtmlEncode("t102_mutasilist.php?" . Config("TABLE_SHOW_MASTER") . "=t001_jo&fk_id=" . urlencode(strval($this->id->CurrentValue)) . "") . "\">" . $body . "</a>";
+		$links = "";
+		if (!isset($GLOBALS["t102_mutasi_grid"]))
+			$GLOBALS["t102_mutasi_grid"] = new t102_mutasi_grid();
+		if ($GLOBALS["t102_mutasi_grid"]->DetailView && $Security->canView() && $Security->allowView(CurrentProjectID() . 't001_jo')) {
+			$links .= "<li><a class=\"ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=t102_mutasi")) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+			if ($detailViewTblVar != "")
+				$detailViewTblVar .= ",";
+			$detailViewTblVar .= "t102_mutasi";
+		}
+		if ($GLOBALS["t102_mutasi_grid"]->DetailEdit && $Security->canEdit() && $Security->allowEdit(CurrentProjectID() . 't001_jo')) {
+			$links .= "<li><a class=\"ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=t102_mutasi")) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+			if ($detailEditTblVar != "")
+				$detailEditTblVar .= ",";
+			$detailEditTblVar .= "t102_mutasi";
+		}
+		if ($GLOBALS["t102_mutasi_grid"]->DetailAdd && $Security->canAdd() && $Security->allowAdd(CurrentProjectID() . 't001_jo')) {
+			$links .= "<li><a class=\"ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailCopyLink")) . "\" href=\"" . HtmlEncode($this->getCopyUrl(Config("TABLE_SHOW_DETAIL") . "=t102_mutasi")) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailCopyLink")) . "</a></li>";
+			if ($detailCopyTblVar != "")
+				$detailCopyTblVar .= ",";
+			$detailCopyTblVar .= "t102_mutasi";
+		}
+		if ($links != "") {
+			$body .= "<button class=\"dropdown-toggle btn btn-default ew-detail\" data-toggle=\"dropdown\"></button>";
+			$body .= "<ul class=\"dropdown-menu\">". $links . "</ul>";
+		}
+		$body = "<div class=\"btn-group btn-group-sm ew-btn-group\">" . $body . "</div>";
+		$item->Body = $body;
+		$item->Visible = $Security->allowList(CurrentProjectID() . 't102_mutasi');
+		if ($item->Visible) {
+			if ($detailTableLink != "")
+				$detailTableLink .= ",";
+			$detailTableLink .= "t102_mutasi";
+		}
+		if ($this->ShowMultipleDetails)
+			$item->Visible = FALSE;
+
+		// Multiple details
+		if ($this->ShowMultipleDetails) {
+			$body = "<div class=\"btn-group btn-group-sm ew-btn-group\">";
+			$links = "";
+			if ($detailViewTblVar != "") {
+				$links .= "<li><a class=\"ew-row-link ew-detail-view\" data-action=\"view\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailViewLink")) . "\" href=\"" . HtmlEncode($this->getViewUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailViewTblVar)) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailViewLink")) . "</a></li>";
+			}
+			if ($detailEditTblVar != "") {
+				$links .= "<li><a class=\"ew-row-link ew-detail-edit\" data-action=\"edit\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailEditLink")) . "\" href=\"" . HtmlEncode($this->getEditUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailEditTblVar)) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailEditLink")) . "</a></li>";
+			}
+			if ($detailCopyTblVar != "") {
+				$links .= "<li><a class=\"ew-row-link ew-detail-copy\" data-action=\"add\" data-caption=\"" . HtmlTitle($Language->phrase("MasterDetailCopyLink")) . "\" href=\"" . HtmlEncode($this->getCopyUrl(Config("TABLE_SHOW_DETAIL") . "=" . $detailCopyTblVar)) . "\">" . HtmlImageAndText($Language->phrase("MasterDetailCopyLink")) . "</a></li>";
+			}
+			if ($links != "") {
+				$body .= "<button class=\"dropdown-toggle btn btn-default ew-master-detail\" title=\"" . HtmlTitle($Language->phrase("MultipleMasterDetails")) . "\" data-toggle=\"dropdown\">" . $Language->phrase("MultipleMasterDetails") . "</button>";
+				$body .= "<ul class=\"dropdown-menu ew-menu\">". $links . "</ul>";
+			}
+			$body .= "</div>";
+
+			// Multiple details
+			$item = &$option->add("details");
+			$item->Body = $body;
+		}
+
+		// Set up detail default
+		$option = $options["detail"];
+		$options["detail"]->DropDownButtonPhrase = $Language->phrase("ButtonDetails");
+		$ar = explode(",", $detailTableLink);
+		$cnt = count($ar);
+		$option->UseDropDownButton = ($cnt > 1);
+		$option->UseButtonGroup = TRUE;
+		$item = &$option->add($option->GroupOptionName);
+		$item->Body = "";
+		$item->Visible = FALSE;
 
 		// Set up action default
 		$option = $options["action"];
@@ -930,7 +1014,9 @@ class t001_jo_view extends t001_jo
 			$this->id->ViewCustomAttributes = "";
 
 			// NoJO
-			$this->NoJO->ViewValue = $this->NoJO->CurrentValue;
+			$arwrk = [];
+			$arwrk[1] = $this->NoJO->CurrentValue;
+			$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
 			$this->NoJO->ViewCustomAttributes = "";
 
 			// Status
@@ -1040,6 +1126,36 @@ class t001_jo_view extends t001_jo
 			$this->Row_Rendered();
 	}
 
+	// Set up detail parms based on QueryString
+	protected function setupDetailParms()
+	{
+
+		// Get the keys for master table
+		$detailTblVar = Get(Config("TABLE_SHOW_DETAIL"));
+		if ($detailTblVar !== NULL) {
+			$this->setCurrentDetailTable($detailTblVar);
+		} else {
+			$detailTblVar = $this->getCurrentDetailTable();
+		}
+		if ($detailTblVar != "") {
+			$detailTblVar = explode(",", $detailTblVar);
+			if (in_array("t102_mutasi", $detailTblVar)) {
+				if (!isset($GLOBALS["t102_mutasi_grid"]))
+					$GLOBALS["t102_mutasi_grid"] = new t102_mutasi_grid();
+				if ($GLOBALS["t102_mutasi_grid"]->DetailView) {
+					$GLOBALS["t102_mutasi_grid"]->CurrentMode = "view";
+
+					// Save current master table to detail table
+					$GLOBALS["t102_mutasi_grid"]->setCurrentMasterTable($this->TableVar);
+					$GLOBALS["t102_mutasi_grid"]->setStartRecordNumber(1);
+					$GLOBALS["t102_mutasi_grid"]->jo_id->IsDetailKey = TRUE;
+					$GLOBALS["t102_mutasi_grid"]->jo_id->CurrentValue = $this->id->CurrentValue;
+					$GLOBALS["t102_mutasi_grid"]->jo_id->setSessionValue($GLOBALS["t102_mutasi_grid"]->jo_id->CurrentValue);
+				}
+			}
+		}
+	}
+
 	// Set up Breadcrumb
 	protected function setupBreadcrumb()
 	{
@@ -1065,6 +1181,8 @@ class t001_jo_view extends t001_jo
 
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
+				case "x_NoJO":
+					break;
 				case "x_Status":
 					break;
 				case "x_BM":
@@ -1089,6 +1207,8 @@ class t001_jo_view extends t001_jo
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x_NoJO":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();

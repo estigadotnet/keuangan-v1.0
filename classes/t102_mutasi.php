@@ -66,8 +66,8 @@ class t102_mutasi extends DbTable
 		$this->ExportExcelPageSize = ""; // Page size (PhpSpreadsheet only)
 		$this->ExportWordPageOrientation = "portrait"; // Page orientation (PHPWord only)
 		$this->ExportWordColumnWidth = NULL; // Cell width (PHPWord only)
-		$this->DetailAdd = FALSE; // Allow detail add
-		$this->DetailEdit = FALSE; // Allow detail edit
+		$this->DetailAdd = TRUE; // Allow detail add
+		$this->DetailEdit = TRUE; // Allow detail edit
 		$this->DetailView = FALSE; // Allow detail view
 		$this->ShowMultipleDetails = FALSE; // Show multiple details
 		$this->GridAddRowCount = 25;
@@ -101,6 +101,7 @@ class t102_mutasi extends DbTable
 
 		// jo_id
 		$this->jo_id = new DbField('t102_mutasi', 't102_mutasi', 'x_jo_id', 'jo_id', '`jo_id`', '`jo_id`', 3, 11, -1, FALSE, '`jo_id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->jo_id->IsForeignKey = TRUE; // Foreign key field
 		$this->jo_id->Nullable = FALSE; // NOT NULL field
 		$this->jo_id->Required = TRUE; // Required field
 		$this->jo_id->Sortable = TRUE; // Allow sort
@@ -190,6 +191,58 @@ class t102_mutasi extends DbTable
 			if (!$ctrl)
 				$fld->setSort("");
 		}
+	}
+
+	// Current master table name
+	public function getCurrentMasterTable()
+	{
+		return @$_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")];
+	}
+	public function setCurrentMasterTable($v)
+	{
+		$_SESSION[PROJECT_NAME . "_" . $this->TableVar . "_" . Config("TABLE_MASTER_TABLE")] = $v;
+	}
+
+	// Session master WHERE clause
+	public function getMasterFilter()
+	{
+
+		// Master filter
+		$masterFilter = "";
+		if ($this->getCurrentMasterTable() == "t001_jo") {
+			if ($this->jo_id->getSessionValue() != "")
+				$masterFilter .= "`id`=" . QuotedValue($this->jo_id->getSessionValue(), DATATYPE_NUMBER, "DB");
+			else
+				return "";
+		}
+		return $masterFilter;
+	}
+
+	// Session detail WHERE clause
+	public function getDetailFilter()
+	{
+
+		// Detail filter
+		$detailFilter = "";
+		if ($this->getCurrentMasterTable() == "t001_jo") {
+			if ($this->jo_id->getSessionValue() != "")
+				$detailFilter .= "`jo_id`=" . QuotedValue($this->jo_id->getSessionValue(), DATATYPE_NUMBER, "DB");
+			else
+				return "";
+		}
+		return $detailFilter;
+	}
+
+	// Master filter
+	public function sqlMasterFilter_t001_jo()
+	{
+		return "`id`=@id@";
+	}
+
+	// Detail filter
+	public function sqlDetailFilter_t001_jo()
+	{
+		return "`jo_id`=@jo_id@";
 	}
 
 	// Table level SQL
@@ -653,6 +706,10 @@ class t102_mutasi extends DbTable
 	// Add master url
 	public function addMasterUrl($url)
 	{
+		if ($this->getCurrentMasterTable() == "t001_jo" && !ContainsString($url, Config("TABLE_SHOW_MASTER") . "=")) {
+			$url .= (ContainsString($url, "?") ? "&" : "?") . Config("TABLE_SHOW_MASTER") . "=" . $this->getCurrentMasterTable();
+			$url .= "&fk_id=" . urlencode($this->jo_id->CurrentValue);
+		}
 		return $url;
 	}
 	public function keyToJson($htmlEncode = FALSE)
@@ -935,6 +992,30 @@ class t102_mutasi extends DbTable
 		// jo_id
 		$this->jo_id->EditAttrs["class"] = "form-control";
 		$this->jo_id->EditCustomAttributes = "";
+		if ($this->jo_id->getSessionValue() != "") {
+			$this->jo_id->CurrentValue = $this->jo_id->getSessionValue();
+			$curVal = strval($this->jo_id->CurrentValue);
+			if ($curVal != "") {
+				$this->jo_id->ViewValue = $this->jo_id->lookupCacheOption($curVal);
+				if ($this->jo_id->ViewValue === NULL) { // Lookup from database
+					$filterWrk = "`id`" . SearchString("=", $curVal, DATATYPE_NUMBER, "");
+					$sqlWrk = $this->jo_id->Lookup->getSql(FALSE, $filterWrk, '', $this);
+					$rswrk = Conn()->execute($sqlWrk);
+					if ($rswrk && !$rswrk->EOF) { // Lookup values found
+						$arwrk = [];
+						$arwrk[1] = $rswrk->fields('df');
+						$this->jo_id->ViewValue = $this->jo_id->displayValue($arwrk);
+						$rswrk->Close();
+					} else {
+						$this->jo_id->ViewValue = $this->jo_id->CurrentValue;
+					}
+				}
+			} else {
+				$this->jo_id->ViewValue = NULL;
+			}
+			$this->jo_id->ViewCustomAttributes = "";
+		} else {
+		}
 
 		// jenis_id
 		$this->jenis_id->EditAttrs["class"] = "form-control";

@@ -138,6 +138,8 @@ loadjs.ready("head", function() {
 	ft001_joedit.validateRequired = <?php echo Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
 	// Dynamic selection lists
+	ft001_joedit.lists["x_NoJO"] = <?php echo $t001_jo_edit->NoJO->Lookup->toClientList($t001_jo_edit) ?>;
+	ft001_joedit.lists["x_NoJO"].options = <?php echo JsonEncode($t001_jo_edit->NoJO->lookupOptions()) ?>;
 	ft001_joedit.lists["x_Status"] = <?php echo $t001_jo_edit->Status->Lookup->toClientList($t001_jo_edit) ?>;
 	ft001_joedit.lists["x_Status"].options = <?php echo JsonEncode($t001_jo_edit->Status->options(FALSE, TRUE)) ?>;
 	ft001_joedit.lists["x_BM"] = <?php echo $t001_jo_edit->BM->Lookup->toClientList($t001_jo_edit) ?>;
@@ -170,7 +172,14 @@ $t001_jo_edit->showMessage();
 		<label id="elh_t001_jo_NoJO" for="x_NoJO" class="<?php echo $t001_jo_edit->LeftColumnClass ?>"><?php echo $t001_jo_edit->NoJO->caption() ?><?php echo $t001_jo_edit->NoJO->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $t001_jo_edit->RightColumnClass ?>"><div <?php echo $t001_jo_edit->NoJO->cellAttributes() ?>>
 <span id="el_t001_jo_NoJO">
-<input type="text" data-table="t001_jo" data-field="x_NoJO" name="x_NoJO" id="x_NoJO" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_edit->NoJO->getPlaceHolder()) ?>" value="<?php echo $t001_jo_edit->NoJO->EditValue ?>"<?php echo $t001_jo_edit->NoJO->editAttributes() ?>>
+<div class="input-group ew-lookup-list">
+	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x_NoJO"><?php echo EmptyValue(strval($t001_jo_edit->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_edit->NoJO->ViewValue ?></div>
+	<div class="input-group-append">
+		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_edit->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_edit->NoJO->ReadOnly || $t001_jo_edit->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+	</div>
+</div>
+<?php echo $t001_jo_edit->NoJO->Lookup->getParamTag($t001_jo_edit, "p_x_NoJO") ?>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_edit->NoJO->displayValueSeparatorAttribute() ?>" name="x_NoJO" id="x_NoJO" value="<?php echo $t001_jo_edit->NoJO->CurrentValue ?>"<?php echo $t001_jo_edit->NoJO->editAttributes() ?>>
 </span>
 <?php echo $t001_jo_edit->NoJO->CustomMsg ?></div></div>
 	</div>
@@ -287,6 +296,14 @@ $t001_jo_edit->showMessage();
 <?php } ?>
 </div><!-- /page* -->
 	<input type="hidden" data-table="t001_jo" data-field="x_id" name="x_id" id="x_id" value="<?php echo HtmlEncode($t001_jo_edit->id->CurrentValue) ?>">
+<?php
+	if (in_array("t102_mutasi", explode(",", $t001_jo->getCurrentDetailTable())) && $t102_mutasi->DetailEdit) {
+?>
+<?php if ($t001_jo->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?php echo $Language->tablePhrase("t102_mutasi", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "t102_mutasigrid.php" ?>
+<?php } ?>
 <?php if (!$t001_jo_edit->IsModal) { ?>
 <div class="form-group row"><!-- buttons .form-group -->
 	<div class="<?php echo $t001_jo_edit->OffsetColumnClass ?>"><!-- buttons offset -->

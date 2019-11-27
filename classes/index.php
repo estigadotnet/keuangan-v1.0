@@ -285,6 +285,10 @@ class index
 		$Security->loadUserLevel(); // Load User Level
 		if ($Security->allowList(CurrentProjectID() . 'c401_home.php'))
 			$this->terminate("c401_home.php"); // Exit and go to default page
+		if ($Security->allowList(CurrentProjectID() . 'r201_mutasi'))
+			$this->terminate("r201_mutasismry.php");
+		if ($Security->allowList(CurrentProjectID() . 'r202_jomutasihrn.php'))
+			$this->terminate("r202_jomutasihrn.php");
 		if ($Security->allowList(CurrentProjectID() . 't001_jo'))
 			$this->terminate("t001_jolist.php");
 		if ($Security->allowList(CurrentProjectID() . 't002_jenis'))
@@ -301,10 +305,6 @@ class index
 			$this->terminate("t303_userlevelpermissionslist.php");
 		if ($Security->allowList(CurrentProjectID() . 't304_audittrail'))
 			$this->terminate("t304_audittraillist.php");
-		if ($Security->allowList(CurrentProjectID() . 'r201_mutasi'))
-			$this->terminate("r201_mutasismry.php");
-		if ($Security->allowList(CurrentProjectID() . 'r202_jomutasihrn.php'))
-			$this->terminate("r202_jomutasihrn.php");
 		if ($Security->allowList(CurrentProjectID() . 'v202_jomutasihrn'))
 			$this->terminate("v202_jomutasihrnlist.php");
 		if ($Security->isLoggedIn()) {

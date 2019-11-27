@@ -172,6 +172,14 @@ $t001_jo_view->showMessage();
 	</tr>
 <?php } ?>
 </table>
+<?php
+	if (in_array("t102_mutasi", explode(",", $t001_jo->getCurrentDetailTable())) && $t102_mutasi->DetailView) {
+?>
+<?php if ($t001_jo->getCurrentDetailTable() != "") { ?>
+<h4 class="ew-detail-caption"><?php echo $Language->tablePhrase("t102_mutasi", "TblCaption") ?></h4>
+<?php } ?>
+<?php include_once "t102_mutasigrid.php" ?>
+<?php } ?>
 </form>
 <?php
 $t001_jo_view->showPageFooter();

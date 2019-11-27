@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<ew-language date="2019/11/26" version="16.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
+<ew-language date="2019/11/27" version="16.0.1" id="en" name="English" desc="English" author="e.World Technology Ltd.">
   <!-- 
 	*** Important Notes:
 	1. Language ID should follow: https://developers.google.com/recaptcha/docs/language,
@@ -863,16 +863,16 @@
       <phrase id="menutext" value="Setup" />
     </menu>
     <menu id="2">
-      <phrase id="menutext" value="Jenis Mutasi" />
+      <phrase id="menutext" value="Jenis Pengeluaran" />
     </menu>
     <menu id="12">
       <phrase id="menutext" value="Saldo Awal" />
     </menu>
-    <menu id="1">
-      <phrase id="menutext" value="Job Order" />
-    </menu>
     <menu id="10">
       <phrase id="menutext" value="Transaksi" />
+    </menu>
+    <menu id="1">
+      <phrase id="menutext" value="Job Order" />
     </menu>
     <menu id="3">
       <phrase id="menutext" value="Mutasi" />
@@ -893,7 +893,7 @@
       <phrase id="menutext" value="Job Order" />
     </menu>
     <menu id="13">
-      <phrase id="menutext" value="Cost Sheet" />
+      <phrase id="menutext" value="v 201 mutasi" />
     </menu>
     <menu id="11">
       <phrase id="menutext" value="General" />
@@ -910,8 +910,77 @@
     <menu id="7">
       <phrase id="menutext" value="t 304 audittrail" />
     </menu>
+    <table id="c201_mutasi">
+      <phrase id="tblcaption" value="cv 201 mutasi" />
+      <field id="mutasi_id">
+        <phrase id="fldcaption" value="mutasi id" />
+      </field>
+      <field id="tanggal">
+        <phrase id="fldcaption" value="tanggal" />
+      </field>
+      <field id="nourut">
+        <phrase id="fldcaption" value="nourut" />
+      </field>
+      <field id="masuk">
+        <phrase id="fldcaption" value="masuk" />
+      </field>
+      <field id="keluar">
+        <phrase id="fldcaption" value="keluar" />
+      </field>
+      <field id="selisih">
+        <phrase id="fldcaption" value="selisih" />
+      </field>
+      <field id="mutasi">
+        <phrase id="fldcaption" value="mutasi" />
+      </field>
+      <field id="jo_id">
+        <phrase id="fldcaption" value="jo id" />
+      </field>
+      <field id="jenis_id">
+        <phrase id="fldcaption" value="jenis id" />
+      </field>
+      <field id="comment">
+        <phrase id="fldcaption" value="comment" />
+      </field>
+    </table>
     <table id="c401_home">
       <phrase id="tblcaption" value="Home" />
+    </table>
+    <table id="r201_mutasi">
+      <phrase id="tblcaption" value="Laporan Mutasi" />
+      <field id="mutasi_id">
+        <phrase id="fldcaption" value="mutasi id" />
+      </field>
+      <field id="tanggal">
+        <phrase id="fldcaption" value="Tanggal" />
+      </field>
+      <field id="nourut">
+        <phrase id="fldcaption" value="No. Urut" />
+      </field>
+      <field id="jo_id">
+        <phrase id="fldcaption" value="No. JO" />
+      </field>
+      <field id="jenis_id">
+        <phrase id="fldcaption" value="Jenis Pengeluaran" />
+      </field>
+      <field id="comment">
+        <phrase id="fldcaption" value="Comment" />
+      </field>
+      <field id="masuk">
+        <phrase id="fldcaption" value="Masuk" />
+      </field>
+      <field id="keluar">
+        <phrase id="fldcaption" value="Keluar" />
+      </field>
+      <field id="selisih">
+        <phrase id="fldcaption" value="Selisih" />
+      </field>
+      <field id="mutasi">
+        <phrase id="fldcaption" value="Mutasi" />
+      </field>
+    </table>
+    <table id="r202_jomutasihrn">
+      <phrase id="tblcaption" value="Laporan Job Order" />
     </table>
     <table id="t001_jo">
       <phrase id="tblcaption" value="Job Order" />
@@ -964,12 +1033,12 @@
       </field>
     </table>
     <table id="t002_jenis">
-      <phrase id="tblcaption" value="Jenis Mutasi" />
+      <phrase id="tblcaption" value="Jenis Pengeluaran" />
       <field id="id">
         <phrase id="fldcaption" value="id" />
       </field>
       <field id="nama">
-        <phrase id="fldcaption" value="Jenis" />
+        <phrase id="fldcaption" value="Jenis Pengeluaran" />
       </field>
       <field id="nokolom">
         <phrase id="fldcaption" value="No. Kolom" />
@@ -1145,7 +1214,7 @@
       </field>
     </table>
     <table id="v201_mutasi">
-      <phrase id="tblcaption" value="Cost Sheet" />
+      <phrase id="tblcaption" value="v 201 mutasi" />
       <field id="jo_id">
         <phrase id="fldcaption" value="No. JO" />
       </field>
@@ -1173,75 +1242,6 @@
       <field id="comment">
         <phrase id="fldcaption" value="comment" />
       </field>
-    </table>
-    <table id="c201_mutasi">
-      <phrase id="tblcaption" value="cv 201 mutasi" />
-      <field id="mutasi_id">
-        <phrase id="fldcaption" value="mutasi id" />
-      </field>
-      <field id="tanggal">
-        <phrase id="fldcaption" value="tanggal" />
-      </field>
-      <field id="nourut">
-        <phrase id="fldcaption" value="nourut" />
-      </field>
-      <field id="masuk">
-        <phrase id="fldcaption" value="masuk" />
-      </field>
-      <field id="keluar">
-        <phrase id="fldcaption" value="keluar" />
-      </field>
-      <field id="selisih">
-        <phrase id="fldcaption" value="selisih" />
-      </field>
-      <field id="mutasi">
-        <phrase id="fldcaption" value="mutasi" />
-      </field>
-      <field id="jo_id">
-        <phrase id="fldcaption" value="jo id" />
-      </field>
-      <field id="jenis_id">
-        <phrase id="fldcaption" value="jenis id" />
-      </field>
-      <field id="comment">
-        <phrase id="fldcaption" value="comment" />
-      </field>
-    </table>
-    <table id="r201_mutasi">
-      <phrase id="tblcaption" value="Laporan Mutasi" />
-      <field id="mutasi_id">
-        <phrase id="fldcaption" value="mutasi id" />
-      </field>
-      <field id="tanggal">
-        <phrase id="fldcaption" value="Tanggal" />
-      </field>
-      <field id="nourut">
-        <phrase id="fldcaption" value="No. Urut" />
-      </field>
-      <field id="jo_id">
-        <phrase id="fldcaption" value="No. JO" />
-      </field>
-      <field id="jenis_id">
-        <phrase id="fldcaption" value="Jenis Pengeluaran" />
-      </field>
-      <field id="comment">
-        <phrase id="fldcaption" value="Comment" />
-      </field>
-      <field id="masuk">
-        <phrase id="fldcaption" value="Masuk" />
-      </field>
-      <field id="keluar">
-        <phrase id="fldcaption" value="Keluar" />
-      </field>
-      <field id="selisih">
-        <phrase id="fldcaption" value="Selisih" />
-      </field>
-      <field id="mutasi">
-        <phrase id="fldcaption" value="Mutasi" />
-      </field>
-    </table>
-    <table id="r202_jomutasihrn">
-      <phrase id="tblcaption" value="Laporan Job Order" />
     </table>
     <table id="v202_jomutasihrn">
       <phrase id="tblcaption" value="Laporan Job Order" />

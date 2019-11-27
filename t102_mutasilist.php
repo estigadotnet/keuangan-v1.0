@@ -220,6 +220,15 @@ loadjs.ready("head", function() {
 <div class="clearfix"></div>
 </div>
 <?php } ?>
+<?php if (!$t102_mutasi_list->isExport() || Config("EXPORT_MASTER_RECORD") && $t102_mutasi_list->isExport("print")) { ?>
+<?php
+if ($t102_mutasi_list->DbMasterFilter != "" && $t102_mutasi->getCurrentMasterTable() == "t001_jo") {
+	if ($t102_mutasi_list->MasterRecordExists) {
+		include_once "t001_jomaster.php";
+	}
+}
+?>
+<?php } ?>
 <?php
 $t102_mutasi_list->renderOtherOptions();
 ?>
@@ -389,6 +398,10 @@ $t102_mutasi_list->showMessage();
 <input type="hidden" name="<?php echo Config("TOKEN_NAME") ?>" value="<?php echo $Page->Token ?>">
 <?php } ?>
 <input type="hidden" name="t" value="t102_mutasi">
+<?php if ($t102_mutasi->getCurrentMasterTable() == "t001_jo" && $t102_mutasi->CurrentAction) { ?>
+<input type="hidden" name="<?php echo Config("TABLE_SHOW_MASTER") ?>" value="t001_jo">
+<input type="hidden" name="fk_id" value="<?php echo $t102_mutasi_list->jo_id->getSessionValue() ?>">
+<?php } ?>
 <div id="gmp_t102_mutasi" class="<?php echo ResponsiveTableClass() ?>card-body ew-grid-middle-panel">
 <?php if ($t102_mutasi_list->TotalRecords > 0 || $t102_mutasi_list->isAdd() || $t102_mutasi_list->isCopy() || $t102_mutasi_list->isGridEdit()) { ?>
 <table id="tbl_t102_mutasilist" class="table ew-table"><!-- .ew-table -->
@@ -530,6 +543,12 @@ loadjs.ready(["ft102_mutasilist", "datetimepicker"], function() {
 	<?php } ?>
 	<?php if ($t102_mutasi_list->jo_id->Visible) { // jo_id ?>
 		<td data-name="jo_id">
+<?php if ($t102_mutasi_list->jo_id->getSessionValue() != "") { ?>
+<span id="el<?php echo $t102_mutasi_list->RowCount ?>_t102_mutasi_jo_id" class="form-group t102_mutasi_jo_id">
+<span<?php echo $t102_mutasi_list->jo_id->viewAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo HtmlEncode(RemoveHtml($t102_mutasi_list->jo_id->ViewValue)) ?>"></span>
+</span>
+<input type="hidden" id="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" name="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo HtmlEncode($t102_mutasi_list->jo_id->CurrentValue) ?>">
+<?php } else { ?>
 <span id="el<?php echo $t102_mutasi_list->RowCount ?>_t102_mutasi_jo_id" class="form-group t102_mutasi_jo_id">
 <div class="input-group ew-lookup-list">
 	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id"><?php echo EmptyValue(strval($t102_mutasi_list->jo_id->ViewValue)) ? $Language->phrase("PleaseSelect") : $t102_mutasi_list->jo_id->ViewValue ?></div>
@@ -543,6 +562,7 @@ loadjs.ready(["ft102_mutasilist", "datetimepicker"], function() {
 <?php echo $t102_mutasi_list->jo_id->Lookup->getParamTag($t102_mutasi_list, "p_x" . $t102_mutasi_list->RowIndex . "_jo_id") ?>
 <input type="hidden" data-table="t102_mutasi" data-field="x_jo_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t102_mutasi_list->jo_id->displayValueSeparatorAttribute() ?>" name="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" id="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo $t102_mutasi_list->jo_id->CurrentValue ?>"<?php echo $t102_mutasi_list->jo_id->editAttributes() ?>>
 </span>
+<?php } ?>
 <input type="hidden" data-table="t102_mutasi" data-field="x_jo_id" name="o<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" id="o<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo HtmlEncode($t102_mutasi_list->jo_id->OldValue) ?>">
 </td>
 	<?php } ?>
@@ -778,6 +798,12 @@ loadjs.ready(["ft102_mutasilist", "datetimepicker"], function() {
 	<?php if ($t102_mutasi_list->jo_id->Visible) { // jo_id ?>
 		<td data-name="jo_id" <?php echo $t102_mutasi_list->jo_id->cellAttributes() ?>>
 <?php if ($t102_mutasi->RowType == ROWTYPE_ADD) { // Add record ?>
+<?php if ($t102_mutasi_list->jo_id->getSessionValue() != "") { ?>
+<span id="el<?php echo $t102_mutasi_list->RowCount ?>_t102_mutasi_jo_id" class="form-group">
+<span<?php echo $t102_mutasi_list->jo_id->viewAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo HtmlEncode(RemoveHtml($t102_mutasi_list->jo_id->ViewValue)) ?>"></span>
+</span>
+<input type="hidden" id="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" name="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo HtmlEncode($t102_mutasi_list->jo_id->CurrentValue) ?>">
+<?php } else { ?>
 <span id="el<?php echo $t102_mutasi_list->RowCount ?>_t102_mutasi_jo_id" class="form-group">
 <div class="input-group ew-lookup-list">
 	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id"><?php echo EmptyValue(strval($t102_mutasi_list->jo_id->ViewValue)) ? $Language->phrase("PleaseSelect") : $t102_mutasi_list->jo_id->ViewValue ?></div>
@@ -791,9 +817,16 @@ loadjs.ready(["ft102_mutasilist", "datetimepicker"], function() {
 <?php echo $t102_mutasi_list->jo_id->Lookup->getParamTag($t102_mutasi_list, "p_x" . $t102_mutasi_list->RowIndex . "_jo_id") ?>
 <input type="hidden" data-table="t102_mutasi" data-field="x_jo_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t102_mutasi_list->jo_id->displayValueSeparatorAttribute() ?>" name="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" id="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo $t102_mutasi_list->jo_id->CurrentValue ?>"<?php echo $t102_mutasi_list->jo_id->editAttributes() ?>>
 </span>
+<?php } ?>
 <input type="hidden" data-table="t102_mutasi" data-field="x_jo_id" name="o<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" id="o<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo HtmlEncode($t102_mutasi_list->jo_id->OldValue) ?>">
 <?php } ?>
 <?php if ($t102_mutasi->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<?php if ($t102_mutasi_list->jo_id->getSessionValue() != "") { ?>
+<span id="el<?php echo $t102_mutasi_list->RowCount ?>_t102_mutasi_jo_id" class="form-group">
+<span<?php echo $t102_mutasi_list->jo_id->viewAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo HtmlEncode(RemoveHtml($t102_mutasi_list->jo_id->ViewValue)) ?>"></span>
+</span>
+<input type="hidden" id="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" name="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo HtmlEncode($t102_mutasi_list->jo_id->CurrentValue) ?>">
+<?php } else { ?>
 <span id="el<?php echo $t102_mutasi_list->RowCount ?>_t102_mutasi_jo_id" class="form-group">
 <div class="input-group ew-lookup-list">
 	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id"><?php echo EmptyValue(strval($t102_mutasi_list->jo_id->ViewValue)) ? $Language->phrase("PleaseSelect") : $t102_mutasi_list->jo_id->ViewValue ?></div>
@@ -807,6 +840,7 @@ loadjs.ready(["ft102_mutasilist", "datetimepicker"], function() {
 <?php echo $t102_mutasi_list->jo_id->Lookup->getParamTag($t102_mutasi_list, "p_x" . $t102_mutasi_list->RowIndex . "_jo_id") ?>
 <input type="hidden" data-table="t102_mutasi" data-field="x_jo_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t102_mutasi_list->jo_id->displayValueSeparatorAttribute() ?>" name="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" id="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo $t102_mutasi_list->jo_id->CurrentValue ?>"<?php echo $t102_mutasi_list->jo_id->editAttributes() ?>>
 </span>
+<?php } ?>
 <?php } ?>
 <?php if ($t102_mutasi->RowType == ROWTYPE_VIEW) { // View record ?>
 <span id="el<?php echo $t102_mutasi_list->RowCount ?>_t102_mutasi_jo_id">
@@ -985,6 +1019,12 @@ loadjs.ready(["ft102_mutasilist", "datetimepicker"], function() {
 	<?php } ?>
 	<?php if ($t102_mutasi_list->jo_id->Visible) { // jo_id ?>
 		<td data-name="jo_id">
+<?php if ($t102_mutasi_list->jo_id->getSessionValue() != "") { ?>
+<span id="el$rowindex$_t102_mutasi_jo_id" class="form-group t102_mutasi_jo_id">
+<span<?php echo $t102_mutasi_list->jo_id->viewAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo HtmlEncode(RemoveHtml($t102_mutasi_list->jo_id->ViewValue)) ?>"></span>
+</span>
+<input type="hidden" id="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" name="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo HtmlEncode($t102_mutasi_list->jo_id->CurrentValue) ?>">
+<?php } else { ?>
 <span id="el$rowindex$_t102_mutasi_jo_id" class="form-group t102_mutasi_jo_id">
 <div class="input-group ew-lookup-list">
 	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id"><?php echo EmptyValue(strval($t102_mutasi_list->jo_id->ViewValue)) ? $Language->phrase("PleaseSelect") : $t102_mutasi_list->jo_id->ViewValue ?></div>
@@ -998,6 +1038,7 @@ loadjs.ready(["ft102_mutasilist", "datetimepicker"], function() {
 <?php echo $t102_mutasi_list->jo_id->Lookup->getParamTag($t102_mutasi_list, "p_x" . $t102_mutasi_list->RowIndex . "_jo_id") ?>
 <input type="hidden" data-table="t102_mutasi" data-field="x_jo_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t102_mutasi_list->jo_id->displayValueSeparatorAttribute() ?>" name="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" id="x<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo $t102_mutasi_list->jo_id->CurrentValue ?>"<?php echo $t102_mutasi_list->jo_id->editAttributes() ?>>
 </span>
+<?php } ?>
 <input type="hidden" data-table="t102_mutasi" data-field="x_jo_id" name="o<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" id="o<?php echo $t102_mutasi_list->RowIndex ?>_jo_id" value="<?php echo HtmlEncode($t102_mutasi_list->jo_id->OldValue) ?>">
 </td>
 	<?php } ?>

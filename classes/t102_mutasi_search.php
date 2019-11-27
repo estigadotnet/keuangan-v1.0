@@ -355,6 +355,10 @@ class t102_mutasi_search extends t102_mutasi
 			$GLOBALS["Table"] = &$GLOBALS["t102_mutasi"];
 		}
 
+		// Table object (t001_jo)
+		if (!isset($GLOBALS['t001_jo']))
+			$GLOBALS['t001_jo'] = new t001_jo();
+
 		// Table object (t301_employees)
 		if (!isset($GLOBALS['t301_employees']))
 			$GLOBALS['t301_employees'] = new t301_employees();

@@ -4,11 +4,11 @@ namespace PHPMaker2020\p_keuangan_v1_0;
 /**
  * Page class
  */
-class t102_mutasi_list extends t102_mutasi
+class t102_mutasi_grid extends t102_mutasi
 {
 
 	// Page ID
-	public $PageID = "list";
+	public $PageID = "grid";
 
 	// Project ID
 	public $ProjectID = "{FBB5EF95-13BB-496B-B131-E8C649D0628A}";
@@ -17,10 +17,10 @@ class t102_mutasi_list extends t102_mutasi
 	public $TableName = 't102_mutasi';
 
 	// Page object name
-	public $PageObjName = "t102_mutasi_list";
+	public $PageObjName = "t102_mutasi_grid";
 
 	// Grid form hidden field names
-	public $FormName = "ft102_mutasilist";
+	public $FormName = "ft102_mutasigrid";
 	public $FormActionName = "k_action";
 	public $FormKeyName = "k_key";
 	public $FormOldKeyName = "k_oldkey";
@@ -34,30 +34,6 @@ class t102_mutasi_list extends t102_mutasi
 	public $DeleteUrl;
 	public $ViewUrl;
 	public $ListUrl;
-
-	// Export URLs
-	public $ExportPrintUrl;
-	public $ExportHtmlUrl;
-	public $ExportExcelUrl;
-	public $ExportWordUrl;
-	public $ExportXmlUrl;
-	public $ExportCsvUrl;
-	public $ExportPdfUrl;
-
-	// Custom export
-	public $ExportExcelCustom = FALSE;
-	public $ExportWordCustom = FALSE;
-	public $ExportPdfCustom = FALSE;
-	public $ExportEmailCustom = FALSE;
-
-	// Update URLs
-	public $InlineAddUrl;
-	public $InlineCopyUrl;
-	public $InlineEditUrl;
-	public $GridAddUrl;
-	public $GridEditUrl;
-	public $MultiDeleteUrl;
-	public $MultiUpdateUrl;
 
 	// Audit Trail
 	public $AuditTrailOnAdd = TRUE;
@@ -379,7 +355,12 @@ class t102_mutasi_list extends t102_mutasi
 		$this->CheckToken = Config("CHECK_TOKEN");
 
 		// Initialize
-		$GLOBALS["Page"] = &$this;
+		$this->FormActionName .= "_" . $this->FormName;
+		$this->FormKeyName .= "_" . $this->FormName;
+		$this->FormOldKeyName .= "_" . $this->FormName;
+		$this->FormBlankRowName .= "_" . $this->FormName;
+		$this->FormKeyCountName .= "_" . $this->FormName;
+		$GLOBALS["Grid"] = &$this;
 		$this->TokenTimeout = SessionTimeoutTime();
 
 		// Language object
@@ -392,27 +373,13 @@ class t102_mutasi_list extends t102_mutasi
 		// Table object (t102_mutasi)
 		if (!isset($GLOBALS["t102_mutasi"]) || get_class($GLOBALS["t102_mutasi"]) == PROJECT_NAMESPACE . "t102_mutasi") {
 			$GLOBALS["t102_mutasi"] = &$this;
-			$GLOBALS["Table"] = &$GLOBALS["t102_mutasi"];
+
+			// $GLOBALS["MasterTable"] = &$GLOBALS["Table"];
+			// if (!isset($GLOBALS["Table"]))
+			// 	$GLOBALS["Table"] = &$GLOBALS["t102_mutasi"];
+
 		}
-
-		// Initialize URLs
-		$this->ExportPrintUrl = $this->pageUrl() . "export=print";
-		$this->ExportExcelUrl = $this->pageUrl() . "export=excel";
-		$this->ExportWordUrl = $this->pageUrl() . "export=word";
-		$this->ExportPdfUrl = $this->pageUrl() . "export=pdf";
-		$this->ExportHtmlUrl = $this->pageUrl() . "export=html";
-		$this->ExportXmlUrl = $this->pageUrl() . "export=xml";
-		$this->ExportCsvUrl = $this->pageUrl() . "export=csv";
 		$this->AddUrl = "t102_mutasiadd.php";
-		$this->InlineAddUrl = $this->pageUrl() . "action=add";
-		$this->GridAddUrl = $this->pageUrl() . "action=gridadd";
-		$this->GridEditUrl = $this->pageUrl() . "action=gridedit";
-		$this->MultiDeleteUrl = "t102_mutasidelete.php";
-		$this->MultiUpdateUrl = "t102_mutasiupdate.php";
-
-		// Table object (t001_jo)
-		if (!isset($GLOBALS['t001_jo']))
-			$GLOBALS['t001_jo'] = new t001_jo();
 
 		// Table object (t301_employees)
 		if (!isset($GLOBALS['t301_employees']))
@@ -420,7 +387,7 @@ class t102_mutasi_list extends t102_mutasi
 
 		// Page ID (for backward compatibility only)
 		if (!defined(PROJECT_NAMESPACE . "PAGE_ID"))
-			define(PROJECT_NAMESPACE . "PAGE_ID", 'list');
+			define(PROJECT_NAMESPACE . "PAGE_ID", 'grid');
 
 		// Table name (for backward compatibility only)
 		if (!defined(PROJECT_NAMESPACE . "TABLE_NAME"))
@@ -444,42 +411,17 @@ class t102_mutasi_list extends t102_mutasi
 		$this->ListOptions = new ListOptions();
 		$this->ListOptions->TableVar = $this->TableVar;
 
-		// Export options
-		$this->ExportOptions = new ListOptions("div");
-		$this->ExportOptions->TagClassName = "ew-export-option";
-
-		// Import options
-		$this->ImportOptions = new ListOptions("div");
-		$this->ImportOptions->TagClassName = "ew-import-option";
-
 		// Other options
 		if (!$this->OtherOptions)
 			$this->OtherOptions = new ListOptionsArray();
 		$this->OtherOptions["addedit"] = new ListOptions("div");
 		$this->OtherOptions["addedit"]->TagClassName = "ew-add-edit-option";
-		$this->OtherOptions["detail"] = new ListOptions("div");
-		$this->OtherOptions["detail"]->TagClassName = "ew-detail-option";
-		$this->OtherOptions["action"] = new ListOptions("div");
-		$this->OtherOptions["action"]->TagClassName = "ew-action-option";
-
-		// Filter options
-		$this->FilterOptions = new ListOptions("div");
-		$this->FilterOptions->TagClassName = "ew-filter-option ft102_mutasilistsrch";
-
-		// List actions
-		$this->ListActions = new ListActions();
 	}
 
 	// Terminate page
 	public function terminate($url = "")
 	{
 		global $ExportFileName, $TempImages, $DashboardReport;
-
-		// Page Unload event
-		$this->Page_Unload();
-
-		// Global Page Unloaded event (in userfn*.php)
-		Page_Unloaded();
 
 		// Export
 		global $t102_mutasi;
@@ -499,11 +441,13 @@ class t102_mutasi_list extends t102_mutasi
 				exit();
 			}
 		}
+
+//		$GLOBALS["Table"] = &$GLOBALS["MasterTable"];
+		unset($GLOBALS["Grid"]);
+		if ($url === "")
+			return;
 		if (!IsApi())
 			$this->Page_Redirecting($url);
-
-		// Close connection
-		CloseConnections();
 
 		// Return for API
 		if (IsApi()) {
@@ -710,6 +654,7 @@ class t102_mutasi_list extends t102_mutasi
 	public $ListActions; // List actions
 	public $SelectedCount = 0;
 	public $SelectedIndex = 0;
+	public $ShowOtherOptions = FALSE;
 	public $DisplayRecords = 20;
 	public $StartRecord;
 	public $StopRecord;
@@ -777,46 +722,6 @@ class t102_mutasi_list extends t102_mutasi
 			}
 		}
 
-		// Create form object
-		$CurrentForm = new HttpForm();
-
-		// Get export parameters
-		$custom = "";
-		if (Param("export") !== NULL) {
-			$this->Export = Param("export");
-			$custom = Param("custom", "");
-		} elseif (IsPost()) {
-			if (Post("exporttype") !== NULL)
-				$this->Export = Post("exporttype");
-			$custom = Post("custom", "");
-		} elseif (Get("cmd") == "json") {
-			$this->Export = Get("cmd");
-		} else {
-			$this->setExportReturnUrl(CurrentUrl());
-		}
-		$ExportFileName = $this->TableVar; // Get export file, used in header
-
-		// Get custom export parameters
-		if ($this->isExport() && $custom != "") {
-			$this->CustomExport = $this->Export;
-			$this->Export = "print";
-		}
-		$CustomExportType = $this->CustomExport;
-		$ExportType = $this->Export; // Get export parameter, used in header
-
-		// Update Export URLs
-		if (Config("USE_PHPEXCEL"))
-			$this->ExportExcelCustom = FALSE;
-		if ($this->ExportExcelCustom)
-			$this->ExportExcelUrl .= "&amp;custom=1";
-		if (Config("USE_PHPWORD"))
-			$this->ExportWordCustom = FALSE;
-		if ($this->ExportWordCustom)
-			$this->ExportWordUrl .= "&amp;custom=1";
-		if ($this->ExportPdfCustom)
-			$this->ExportPdfUrl .= "&amp;custom=1";
-		$this->CurrentAction = Param("action"); // Set up current action
-
 		// Get grid add count
 		$gridaddcnt = Get(Config("TABLE_GRID_ADD_ROW_COUNT"), "");
 		if (is_numeric($gridaddcnt) && $gridaddcnt > 0)
@@ -824,9 +729,6 @@ class t102_mutasi_list extends t102_mutasi
 
 		// Set up list options
 		$this->setupListOptions();
-
-		// Setup export options
-		$this->setupExportOptions();
 		$this->id->Visible = FALSE;
 		$this->Tanggal->setVisibility();
 		$this->NoUrut->setVisibility();
@@ -858,18 +760,6 @@ class t102_mutasi_list extends t102_mutasi
 		// Setup other options
 		$this->setupOtherOptions();
 
-		// Set up custom action (compatible with old version)
-		foreach ($this->CustomActions as $name => $action)
-			$this->ListActions->add($name, $action);
-
-		// Show checkbox column if multiple action
-		foreach ($this->ListActions->Items as $listaction) {
-			if ($listaction->Select == ACTION_MULTIPLE && $listaction->Allow) {
-				$this->ListOptions["checkbox"]->Visible = TRUE;
-				break;
-			}
-		}
-
 		// Set up lookup cache
 		$this->setupLookupOptions($this->jo_id);
 		$this->setupLookupOptions($this->jenis_id);
@@ -883,91 +773,11 @@ class t102_mutasi_list extends t102_mutasi
 		$this->Command = strtolower(Get("cmd"));
 		if ($this->isPageRequest()) { // Validate request
 
-			// Process list action first
-			if ($this->processListAction()) // Ajax request
-				$this->terminate();
-
 			// Set up records per page
 			$this->setupDisplayRecords();
 
 			// Handle reset command
 			$this->resetCmd();
-
-			// Set up Breadcrumb
-			if (!$this->isExport())
-				$this->setupBreadcrumb();
-
-			// Check QueryString parameters
-			if (Get("action") !== NULL) {
-				$this->CurrentAction = Get("action");
-
-				// Clear inline mode
-				if ($this->isCancel())
-					$this->clearInlineMode();
-
-				// Switch to grid edit mode
-				if ($this->isGridEdit())
-					$this->gridEditMode();
-
-				// Switch to inline edit mode
-				if ($this->isEdit())
-					$this->inlineEditMode();
-
-				// Switch to inline add mode
-				if ($this->isAdd() || $this->isCopy())
-					$this->inlineAddMode();
-
-				// Switch to grid add mode
-				if ($this->isGridAdd())
-					$this->gridAddMode();
-			} else {
-				if (Post("action") !== NULL) {
-					$this->CurrentAction = Post("action"); // Get action
-
-					// Grid Update
-					if (($this->isGridUpdate() || $this->isGridOverwrite()) && @$_SESSION[SESSION_INLINE_MODE] == "gridedit") {
-						if ($this->validateGridForm()) {
-							$gridUpdate = $this->gridUpdate();
-						} else {
-							$gridUpdate = FALSE;
-							$this->setFailureMessage($FormError);
-						}
-						if ($gridUpdate) {
-						} else {
-							$this->EventCancelled = TRUE;
-							$this->gridEditMode(); // Stay in Grid edit mode
-						}
-					}
-
-					// Inline Update
-					if (($this->isUpdate() || $this->isOverwrite()) && @$_SESSION[SESSION_INLINE_MODE] == "edit")
-						$this->inlineUpdate();
-
-					// Insert Inline
-					if ($this->isInsert() && @$_SESSION[SESSION_INLINE_MODE] == "add")
-						$this->inlineInsert();
-
-					// Grid Insert
-					if ($this->isGridInsert() && @$_SESSION[SESSION_INLINE_MODE] == "gridadd") {
-						if ($this->validateGridForm()) {
-							$gridInsert = $this->gridInsert();
-						} else {
-							$gridInsert = FALSE;
-							$this->setFailureMessage($FormError);
-						}
-						if ($gridInsert) {
-						} else {
-							$this->EventCancelled = TRUE;
-							$this->gridAddMode(); // Stay in Grid add mode
-						}
-					}
-				} elseif (@$_SESSION[SESSION_INLINE_MODE] == "gridedit") { // Previously in grid edit mode
-					if (Get(Config("TABLE_START_REC")) !== NULL || Get(Config("TABLE_PAGE_NO")) !== NULL) // Stay in grid edit mode if paging
-						$this->gridEditMode();
-					else // Reset grid edit
-						$this->clearInlineMode();
-				}
-			}
 
 			// Hide list options
 			if ($this->isExport()) {
@@ -980,17 +790,6 @@ class t102_mutasi_list extends t102_mutasi
 				$this->ListOptions->UseButtonGroup = FALSE; // Disable button group
 			}
 
-			// Hide options
-			if ($this->isExport() || $this->CurrentAction) {
-				$this->ExportOptions->hideAllOptions();
-				$this->FilterOptions->hideAllOptions();
-				$this->ImportOptions->hideAllOptions();
-			}
-
-			// Hide other options
-			if ($this->isExport())
-				$this->OtherOptions->hideAllOptions();
-
 			// Show grid delete link for grid add / grid edit
 			if ($this->AllowAddDeleteRow) {
 				if ($this->isGridAdd() || $this->isGridEdit()) {
@@ -1000,39 +799,8 @@ class t102_mutasi_list extends t102_mutasi
 				}
 			}
 
-			// Get default search criteria
-			AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(TRUE));
-			AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(TRUE));
-
-			// Get basic search values
-			$this->loadBasicSearchValues();
-
-			// Get and validate search values for advanced search
-			$this->loadSearchValues(); // Get search values
-
-			// Process filter list
-			if ($this->processFilterList())
-				$this->terminate();
-			if (!$this->validateSearch())
-				$this->setFailureMessage($SearchError);
-
-			// Restore search parms from Session if not searching / reset / export
-			if (($this->isExport() || $this->Command != "search" && $this->Command != "reset" && $this->Command != "resetall") && $this->Command != "json" && $this->checkSearchParms())
-				$this->restoreSearchParms();
-
-			// Call Recordset SearchValidated event
-			$this->Recordset_SearchValidated();
-
 			// Set up sorting order
 			$this->setupSortOrder();
-
-			// Get basic search criteria
-			if ($SearchError == "")
-				$srchBasic = $this->basicSearchWhere();
-
-			// Get search criteria for advanced search
-			if ($SearchError == "")
-				$srchAdvanced = $this->advancedSearchWhere();
 		}
 
 		// Restore display records
@@ -1046,40 +814,6 @@ class t102_mutasi_list extends t102_mutasi
 		// Load Sorting Order
 		if ($this->Command != "json")
 			$this->loadSortOrder();
-
-		// Load search default if no existing search criteria
-		if (!$this->checkSearchParms()) {
-
-			// Load basic search from default
-			$this->BasicSearch->loadDefault();
-			if ($this->BasicSearch->Keyword != "")
-				$srchBasic = $this->basicSearchWhere();
-
-			// Load advanced search from default
-			if ($this->loadAdvancedSearchDefault()) {
-				$srchAdvanced = $this->advancedSearchWhere();
-			}
-		}
-
-		// Restore search settings from Session
-		if ($SearchError == "")
-			$this->loadAdvancedSearch();
-
-		// Build search criteria
-		AddFilter($this->SearchWhere, $srchAdvanced);
-		AddFilter($this->SearchWhere, $srchBasic);
-
-		// Call Recordset_Searching event
-		$this->Recordset_Searching($this->SearchWhere);
-
-		// Save search criteria
-		if ($this->Command == "search" && !$this->RestoreSearch) {
-			$this->setSearchWhere($this->SearchWhere); // Save to Session
-			$this->StartRecord = 1; // Reset start record counter
-			$this->setStartRecordNumber($this->StartRecord);
-		} elseif ($this->Command != "json") {
-			$this->SearchWhere = $this->getSearchWhere();
-		}
 
 		// Build filter
 		$filter = "";
@@ -1120,16 +854,23 @@ class t102_mutasi_list extends t102_mutasi
 			$this->setSessionWhere($filter);
 			$this->CurrentFilter = "";
 		}
-
-		// Export data only
-		if (!$this->CustomExport && in_array($this->Export, array_keys(Config("EXPORT_CLASSES")))) {
-			$this->exportData();
-			$this->terminate();
-		}
 		if ($this->isGridAdd()) {
-			$this->CurrentFilter = "0=1";
-			$this->StartRecord = 1;
-			$this->DisplayRecords = $this->GridAddRowCount;
+			if ($this->CurrentMode == "copy") {
+				$selectLimit = $this->UseSelectLimit;
+				if ($selectLimit) {
+					$this->TotalRecords = $this->listRecordCount();
+					$this->Recordset = $this->loadRecordset($this->StartRecord - 1, $this->DisplayRecords);
+				} else {
+					if ($this->Recordset = $this->loadRecordset())
+						$this->TotalRecords = $this->Recordset->RecordCount();
+				}
+				$this->StartRecord = 1;
+				$this->DisplayRecords = $this->TotalRecords;
+			} else {
+				$this->CurrentFilter = "0=1";
+				$this->StartRecord = 1;
+				$this->DisplayRecords = $this->GridAddRowCount;
+			}
 			$this->TotalRecords = $this->DisplayRecords;
 			$this->StopRecord = $this->DisplayRecords;
 		} else {
@@ -1141,37 +882,10 @@ class t102_mutasi_list extends t102_mutasi
 					$this->TotalRecords = $this->Recordset->RecordCount();
 			}
 			$this->StartRecord = 1;
-			if ($this->DisplayRecords <= 0 || ($this->isExport() && $this->ExportAll)) // Display all records
-				$this->DisplayRecords = $this->TotalRecords;
-			if (!($this->isExport() && $this->ExportAll)) // Set up start record position
-				$this->setupStartRecord();
+			$this->DisplayRecords = $this->TotalRecords; // Display all records
 			if ($selectLimit)
 				$this->Recordset = $this->loadRecordset($this->StartRecord - 1, $this->DisplayRecords);
-
-			// Set no record found message
-			if (!$this->CurrentAction && $this->TotalRecords == 0) {
-				if (!$Security->canList())
-					$this->setWarningMessage(DeniedMessage());
-				if ($this->SearchWhere == "0=101")
-					$this->setWarningMessage($Language->phrase("EnterSearchCriteria"));
-				else
-					$this->setWarningMessage($Language->phrase("NoRecord"));
-			}
-
-			// Audit trail on search
-			if ($this->AuditTrailOnSearch && $this->Command == "search" && !$this->RestoreSearch) {
-				$searchParm = ServerVar("QUERY_STRING");
-				$searchSql = $this->getSessionWhere();
-				$this->writeAuditTrailOnSearch($searchParm, $searchSql);
-			}
 		}
-
-		// Search options
-		$this->setupSearchOptions();
-
-		// Set up search panel class
-		if ($this->SearchWhere != "")
-			AppendClass($this->SearchPanelClass, "show");
 
 		// Normal return
 		if (IsApi()) {
@@ -1210,7 +924,6 @@ class t102_mutasi_list extends t102_mutasi
 	// Exit inline mode
 	protected function clearInlineMode()
 	{
-		$this->setKey("id", ""); // Clear inline edit key
 		$this->Masuk->FormValue = ""; // Clear form value
 		$this->Keluar->FormValue = ""; // Clear form value
 		$this->LastAction = $this->CurrentAction; // Save last action
@@ -1232,119 +945,6 @@ class t102_mutasi_list extends t102_mutasi
 		$this->CurrentAction = "gridedit";
 		$_SESSION[SESSION_INLINE_MODE] = "gridedit";
 		$this->hideFieldsForAddEdit();
-	}
-
-	// Switch to Inline Edit mode
-	protected function inlineEditMode()
-	{
-		global $Security, $Language;
-		if (!$Security->canEdit())
-			return FALSE; // Edit not allowed
-		$inlineEdit = TRUE;
-		if (Get("id") !== NULL) {
-			$this->id->setQueryStringValue(Get("id"));
-		} else {
-			$inlineEdit = FALSE;
-		}
-		if ($inlineEdit) {
-			if ($this->loadRow()) {
-				$this->setKey("id", $this->id->CurrentValue); // Set up inline edit key
-				$_SESSION[SESSION_INLINE_MODE] = "edit"; // Enable inline edit
-			}
-		}
-		return TRUE;
-	}
-
-	// Perform update to Inline Edit record
-	protected function inlineUpdate()
-	{
-		global $Language, $CurrentForm, $FormError;
-		$CurrentForm->Index = 1;
-		$this->loadFormValues(); // Get form values
-
-		// Validate form
-		$inlineUpdate = TRUE;
-		if (!$this->validateForm()) {
-			$inlineUpdate = FALSE; // Form error, reset action
-			$this->setFailureMessage($FormError);
-		} else {
-			$inlineUpdate = FALSE;
-			$rowkey = strval($CurrentForm->getValue($this->FormKeyName));
-			if ($this->setupKeyValues($rowkey)) { // Set up key values
-				if ($this->checkInlineEditKey()) { // Check key
-					$this->SendEmail = TRUE; // Send email on update success
-					$inlineUpdate = $this->editRow(); // Update record
-				} else {
-					$inlineUpdate = FALSE;
-				}
-			}
-		}
-		if ($inlineUpdate) { // Update success
-			if ($this->getSuccessMessage() == "")
-				$this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up success message
-			$this->clearInlineMode(); // Clear inline edit mode
-		} else {
-			if ($this->getFailureMessage() == "")
-				$this->setFailureMessage($Language->phrase("UpdateFailed")); // Set update failed message
-			$this->EventCancelled = TRUE; // Cancel event
-			$this->CurrentAction = "edit"; // Stay in edit mode
-		}
-	}
-
-	// Check Inline Edit key
-	public function checkInlineEditKey()
-	{
-		if ($this->EventCancelled)
-			$this->id->OldValue = $this->id->DbValue;
-		$val = $this->id->OldValue !== NULL ? $this->id->OldValue : $this->id->CurrentValue;
-		if (strval($this->getKey("id")) != strval($val))
-			return FALSE;
-		return TRUE;
-	}
-
-	// Switch to Inline Add mode
-	protected function inlineAddMode()
-	{
-		global $Security, $Language;
-		if (!$Security->canAdd())
-			return FALSE; // Add not allowed
-		if ($this->isCopy()) {
-			if (Get("id") !== NULL) {
-				$this->id->setQueryStringValue(Get("id"));
-				$this->setKey("id", $this->id->CurrentValue); // Set up key
-			} else {
-				$this->setKey("id", ""); // Clear key
-				$this->CurrentAction = "add";
-			}
-		}
-		$_SESSION[SESSION_INLINE_MODE] = "add"; // Enable inline add
-		return TRUE;
-	}
-
-	// Perform update to Inline Add/Copy record
-	protected function inlineInsert()
-	{
-		global $Language, $CurrentForm, $FormError;
-		$this->loadOldRecord(); // Load old record
-		$CurrentForm->Index = 0;
-		$this->loadFormValues(); // Get form values
-
-		// Validate form
-		if (!$this->validateForm()) {
-			$this->setFailureMessage($FormError); // Set validation error message
-			$this->EventCancelled = TRUE; // Set event cancelled
-			$this->CurrentAction = "add"; // Stay in add mode
-			return;
-		}
-		$this->SendEmail = TRUE; // Send email on add success
-		if ($this->addRow($this->OldRecordset)) { // Add record
-			if ($this->getSuccessMessage() == "")
-				$this->setSuccessMessage($Language->phrase("AddSuccess")); // Set up add success message
-			$this->clearInlineMode(); // Clear inline add mode
-		} else { // Add failed
-			$this->EventCancelled = TRUE; // Set event cancelled
-			$this->CurrentAction = "add"; // Stay in add mode
-		}
 	}
 
 	// Perform update to grid
@@ -1370,9 +970,6 @@ class t102_mutasi_list extends t102_mutasi
 				$this->setFailureMessage($Language->phrase("GridEditCancelled")); // Set grid edit cancelled message
 			return FALSE;
 		}
-
-		// Begin transaction
-		$conn->beginTrans();
 		if ($this->AuditTrailOnEdit)
 			$this->writeAuditTrailDummy($Language->phrase("BatchUpdateBegin")); // Batch update begin
 		$key = "";
@@ -1432,7 +1029,6 @@ class t102_mutasi_list extends t102_mutasi
 			}
 		}
 		if ($gridUpdate) {
-			$conn->commitTrans(); // Commit transaction
 
 			// Get new recordset
 			if ($rs = $conn->execute($sql)) {
@@ -1444,11 +1040,8 @@ class t102_mutasi_list extends t102_mutasi
 			$this->Grid_Updated($rsold, $rsnew);
 			if ($this->AuditTrailOnEdit)
 				$this->writeAuditTrailDummy($Language->phrase("BatchUpdateSuccess")); // Batch update success
-			if ($this->getSuccessMessage() == "")
-				$this->setSuccessMessage($Language->phrase("UpdateSuccess")); // Set up update success message
 			$this->clearInlineMode(); // Clear inline edit mode
 		} else {
-			$conn->rollbackTrans(); // Rollback transaction
 			if ($this->AuditTrailOnEdit)
 				$this->writeAuditTrailDummy($Language->phrase("BatchUpdateRollback")); // Batch update rollback
 			if ($this->getFailureMessage() == "")
@@ -1513,9 +1106,6 @@ class t102_mutasi_list extends t102_mutasi
 			return FALSE;
 		}
 
-		// Begin transaction
-		$conn->beginTrans();
-
 		// Init key filter
 		$wrkfilter = "";
 		$addcnt = 0;
@@ -1537,6 +1127,10 @@ class t102_mutasi_list extends t102_mutasi
 			$rowaction = strval($CurrentForm->getValue($this->FormActionName));
 			if ($rowaction != "" && $rowaction != "insert")
 				continue; // Skip
+			if ($rowaction == "insert") {
+				$this->RowOldKey = strval($CurrentForm->getValue($this->FormOldKeyName));
+				$this->loadOldRecord(); // Load old record
+			}
 			$this->loadFormValues(); // Get form values
 			if (!$this->emptyRow()) {
 				$addcnt++;
@@ -1565,11 +1159,10 @@ class t102_mutasi_list extends t102_mutasi
 			}
 		}
 		if ($addcnt == 0) { // No record inserted
-			$this->setFailureMessage($Language->phrase("NoAddRecord"));
-			$gridInsert = FALSE;
+			$this->clearInlineMode(); // Clear grid add mode and return
+			return TRUE;
 		}
 		if ($gridInsert) {
-			$conn->commitTrans(); // Commit transaction
 
 			// Get new recordset
 			$this->CurrentFilter = $wrkfilter;
@@ -1583,11 +1176,8 @@ class t102_mutasi_list extends t102_mutasi
 			$this->Grid_Inserted($rsnew);
 			if ($this->AuditTrailOnAdd)
 				$this->writeAuditTrailDummy($Language->phrase("BatchInsertSuccess")); // Batch insert success
-			if ($this->getSuccessMessage() == "")
-				$this->setSuccessMessage($Language->phrase("InsertSuccess")); // Set up insert success message
 			$this->clearInlineMode(); // Clear grid add mode
 		} else {
-			$conn->rollbackTrans(); // Rollback transaction
 			if ($this->AuditTrailOnAdd)
 				$this->writeAuditTrailDummy($Language->phrase("BatchInsertRollback")); // Batch insert rollback
 			if ($this->getFailureMessage() == "")
@@ -1688,431 +1278,14 @@ class t102_mutasi_list extends t102_mutasi
 		$this->loadFormValues(); // Load form values
 	}
 
-	// Get list of filters
-	public function getFilterList()
-	{
-		global $UserProfile;
-
-		// Initialize
-		$filterList = "";
-		$savedFilterList = "";
-		$filterList = Concat($filterList, $this->id->AdvancedSearch->toJson(), ","); // Field id
-		$filterList = Concat($filterList, $this->Tanggal->AdvancedSearch->toJson(), ","); // Field Tanggal
-		$filterList = Concat($filterList, $this->NoUrut->AdvancedSearch->toJson(), ","); // Field NoUrut
-		$filterList = Concat($filterList, $this->jo_id->AdvancedSearch->toJson(), ","); // Field jo_id
-		$filterList = Concat($filterList, $this->jenis_id->AdvancedSearch->toJson(), ","); // Field jenis_id
-		$filterList = Concat($filterList, $this->Comment->AdvancedSearch->toJson(), ","); // Field Comment
-		$filterList = Concat($filterList, $this->Masuk->AdvancedSearch->toJson(), ","); // Field Masuk
-		$filterList = Concat($filterList, $this->Keluar->AdvancedSearch->toJson(), ","); // Field Keluar
-		if ($this->BasicSearch->Keyword != "") {
-			$wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
-			$filterList = Concat($filterList, $wrk, ",");
-		}
-
-		// Return filter list in JSON
-		if ($filterList != "")
-			$filterList = "\"data\":{" . $filterList . "}";
-		if ($savedFilterList != "")
-			$filterList = Concat($filterList, "\"filters\":" . $savedFilterList, ",");
-		return ($filterList != "") ? "{" . $filterList . "}" : "null";
-	}
-
-	// Process filter list
-	protected function processFilterList()
-	{
-		global $UserProfile;
-		if (Post("ajax") == "savefilters") { // Save filter request (Ajax)
-			$filters = Post("filters");
-			$UserProfile->setSearchFilters(CurrentUserName(), "ft102_mutasilistsrch", $filters);
-			WriteJson([["success" => TRUE]]); // Success
-			return TRUE;
-		} elseif (Post("cmd") == "resetfilter") {
-			$this->restoreFilterList();
-		}
-		return FALSE;
-	}
-
-	// Restore list of filters
-	protected function restoreFilterList()
-	{
-
-		// Return if not reset filter
-		if (Post("cmd") !== "resetfilter")
-			return FALSE;
-		$filter = json_decode(Post("filter"), TRUE);
-		$this->Command = "search";
-
-		// Field id
-		$this->id->AdvancedSearch->SearchValue = @$filter["x_id"];
-		$this->id->AdvancedSearch->SearchOperator = @$filter["z_id"];
-		$this->id->AdvancedSearch->SearchCondition = @$filter["v_id"];
-		$this->id->AdvancedSearch->SearchValue2 = @$filter["y_id"];
-		$this->id->AdvancedSearch->SearchOperator2 = @$filter["w_id"];
-		$this->id->AdvancedSearch->save();
-
-		// Field Tanggal
-		$this->Tanggal->AdvancedSearch->SearchValue = @$filter["x_Tanggal"];
-		$this->Tanggal->AdvancedSearch->SearchOperator = @$filter["z_Tanggal"];
-		$this->Tanggal->AdvancedSearch->SearchCondition = @$filter["v_Tanggal"];
-		$this->Tanggal->AdvancedSearch->SearchValue2 = @$filter["y_Tanggal"];
-		$this->Tanggal->AdvancedSearch->SearchOperator2 = @$filter["w_Tanggal"];
-		$this->Tanggal->AdvancedSearch->save();
-
-		// Field NoUrut
-		$this->NoUrut->AdvancedSearch->SearchValue = @$filter["x_NoUrut"];
-		$this->NoUrut->AdvancedSearch->SearchOperator = @$filter["z_NoUrut"];
-		$this->NoUrut->AdvancedSearch->SearchCondition = @$filter["v_NoUrut"];
-		$this->NoUrut->AdvancedSearch->SearchValue2 = @$filter["y_NoUrut"];
-		$this->NoUrut->AdvancedSearch->SearchOperator2 = @$filter["w_NoUrut"];
-		$this->NoUrut->AdvancedSearch->save();
-
-		// Field jo_id
-		$this->jo_id->AdvancedSearch->SearchValue = @$filter["x_jo_id"];
-		$this->jo_id->AdvancedSearch->SearchOperator = @$filter["z_jo_id"];
-		$this->jo_id->AdvancedSearch->SearchCondition = @$filter["v_jo_id"];
-		$this->jo_id->AdvancedSearch->SearchValue2 = @$filter["y_jo_id"];
-		$this->jo_id->AdvancedSearch->SearchOperator2 = @$filter["w_jo_id"];
-		$this->jo_id->AdvancedSearch->save();
-
-		// Field jenis_id
-		$this->jenis_id->AdvancedSearch->SearchValue = @$filter["x_jenis_id"];
-		$this->jenis_id->AdvancedSearch->SearchOperator = @$filter["z_jenis_id"];
-		$this->jenis_id->AdvancedSearch->SearchCondition = @$filter["v_jenis_id"];
-		$this->jenis_id->AdvancedSearch->SearchValue2 = @$filter["y_jenis_id"];
-		$this->jenis_id->AdvancedSearch->SearchOperator2 = @$filter["w_jenis_id"];
-		$this->jenis_id->AdvancedSearch->save();
-
-		// Field Comment
-		$this->Comment->AdvancedSearch->SearchValue = @$filter["x_Comment"];
-		$this->Comment->AdvancedSearch->SearchOperator = @$filter["z_Comment"];
-		$this->Comment->AdvancedSearch->SearchCondition = @$filter["v_Comment"];
-		$this->Comment->AdvancedSearch->SearchValue2 = @$filter["y_Comment"];
-		$this->Comment->AdvancedSearch->SearchOperator2 = @$filter["w_Comment"];
-		$this->Comment->AdvancedSearch->save();
-
-		// Field Masuk
-		$this->Masuk->AdvancedSearch->SearchValue = @$filter["x_Masuk"];
-		$this->Masuk->AdvancedSearch->SearchOperator = @$filter["z_Masuk"];
-		$this->Masuk->AdvancedSearch->SearchCondition = @$filter["v_Masuk"];
-		$this->Masuk->AdvancedSearch->SearchValue2 = @$filter["y_Masuk"];
-		$this->Masuk->AdvancedSearch->SearchOperator2 = @$filter["w_Masuk"];
-		$this->Masuk->AdvancedSearch->save();
-
-		// Field Keluar
-		$this->Keluar->AdvancedSearch->SearchValue = @$filter["x_Keluar"];
-		$this->Keluar->AdvancedSearch->SearchOperator = @$filter["z_Keluar"];
-		$this->Keluar->AdvancedSearch->SearchCondition = @$filter["v_Keluar"];
-		$this->Keluar->AdvancedSearch->SearchValue2 = @$filter["y_Keluar"];
-		$this->Keluar->AdvancedSearch->SearchOperator2 = @$filter["w_Keluar"];
-		$this->Keluar->AdvancedSearch->save();
-		$this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
-		$this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
-	}
-
-	// Advanced search WHERE clause based on QueryString
-	protected function advancedSearchWhere($default = FALSE)
-	{
-		global $Security;
-		$where = "";
-		if (!$Security->canSearch())
-			return "";
-		$this->buildSearchSql($where, $this->id, $default, FALSE); // id
-		$this->buildSearchSql($where, $this->Tanggal, $default, FALSE); // Tanggal
-		$this->buildSearchSql($where, $this->NoUrut, $default, FALSE); // NoUrut
-		$this->buildSearchSql($where, $this->jo_id, $default, FALSE); // jo_id
-		$this->buildSearchSql($where, $this->jenis_id, $default, FALSE); // jenis_id
-		$this->buildSearchSql($where, $this->Comment, $default, FALSE); // Comment
-		$this->buildSearchSql($where, $this->Masuk, $default, FALSE); // Masuk
-		$this->buildSearchSql($where, $this->Keluar, $default, FALSE); // Keluar
-
-		// Set up search parm
-		if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
-			$this->Command = "search";
-		}
-		if (!$default && $this->Command == "search") {
-			$this->id->AdvancedSearch->save(); // id
-			$this->Tanggal->AdvancedSearch->save(); // Tanggal
-			$this->NoUrut->AdvancedSearch->save(); // NoUrut
-			$this->jo_id->AdvancedSearch->save(); // jo_id
-			$this->jenis_id->AdvancedSearch->save(); // jenis_id
-			$this->Comment->AdvancedSearch->save(); // Comment
-			$this->Masuk->AdvancedSearch->save(); // Masuk
-			$this->Keluar->AdvancedSearch->save(); // Keluar
-		}
-		return $where;
-	}
-
-	// Build search SQL
-	protected function buildSearchSql(&$where, &$fld, $default, $multiValue)
-	{
-		$fldParm = $fld->Param;
-		$fldVal = ($default) ? $fld->AdvancedSearch->SearchValueDefault : $fld->AdvancedSearch->SearchValue;
-		$fldOpr = ($default) ? $fld->AdvancedSearch->SearchOperatorDefault : $fld->AdvancedSearch->SearchOperator;
-		$fldCond = ($default) ? $fld->AdvancedSearch->SearchConditionDefault : $fld->AdvancedSearch->SearchCondition;
-		$fldVal2 = ($default) ? $fld->AdvancedSearch->SearchValue2Default : $fld->AdvancedSearch->SearchValue2;
-		$fldOpr2 = ($default) ? $fld->AdvancedSearch->SearchOperator2Default : $fld->AdvancedSearch->SearchOperator2;
-		$wrk = "";
-		if (is_array($fldVal))
-			$fldVal = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal);
-		if (is_array($fldVal2))
-			$fldVal2 = implode(Config("MULTIPLE_OPTION_SEPARATOR"), $fldVal2);
-		$fldOpr = strtoupper(trim($fldOpr));
-		if ($fldOpr == "")
-			$fldOpr = "=";
-		$fldOpr2 = strtoupper(trim($fldOpr2));
-		if ($fldOpr2 == "")
-			$fldOpr2 = "=";
-		if (Config("SEARCH_MULTI_VALUE_OPTION") == 1 || !IsMultiSearchOperator($fldOpr))
-			$multiValue = FALSE;
-		if ($multiValue) {
-			$wrk1 = ($fldVal != "") ? GetMultiSearchSql($fld, $fldOpr, $fldVal, $this->Dbid) : ""; // Field value 1
-			$wrk2 = ($fldVal2 != "") ? GetMultiSearchSql($fld, $fldOpr2, $fldVal2, $this->Dbid) : ""; // Field value 2
-			$wrk = $wrk1; // Build final SQL
-			if ($wrk2 != "")
-				$wrk = ($wrk != "") ? "($wrk) $fldCond ($wrk2)" : $wrk2;
-		} else {
-			$fldVal = $this->convertSearchValue($fld, $fldVal);
-			$fldVal2 = $this->convertSearchValue($fld, $fldVal2);
-			$wrk = GetSearchSql($fld, $fldVal, $fldOpr, $fldCond, $fldVal2, $fldOpr2, $this->Dbid);
-		}
-		AddFilter($where, $wrk);
-	}
-
-	// Convert search value
-	protected function convertSearchValue(&$fld, $fldVal)
-	{
-		if ($fldVal == Config("NULL_VALUE") || $fldVal == Config("NOT_NULL_VALUE"))
-			return $fldVal;
-		$value = $fldVal;
-		if ($fld->isBoolean()) {
-			if ($fldVal != "")
-				$value = (SameText($fldVal, "1") || SameText($fldVal, "y") || SameText($fldVal, "t")) ? $fld->TrueValue : $fld->FalseValue;
-		} elseif ($fld->DataType == DATATYPE_DATE || $fld->DataType == DATATYPE_TIME) {
-			if ($fldVal != "")
-				$value = UnFormatDateTime($fldVal, $fld->DateTimeFormat);
-		}
-		return $value;
-	}
-
-	// Return basic search SQL
-	protected function basicSearchSql($arKeywords, $type)
-	{
-		$where = "";
-		$this->buildBasicSearchSql($where, $this->Tanggal, $arKeywords, $type);
-		$this->buildBasicSearchSql($where, $this->NoUrut, $arKeywords, $type);
-		$this->buildBasicSearchSql($where, $this->jo_id, $arKeywords, $type);
-		$this->buildBasicSearchSql($where, $this->jenis_id, $arKeywords, $type);
-		$this->buildBasicSearchSql($where, $this->Comment, $arKeywords, $type);
-		return $where;
-	}
-
-	// Build basic search SQL
-	protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
-	{
-		$defCond = ($type == "OR") ? "OR" : "AND";
-		$arSql = []; // Array for SQL parts
-		$arCond = []; // Array for search conditions
-		$cnt = count($arKeywords);
-		$j = 0; // Number of SQL parts
-		for ($i = 0; $i < $cnt; $i++) {
-			$keyword = $arKeywords[$i];
-			$keyword = trim($keyword);
-			if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
-				$keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
-				$ar = explode("\\", $keyword);
-			} else {
-				$ar = [$keyword];
-			}
-			foreach ($ar as $keyword) {
-				if ($keyword != "") {
-					$wrk = "";
-					if ($keyword == "OR" && $type == "") {
-						if ($j > 0)
-							$arCond[$j - 1] = "OR";
-					} elseif ($keyword == Config("NULL_VALUE")) {
-						$wrk = $fld->Expression . " IS NULL";
-					} elseif ($keyword == Config("NOT_NULL_VALUE")) {
-						$wrk = $fld->Expression . " IS NOT NULL";
-					} elseif ($fld->IsVirtual) {
-						$wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
-					} elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
-						$wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
-					}
-					if ($wrk != "") {
-						$arSql[$j] = $wrk;
-						$arCond[$j] = $defCond;
-						$j += 1;
-					}
-				}
-			}
-		}
-		$cnt = count($arSql);
-		$quoted = FALSE;
-		$sql = "";
-		if ($cnt > 0) {
-			for ($i = 0; $i < $cnt - 1; $i++) {
-				if ($arCond[$i] == "OR") {
-					if (!$quoted)
-						$sql .= "(";
-					$quoted = TRUE;
-				}
-				$sql .= $arSql[$i];
-				if ($quoted && $arCond[$i] != "OR") {
-					$sql .= ")";
-					$quoted = FALSE;
-				}
-				$sql .= " " . $arCond[$i] . " ";
-			}
-			$sql .= $arSql[$cnt - 1];
-			if ($quoted)
-				$sql .= ")";
-		}
-		if ($sql != "") {
-			if ($where != "")
-				$where .= " OR ";
-			$where .= "(" . $sql . ")";
-		}
-	}
-
-	// Return basic search WHERE clause based on search keyword and type
-	protected function basicSearchWhere($default = FALSE)
-	{
-		global $Security;
-		$searchStr = "";
-		if (!$Security->canSearch())
-			return "";
-		$searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
-		$searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
-
-		// Get search SQL
-		if ($searchKeyword != "") {
-			$ar = $this->BasicSearch->keywordList($default);
-
-			// Search keyword in any fields
-			if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
-				foreach ($ar as $keyword) {
-					if ($keyword != "") {
-						if ($searchStr != "")
-							$searchStr .= " " . $searchType . " ";
-						$searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
-					}
-				}
-			} else {
-				$searchStr = $this->basicSearchSql($ar, $searchType);
-			}
-			if (!$default && in_array($this->Command, ["", "reset", "resetall"]))
-				$this->Command = "search";
-		}
-		if (!$default && $this->Command == "search") {
-			$this->BasicSearch->setKeyword($searchKeyword);
-			$this->BasicSearch->setType($searchType);
-		}
-		return $searchStr;
-	}
-
-	// Check if search parm exists
-	protected function checkSearchParms()
-	{
-
-		// Check basic search
-		if ($this->BasicSearch->issetSession())
-			return TRUE;
-		if ($this->id->AdvancedSearch->issetSession())
-			return TRUE;
-		if ($this->Tanggal->AdvancedSearch->issetSession())
-			return TRUE;
-		if ($this->NoUrut->AdvancedSearch->issetSession())
-			return TRUE;
-		if ($this->jo_id->AdvancedSearch->issetSession())
-			return TRUE;
-		if ($this->jenis_id->AdvancedSearch->issetSession())
-			return TRUE;
-		if ($this->Comment->AdvancedSearch->issetSession())
-			return TRUE;
-		if ($this->Masuk->AdvancedSearch->issetSession())
-			return TRUE;
-		if ($this->Keluar->AdvancedSearch->issetSession())
-			return TRUE;
-		return FALSE;
-	}
-
-	// Clear all search parameters
-	protected function resetSearchParms()
-	{
-
-		// Clear search WHERE clause
-		$this->SearchWhere = "";
-		$this->setSearchWhere($this->SearchWhere);
-
-		// Clear basic search parameters
-		$this->resetBasicSearchParms();
-
-		// Clear advanced search parameters
-		$this->resetAdvancedSearchParms();
-	}
-
-	// Load advanced search default values
-	protected function loadAdvancedSearchDefault()
-	{
-		return FALSE;
-	}
-
-	// Clear all basic search parameters
-	protected function resetBasicSearchParms()
-	{
-		$this->BasicSearch->unsetSession();
-	}
-
-	// Clear all advanced search parameters
-	protected function resetAdvancedSearchParms()
-	{
-		$this->id->AdvancedSearch->unsetSession();
-		$this->Tanggal->AdvancedSearch->unsetSession();
-		$this->NoUrut->AdvancedSearch->unsetSession();
-		$this->jo_id->AdvancedSearch->unsetSession();
-		$this->jenis_id->AdvancedSearch->unsetSession();
-		$this->Comment->AdvancedSearch->unsetSession();
-		$this->Masuk->AdvancedSearch->unsetSession();
-		$this->Keluar->AdvancedSearch->unsetSession();
-	}
-
-	// Restore all search parameters
-	protected function restoreSearchParms()
-	{
-		$this->RestoreSearch = TRUE;
-
-		// Restore basic search values
-		$this->BasicSearch->load();
-
-		// Restore advanced search values
-		$this->id->AdvancedSearch->load();
-		$this->Tanggal->AdvancedSearch->load();
-		$this->NoUrut->AdvancedSearch->load();
-		$this->jo_id->AdvancedSearch->load();
-		$this->jenis_id->AdvancedSearch->load();
-		$this->Comment->AdvancedSearch->load();
-		$this->Masuk->AdvancedSearch->load();
-		$this->Keluar->AdvancedSearch->load();
-	}
-
 	// Set up sort parameters
 	protected function setupSortOrder()
 	{
-
-		// Check for Ctrl pressed
-		$ctrl = Get("ctrl") !== NULL;
 
 		// Check for "order" parameter
 		if (Get("order") !== NULL) {
 			$this->CurrentOrder = Get("order");
 			$this->CurrentOrderType = Get("ordertype", "");
-			$this->updateSort($this->Tanggal, $ctrl); // Tanggal
-			$this->updateSort($this->NoUrut, $ctrl); // NoUrut
-			$this->updateSort($this->jo_id, $ctrl); // jo_id
-			$this->updateSort($this->jenis_id, $ctrl); // jenis_id
-			$this->updateSort($this->Comment, $ctrl); // Comment
-			$this->updateSort($this->Masuk, $ctrl); // Masuk
-			$this->updateSort($this->Keluar, $ctrl); // Keluar
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -2142,10 +1315,6 @@ class t102_mutasi_list extends t102_mutasi
 		// Check if reset command
 		if (StartsString("reset", $this->Command)) {
 
-			// Reset search criteria
-			if ($this->Command == "reset" || $this->Command == "resetall")
-				$this->resetSearchParms();
-
 			// Reset master/detail keys
 			if ($this->Command == "resetall") {
 				$this->setCurrentMasterTable(""); // Clear master table
@@ -2158,13 +1327,6 @@ class t102_mutasi_list extends t102_mutasi
 			if ($this->Command == "resetsort") {
 				$orderBy = "";
 				$this->setSessionOrderBy($orderBy);
-				$this->Tanggal->setSort("");
-				$this->NoUrut->setSort("");
-				$this->jo_id->setSort("");
-				$this->jenis_id->setSort("");
-				$this->Comment->setSort("");
-				$this->Masuk->setSort("");
-				$this->Keluar->setSort("");
 			}
 
 			// Reset start position
@@ -2216,23 +1378,6 @@ class t102_mutasi_list extends t102_mutasi
 		$item->Visible = $Security->canDelete();
 		$item->OnLeft = TRUE;
 
-		// List actions
-		$item = &$this->ListOptions->add("listactions");
-		$item->CssClass = "text-nowrap";
-		$item->OnLeft = TRUE;
-		$item->Visible = FALSE;
-		$item->ShowInButtonGroup = FALSE;
-		$item->ShowInDropDown = FALSE;
-
-		// "checkbox"
-		$item = &$this->ListOptions->add("checkbox");
-		$item->Visible = FALSE;
-		$item->OnLeft = TRUE;
-		$item->Header = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" name=\"key\" id=\"key\" class=\"custom-control-input\" onclick=\"ew.selectAllKey(this);\"><label class=\"custom-control-label\" for=\"key\"></label></div>";
-		$item->moveTo(0);
-		$item->ShowInDropDown = FALSE;
-		$item->ShowInButtonGroup = FALSE;
-
 		// "sequence"
 		$item = &$this->ListOptions->add("sequence");
 		$item->CssClass = "text-nowrap";
@@ -2252,7 +1397,6 @@ class t102_mutasi_list extends t102_mutasi
 		// Call ListOptions_Load event
 
 		$this->ListOptions_Load();
-		$this->setupListOptionsExt();
 		$item = $this->ListOptions[$this->ListOptions->GroupOptionName];
 		$item->Visible = $this->ListOptions->groupOptionVisible();
 	}
@@ -2275,6 +1419,10 @@ class t102_mutasi_list extends t102_mutasi
 			$blankRowName = str_replace("k_", "k" . $this->RowIndex . "_", $this->FormBlankRowName);
 			if ($this->RowAction != "")
 				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $actionName . "\" id=\"" . $actionName . "\" value=\"" . $this->RowAction . "\">";
+			if ($CurrentForm->hasValue($this->FormOldKeyName))
+				$this->RowOldKey = strval($CurrentForm->getValue($this->FormOldKeyName));
+			if ($this->RowOldKey != "")
+				$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $oldKeyName . "\" id=\"" . $oldKeyName . "\" value=\"" . HtmlEncode($this->RowOldKey) . "\">";
 			if ($this->RowAction == "delete") {
 				$rowkey = $CurrentForm->getValue($this->FormKeyName);
 				$this->setupKeyValues($rowkey);
@@ -2288,7 +1436,7 @@ class t102_mutasi_list extends t102_mutasi
 
 		// "delete"
 		if ($this->AllowAddDeleteRow) {
-			if ($this->isGridAdd() || $this->isGridEdit()) {
+			if ($this->CurrentMode == "add" || $this->CurrentMode == "copy" || $this->CurrentMode == "edit") {
 				$options = &$this->ListOptions;
 				$options->UseButtonGroup = TRUE; // Use button group for grid delete button
 				$opt = $options["griddelete"];
@@ -2303,31 +1451,7 @@ class t102_mutasi_list extends t102_mutasi
 		// "sequence"
 		$opt = $this->ListOptions["sequence"];
 		$opt->Body = FormatSequenceNumber($this->RecordCount);
-
-		// "copy"
-		$opt = $this->ListOptions["copy"];
-		if ($this->isInlineAddRow() || $this->isInlineCopyRow()) { // Inline Add/Copy
-			$this->ListOptions->CustomItem = "copy"; // Show copy column only
-			$cancelurl = $this->addMasterUrl($this->pageUrl() . "action=cancel");
-			$opt->Body = "<div" . (($opt->OnLeft) ? " class=\"text-right\"" : "") . ">" .
-				"<a class=\"ew-grid-link ew-inline-insert\" title=\"" . HtmlTitle($Language->phrase("InsertLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InsertLink")) . "\" href=\"#\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("InsertLink") . "</a>&nbsp;" .
-				"<a class=\"ew-grid-link ew-inline-cancel\" title=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" href=\"" . $cancelurl . "\">" . $Language->phrase("CancelLink") . "</a>" .
-				"<input type=\"hidden\" name=\"action\" id=\"action\" value=\"insert\"></div>";
-			return;
-		}
-
-		// "edit"
-		$opt = $this->ListOptions["edit"];
-		if ($this->isInlineEditRow()) { // Inline-Edit
-			$this->ListOptions->CustomItem = "edit"; // Show edit column only
-			$cancelurl = $this->addMasterUrl($this->pageUrl() . "action=cancel");
-				$opt->Body = "<div" . (($opt->OnLeft) ? " class=\"text-right\"" : "") . ">" .
-					"<a class=\"ew-grid-link ew-inline-update\" title=\"" . HtmlTitle($Language->phrase("UpdateLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("UpdateLink")) . "\" href=\"#\" onclick=\"return ew.forms(this).submit('" . UrlAddHash($this->pageName(), "r" . $this->RowCount . "_" . $this->TableVar) . "');\">" . $Language->phrase("UpdateLink") . "</a>&nbsp;" .
-					"<a class=\"ew-grid-link ew-inline-cancel\" title=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("CancelLink")) . "\" href=\"" . $cancelurl . "\">" . $Language->phrase("CancelLink") . "</a>" .
-					"<input type=\"hidden\" name=\"action\" id=\"action\" value=\"update\"></div>";
-			$opt->Body .= "<input type=\"hidden\" name=\"k" . $this->RowIndex . "_key\" id=\"k" . $this->RowIndex . "_key\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\">";
-			return;
-		}
+		if ($this->CurrentMode == "view") { // View mode
 
 		// "view"
 		$opt = $this->ListOptions["view"];
@@ -2343,7 +1467,6 @@ class t102_mutasi_list extends t102_mutasi
 		$editcaption = HtmlTitle($Language->phrase("EditLink"));
 		if ($Security->canEdit()) {
 			$opt->Body = "<a class=\"ew-row-link ew-edit\" title=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("EditLink")) . "\" href=\"" . HtmlEncode($this->EditUrl) . "\">" . $Language->phrase("EditLink") . "</a>";
-			$opt->Body .= "<a class=\"ew-row-link ew-inline-edit\" title=\"" . HtmlTitle($Language->phrase("InlineEditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineEditLink")) . "\" href=\"" . HtmlEncode(UrlAddHash($this->InlineEditUrl, "r" . $this->RowCount . "_" . $this->TableVar)) . "\">" . $Language->phrase("InlineEditLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -2353,7 +1476,6 @@ class t102_mutasi_list extends t102_mutasi
 		$copycaption = HtmlTitle($Language->phrase("CopyLink"));
 		if ($Security->canAdd()) {
 			$opt->Body = "<a class=\"ew-row-link ew-copy\" title=\"" . $copycaption . "\" data-caption=\"" . $copycaption . "\" href=\"" . HtmlEncode($this->CopyUrl) . "\">" . $Language->phrase("CopyLink") . "</a>";
-			$opt->Body .= "<a class=\"ew-row-link ew-inline-copy\" title=\"" . HtmlTitle($Language->phrase("InlineCopyLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineCopyLink")) . "\" href=\"" . HtmlEncode($this->InlineCopyUrl) . "\">" . $Language->phrase("InlineCopyLink") . "</a>";
 		} else {
 			$opt->Body = "";
 		}
@@ -2364,40 +1486,8 @@ class t102_mutasi_list extends t102_mutasi
 			$opt->Body = "<a class=\"ew-row-link ew-delete\"" . "" . " title=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("DeleteLink")) . "\" href=\"" . HtmlEncode($this->DeleteUrl) . "\">" . $Language->phrase("DeleteLink") . "</a>";
 		else
 			$opt->Body = "";
-
-		// Set up list action buttons
-		$opt = $this->ListOptions["listactions"];
-		if ($opt && !$this->isExport() && !$this->CurrentAction) {
-			$body = "";
-			$links = [];
-			foreach ($this->ListActions->Items as $listaction) {
-				if ($listaction->Select == ACTION_SINGLE && $listaction->Allow) {
-					$action = $listaction->Action;
-					$caption = $listaction->Caption;
-					$icon = ($listaction->Icon != "") ? "<i class=\"" . HtmlEncode(str_replace(" ew-icon", "", $listaction->Icon)) . "\" data-caption=\"" . HtmlTitle($caption) . "\"></i> " : "";
-					$links[] = "<li><a class=\"dropdown-item ew-action ew-list-action\" data-action=\"" . HtmlEncode($action) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"#\" onclick=\"return ew.submitAction(event,jQuery.extend({key:" . $this->keyToJson(TRUE) . "}," . $listaction->toJson(TRUE) . "));\">" . $icon . $listaction->Caption . "</a></li>";
-					if (count($links) == 1) // Single button
-						$body = "<a class=\"ew-action ew-list-action\" data-action=\"" . HtmlEncode($action) . "\" title=\"" . HtmlTitle($caption) . "\" data-caption=\"" . HtmlTitle($caption) . "\" href=\"#\" onclick=\"return ew.submitAction(event,jQuery.extend({key:" . $this->keyToJson(TRUE) . "}," . $listaction->toJson(TRUE) . "));\">" . $icon . $listaction->Caption . "</a>";
-				}
-			}
-			if (count($links) > 1) { // More than one buttons, use dropdown
-				$body = "<button class=\"dropdown-toggle btn btn-default ew-actions\" title=\"" . HtmlTitle($Language->phrase("ListActionButton")) . "\" data-toggle=\"dropdown\">" . $Language->phrase("ListActionButton") . "</button>";
-				$content = "";
-				foreach ($links as $link)
-					$content .= "<li>" . $link . "</li>";
-				$body .= "<ul class=\"dropdown-menu" . ($opt->OnLeft ? "" : " dropdown-menu-right") . "\">". $content . "</ul>";
-				$body = "<div class=\"btn-group btn-group-sm\">" . $body . "</div>";
-			}
-			if (count($links) > 0) {
-				$opt->Body = $body;
-				$opt->Visible = TRUE;
-			}
-		}
-
-		// "checkbox"
-		$opt = $this->ListOptions["checkbox"];
-		$opt->Body = "<div class=\"custom-control custom-checkbox d-inline-block\"><input type=\"checkbox\" id=\"key_m_" . $this->RowCount . "\" name=\"key_m[]\" class=\"custom-control-input ew-multi-select\" value=\"" . HtmlEncode($this->id->CurrentValue) . "\" onclick=\"ew.clickMultiCheckbox(event);\"><label class=\"custom-control-label\" for=\"key_m_" . $this->RowCount . "\"></label></div>";
-		if ($this->isGridEdit() && is_numeric($this->RowIndex)) {
+		} // End View mode
+		if ($this->CurrentMode == "edit" && is_numeric($this->RowIndex) && $this->RowAction != "delete") {
 			$this->MultiSelectKey .= "<input type=\"hidden\" name=\"" . $keyName . "\" id=\"" . $keyName . "\" value=\"" . $this->id->CurrentValue . "\">";
 		}
 		$this->renderListOptionsExt();
@@ -2406,63 +1496,37 @@ class t102_mutasi_list extends t102_mutasi
 		$this->ListOptions_Rendered();
 	}
 
+	// Set record key
+	public function setRecordKey(&$key, $rs)
+	{
+		$key = "";
+		if ($key != "")
+			$key .= Config("COMPOSITE_KEY_SEPARATOR");
+		$key .= $rs->fields('id');
+	}
+
 	// Set up other options
 	protected function setupOtherOptions()
 	{
 		global $Language, $Security;
-		$options = &$this->OtherOptions;
-		$option = $options["addedit"];
+		$option = $this->OtherOptions["addedit"];
+		$option->UseDropDownButton = FALSE;
+		$option->DropDownButtonPhrase = $Language->phrase("ButtonAddEdit");
+		$option->UseButtonGroup = TRUE;
 
-		// Add
-		$item = &$option->add("add");
-		$addcaption = HtmlTitle($Language->phrase("AddLink"));
-		$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
-		$item->Visible = $this->AddUrl != "" && $Security->canAdd();
-
-		// Inline Add
-		$item = &$option->add("inlineadd");
-		$item->Body = "<a class=\"ew-add-edit ew-inline-add\" title=\"" . HtmlTitle($Language->phrase("InlineAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("InlineAddLink")) . "\" href=\"" . HtmlEncode($this->InlineAddUrl) . "\">" .$Language->phrase("InlineAddLink") . "</a>";
-		$item->Visible = $this->InlineAddUrl != "" && $Security->canAdd();
-		$item = &$option->add("gridadd");
-		$item->Body = "<a class=\"ew-add-edit ew-grid-add\" title=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridAddLink")) . "\" href=\"" . HtmlEncode($this->GridAddUrl) . "\">" . $Language->phrase("GridAddLink") . "</a>";
-		$item->Visible = $this->GridAddUrl != "" && $Security->canAdd();
-
-		// Add grid edit
-		$option = $options["addedit"];
-		$item = &$option->add("gridedit");
-		$item->Body = "<a class=\"ew-add-edit ew-grid-edit\" title=\"" . HtmlTitle($Language->phrase("GridEditLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridEditLink")) . "\" href=\"" . HtmlEncode($this->GridEditUrl) . "\">" . $Language->phrase("GridEditLink") . "</a>";
-		$item->Visible = $this->GridEditUrl != "" && $Security->canEdit();
-		$option = $options["action"];
-
-		// Set up options default
-		foreach ($options as $option) {
-			$option->UseDropDownButton = FALSE;
-			$option->UseButtonGroup = TRUE;
-
-			//$option->ButtonClass = ""; // Class for button group
-			$item = &$option->add($option->GroupOptionName);
-			$item->Body = "";
-			$item->Visible = FALSE;
-		}
-		$options["addedit"]->DropDownButtonPhrase = $Language->phrase("ButtonAddEdit");
-		$options["detail"]->DropDownButtonPhrase = $Language->phrase("ButtonDetails");
-		$options["action"]->DropDownButtonPhrase = $Language->phrase("ButtonActions");
-
-		// Filter button
-		$item = &$this->FilterOptions->add("savecurrentfilter");
-		$item->Body = "<a class=\"ew-save-filter\" data-form=\"ft102_mutasilistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("SaveCurrentFilter") . "</a>";
-		$item->Visible = TRUE;
-		$item = &$this->FilterOptions->add("deletefilter");
-		$item->Body = "<a class=\"ew-delete-filter\" data-form=\"ft102_mutasilistsrch\" href=\"#\" onclick=\"return false;\">" . $Language->phrase("DeleteFilter") . "</a>";
-		$item->Visible = TRUE;
-		$this->FilterOptions->UseDropDownButton = TRUE;
-		$this->FilterOptions->UseButtonGroup = !$this->FilterOptions->UseDropDownButton;
-		$this->FilterOptions->DropDownButtonPhrase = $Language->phrase("Filters");
-
-		// Add group option item
-		$item = &$this->FilterOptions->add($this->FilterOptions->GroupOptionName);
+		//$option->ButtonClass = ""; // Class for button group
+		$item = &$option->add($option->GroupOptionName);
 		$item->Body = "";
 		$item->Visible = FALSE;
+
+		// Add
+		if ($this->CurrentMode == "view") { // Check view mode
+			$item = &$option->add("add");
+			$addcaption = HtmlTitle($Language->phrase("AddLink"));
+			$this->AddUrl = $this->getAddUrl();
+			$item->Body = "<a class=\"ew-add-edit ew-add\" title=\"" . $addcaption . "\" data-caption=\"" . $addcaption . "\" href=\"" . HtmlEncode($this->AddUrl) . "\">" . $Language->phrase("AddLink") . "</a>";
+			$item->Visible = $this->AddUrl != "" && $Security->canAdd();
+		}
 	}
 
 	// Render other options
@@ -2470,160 +1534,21 @@ class t102_mutasi_list extends t102_mutasi
 	{
 		global $Language, $Security;
 		$options = &$this->OtherOptions;
-		if (!$this->isGridAdd() && !$this->isGridEdit()) { // Not grid add/edit mode
-			$option = $options["action"];
-
-			// Set up list action buttons
-			foreach ($this->ListActions->Items as $listaction) {
-				if ($listaction->Select == ACTION_MULTIPLE) {
-					$item = &$option->add("custom_" . $listaction->Action);
-					$caption = $listaction->Caption;
-					$icon = ($listaction->Icon != "") ? "<i class=\"" . HtmlEncode($listaction->Icon) . "\" data-caption=\"" . HtmlEncode($caption) . "\"></i> " . $caption : $caption;
-					$item->Body = "<a class=\"ew-action ew-list-action\" title=\"" . HtmlEncode($caption) . "\" data-caption=\"" . HtmlEncode($caption) . "\" href=\"#\" onclick=\"return ew.submitAction(event,jQuery.extend({f:document.ft102_mutasilist}," . $listaction->toJson(TRUE) . "));\">" . $icon . "</a>";
-					$item->Visible = $listaction->Allow;
-				}
-			}
-
-			// Hide grid edit and other options
-			if ($this->TotalRecords <= 0) {
+		if (($this->CurrentMode == "add" || $this->CurrentMode == "copy" || $this->CurrentMode == "edit") && !$this->isConfirm()) { // Check add/copy/edit mode
+			if ($this->AllowAddDeleteRow) {
 				$option = $options["addedit"];
-				$item = $option["gridedit"];
-				if ($item)
-					$item->Visible = FALSE;
-				$option = $options["action"];
-				$option->hideAllOptions();
-			}
-		} else { // Grid add/edit mode
-
-			// Hide all options first
-			foreach ($options as $option)
-				$option->hideAllOptions();
-
-			// Grid-Add
-			if ($this->isGridAdd()) {
-				if ($this->AllowAddDeleteRow) {
-
-					// Add add blank row
-					$option = $options["addedit"];
-					$option->UseDropDownButton = FALSE;
-					$item = &$option->add("addblankrow");
-					$item->Body = "<a class=\"ew-add-edit ew-add-blank-row\" title=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" href=\"#\" onclick=\"return ew.addGridRow(this);\">" . $Language->phrase("AddBlankRow") . "</a>";
-					$item->Visible = $Security->canAdd();
-				}
-				$option = $options["action"];
 				$option->UseDropDownButton = FALSE;
-
-				// Add grid insert
-				$item = &$option->add("gridinsert");
-				$item->Body = "<a class=\"ew-action ew-grid-insert\" title=\"" . HtmlTitle($Language->phrase("GridInsertLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridInsertLink")) . "\" href=\"#\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("GridInsertLink") . "</a>";
-
-				// Add grid cancel
-				$item = &$option->add("gridcancel");
-				$cancelurl = $this->addMasterUrl($this->pageUrl() . "action=cancel");
-				$item->Body = "<a class=\"ew-action ew-grid-cancel\" title=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" href=\"" . $cancelurl . "\">" . $Language->phrase("GridCancelLink") . "</a>";
-			}
-
-			// Grid-Edit
-			if ($this->isGridEdit()) {
-				if ($this->AllowAddDeleteRow) {
-
-					// Add add blank row
-					$option = $options["addedit"];
-					$option->UseDropDownButton = FALSE;
-					$item = &$option->add("addblankrow");
-					$item->Body = "<a class=\"ew-add-edit ew-add-blank-row\" title=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" href=\"#\" onclick=\"return ew.addGridRow(this);\">" . $Language->phrase("AddBlankRow") . "</a>";
-					$item->Visible = $Security->canAdd();
-				}
-				$option = $options["action"];
-				$option->UseDropDownButton = FALSE;
-					$item = &$option->add("gridsave");
-					$item->Body = "<a class=\"ew-action ew-grid-save\" title=\"" . HtmlTitle($Language->phrase("GridSaveLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridSaveLink")) . "\" href=\"#\" onclick=\"return ew.forms(this).submit('" . $this->pageName() . "');\">" . $Language->phrase("GridSaveLink") . "</a>";
-					$item = &$option->add("gridcancel");
-					$cancelurl = $this->addMasterUrl($this->pageUrl() . "action=cancel");
-					$item->Body = "<a class=\"ew-action ew-grid-cancel\" title=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("GridCancelLink")) . "\" href=\"" . $cancelurl . "\">" . $Language->phrase("GridCancelLink") . "</a>";
+				$item = &$option->add("addblankrow");
+				$item->Body = "<a class=\"ew-add-edit ew-add-blank-row\" title=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" data-caption=\"" . HtmlTitle($Language->phrase("AddBlankRow")) . "\" href=\"#\" onclick=\"return ew.addGridRow(this);\">" . $Language->phrase("AddBlankRow") . "</a>";
+				$item->Visible = $Security->canAdd();
+				$this->ShowOtherOptions = $item->Visible;
 			}
 		}
-	}
-
-	// Process list action
-	protected function processListAction()
-	{
-		global $Language, $Security;
-		$userlist = "";
-		$user = "";
-		$filter = $this->getFilterFromRecordKeys();
-		$userAction = Post("useraction", "");
-		if ($filter != "" && $userAction != "") {
-
-			// Check permission first
-			$actionCaption = $userAction;
-			if (array_key_exists($userAction, $this->ListActions->Items)) {
-				$actionCaption = $this->ListActions[$userAction]->Caption;
-				if (!$this->ListActions[$userAction]->Allow) {
-					$errmsg = str_replace('%s', $actionCaption, $Language->phrase("CustomActionNotAllowed"));
-					if (Post("ajax") == $userAction) // Ajax
-						echo "<p class=\"text-danger\">" . $errmsg . "</p>";
-					else
-						$this->setFailureMessage($errmsg);
-					return FALSE;
-				}
-			}
-			$this->CurrentFilter = $filter;
-			$sql = $this->getCurrentSql();
-			$conn = $this->getConnection();
-			$conn->raiseErrorFn = Config("ERROR_FUNC");
-			$rs = $conn->execute($sql);
-			$conn->raiseErrorFn = "";
-			$this->CurrentAction = $userAction;
-
-			// Call row action event
-			if ($rs && !$rs->EOF) {
-				$conn->beginTrans();
-				$this->SelectedCount = $rs->RecordCount();
-				$this->SelectedIndex = 0;
-				while (!$rs->EOF) {
-					$this->SelectedIndex++;
-					$row = $rs->fields;
-					$processed = $this->Row_CustomAction($userAction, $row);
-					if (!$processed)
-						break;
-					$rs->moveNext();
-				}
-				if ($processed) {
-					$conn->commitTrans(); // Commit the changes
-					if ($this->getSuccessMessage() == "" && !ob_get_length()) // No output
-						$this->setSuccessMessage(str_replace('%s', $actionCaption, $Language->phrase("CustomActionCompleted"))); // Set up success message
-				} else {
-					$conn->rollbackTrans(); // Rollback changes
-
-					// Set up error message
-					if ($this->getSuccessMessage() != "" || $this->getFailureMessage() != "") {
-
-						// Use the message, do nothing
-					} elseif ($this->CancelMessage != "") {
-						$this->setFailureMessage($this->CancelMessage);
-						$this->CancelMessage = "";
-					} else {
-						$this->setFailureMessage(str_replace('%s', $actionCaption, $Language->phrase("CustomActionFailed")));
-					}
-				}
-			}
-			if ($rs)
-				$rs->close();
-			$this->CurrentAction = ""; // Clear action
-			if (Post("ajax") == $userAction) { // Ajax
-				if ($this->getSuccessMessage() != "") {
-					echo "<p class=\"text-success\">" . $this->getSuccessMessage() . "</p>";
-					$this->clearSuccessMessage(); // Clear message
-				}
-				if ($this->getFailureMessage() != "") {
-					echo "<p class=\"text-danger\">" . $this->getFailureMessage() . "</p>";
-					$this->clearFailureMessage(); // Clear message
-				}
-				return TRUE;
-			}
+		if ($this->CurrentMode == "view") { // Check view mode
+			$option = $options["addedit"];
+			$item = $option["add"];
+			$this->ShowOtherOptions = $item && $item->Visible;
 		}
-		return FALSE; // Not ajax request
 	}
 
 	// Set up list options (extended codes)
@@ -2634,6 +1559,12 @@ class t102_mutasi_list extends t102_mutasi
 	// Render list options (extended codes)
 	protected function renderListOptionsExt()
 	{
+	}
+
+	// Get upload files
+	protected function getUploadFiles()
+	{
+		global $CurrentForm, $Language;
 	}
 
 	// Load default values
@@ -2657,86 +1588,13 @@ class t102_mutasi_list extends t102_mutasi
 		$this->Keluar->OldValue = $this->Keluar->CurrentValue;
 	}
 
-	// Load basic search values
-	protected function loadBasicSearchValues()
-	{
-		$this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), FALSE);
-		if ($this->BasicSearch->Keyword != "" && $this->Command == "")
-			$this->Command = "search";
-		$this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), FALSE);
-	}
-
-	// Load search values for validation
-	protected function loadSearchValues()
-	{
-
-		// Load search values
-		$got = FALSE;
-
-		// id
-		if (!$this->isAddOrEdit() && $this->id->AdvancedSearch->get()) {
-			$got = TRUE;
-			if (($this->id->AdvancedSearch->SearchValue != "" || $this->id->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
-				$this->Command = "search";
-		}
-
-		// Tanggal
-		if (!$this->isAddOrEdit() && $this->Tanggal->AdvancedSearch->get()) {
-			$got = TRUE;
-			if (($this->Tanggal->AdvancedSearch->SearchValue != "" || $this->Tanggal->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
-				$this->Command = "search";
-		}
-
-		// NoUrut
-		if (!$this->isAddOrEdit() && $this->NoUrut->AdvancedSearch->get()) {
-			$got = TRUE;
-			if (($this->NoUrut->AdvancedSearch->SearchValue != "" || $this->NoUrut->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
-				$this->Command = "search";
-		}
-
-		// jo_id
-		if (!$this->isAddOrEdit() && $this->jo_id->AdvancedSearch->get()) {
-			$got = TRUE;
-			if (($this->jo_id->AdvancedSearch->SearchValue != "" || $this->jo_id->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
-				$this->Command = "search";
-		}
-
-		// jenis_id
-		if (!$this->isAddOrEdit() && $this->jenis_id->AdvancedSearch->get()) {
-			$got = TRUE;
-			if (($this->jenis_id->AdvancedSearch->SearchValue != "" || $this->jenis_id->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
-				$this->Command = "search";
-		}
-
-		// Comment
-		if (!$this->isAddOrEdit() && $this->Comment->AdvancedSearch->get()) {
-			$got = TRUE;
-			if (($this->Comment->AdvancedSearch->SearchValue != "" || $this->Comment->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
-				$this->Command = "search";
-		}
-
-		// Masuk
-		if (!$this->isAddOrEdit() && $this->Masuk->AdvancedSearch->get()) {
-			$got = TRUE;
-			if (($this->Masuk->AdvancedSearch->SearchValue != "" || $this->Masuk->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
-				$this->Command = "search";
-		}
-
-		// Keluar
-		if (!$this->isAddOrEdit() && $this->Keluar->AdvancedSearch->get()) {
-			$got = TRUE;
-			if (($this->Keluar->AdvancedSearch->SearchValue != "" || $this->Keluar->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
-				$this->Command = "search";
-		}
-		return $got;
-	}
-
 	// Load form values
 	protected function loadFormValues()
 	{
 
 		// Load from form
 		global $CurrentForm;
+		$CurrentForm->FormName = $this->FormName;
 
 		// Check field name 'Tanggal' first before field var 'x_Tanggal'
 		$val = $CurrentForm->hasValue("Tanggal") ? $CurrentForm->getValue("Tanggal") : $CurrentForm->getValue("x_Tanggal");
@@ -2876,8 +1734,6 @@ class t102_mutasi_list extends t102_mutasi
 		if ($rs && !$rs->EOF) {
 			$res = TRUE;
 			$this->loadRowValues($rs); // Load row values
-			if (!$this->EventCancelled)
-				$this->HashValue = $this->getRowHash($rs); // Get hash value for record
 			$rs->close();
 		}
 		return $res;
@@ -2927,10 +1783,16 @@ class t102_mutasi_list extends t102_mutasi
 
 		// Load key values from Session
 		$validKey = TRUE;
-		if (strval($this->getKey("id")) != "")
-			$this->id->OldValue = $this->getKey("id"); // id
-		else
+		$keys = [$this->RowOldKey];
+		$cnt = count($keys);
+		if ($cnt >= 1) {
+			if (strval($keys[0]) != "")
+				$this->id->OldValue = strval($keys[0]); // id
+			else
+				$validKey = FALSE;
+		} else {
 			$validKey = FALSE;
+		}
 
 		// Load old record
 		$this->OldRecordset = NULL;
@@ -2952,9 +1814,7 @@ class t102_mutasi_list extends t102_mutasi
 		// Initialize URLs
 		$this->ViewUrl = $this->getViewUrl();
 		$this->EditUrl = $this->getEditUrl();
-		$this->InlineEditUrl = $this->getInlineEditUrl();
 		$this->CopyUrl = $this->getCopyUrl();
-		$this->InlineCopyUrl = $this->getInlineCopyUrl();
 		$this->DeleteUrl = $this->getDeleteUrl();
 
 		// Convert decimal values if posted back
@@ -3416,105 +2276,6 @@ class t102_mutasi_list extends t102_mutasi
 			// Keluar
 			$this->Keluar->LinkCustomAttributes = "";
 			$this->Keluar->HrefValue = "";
-		} elseif ($this->RowType == ROWTYPE_SEARCH) { // Search row
-
-			// Tanggal
-			$this->Tanggal->EditAttrs["class"] = "form-control";
-			$this->Tanggal->EditCustomAttributes = "";
-			$this->Tanggal->EditValue = HtmlEncode(FormatDateTime(UnFormatDateTime($this->Tanggal->AdvancedSearch->SearchValue, 7), 7));
-			$this->Tanggal->PlaceHolder = RemoveHtml($this->Tanggal->caption());
-			$this->Tanggal->EditAttrs["class"] = "form-control";
-			$this->Tanggal->EditCustomAttributes = "";
-			$this->Tanggal->EditValue2 = HtmlEncode(FormatDateTime(UnFormatDateTime($this->Tanggal->AdvancedSearch->SearchValue2, 7), 7));
-			$this->Tanggal->PlaceHolder = RemoveHtml($this->Tanggal->caption());
-
-			// NoUrut
-			$this->NoUrut->EditAttrs["class"] = "form-control";
-			$this->NoUrut->EditCustomAttributes = "";
-			$this->NoUrut->EditValue = HtmlEncode($this->NoUrut->AdvancedSearch->SearchValue);
-			$this->NoUrut->PlaceHolder = RemoveHtml($this->NoUrut->caption());
-
-			// jo_id
-			$this->jo_id->EditCustomAttributes = "";
-			$curVal = trim(strval($this->jo_id->AdvancedSearch->SearchValue));
-			if ($curVal != "")
-				$this->jo_id->AdvancedSearch->ViewValue = $this->jo_id->lookupCacheOption($curVal);
-			else
-				$this->jo_id->AdvancedSearch->ViewValue = $this->jo_id->Lookup !== NULL && is_array($this->jo_id->Lookup->Options) ? $curVal : NULL;
-			if ($this->jo_id->AdvancedSearch->ViewValue !== NULL) { // Load from cache
-				$this->jo_id->EditValue = array_values($this->jo_id->Lookup->Options);
-				if ($this->jo_id->AdvancedSearch->ViewValue == "")
-					$this->jo_id->AdvancedSearch->ViewValue = $Language->phrase("PleaseSelect");
-			} else { // Lookup from database
-				if ($curVal == "") {
-					$filterWrk = "0=1";
-				} else {
-					$filterWrk = "`id`" . SearchString("=", $this->jo_id->AdvancedSearch->SearchValue, DATATYPE_NUMBER, "");
-				}
-				$sqlWrk = $this->jo_id->Lookup->getSql(TRUE, $filterWrk, '', $this);
-				$rswrk = Conn()->execute($sqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$arwrk = [];
-					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-					$this->jo_id->AdvancedSearch->ViewValue = $this->jo_id->displayValue($arwrk);
-				} else {
-					$this->jo_id->AdvancedSearch->ViewValue = $Language->phrase("PleaseSelect");
-				}
-				$arwrk = $rswrk ? $rswrk->getRows() : [];
-				if ($rswrk)
-					$rswrk->close();
-				$this->jo_id->EditValue = $arwrk;
-			}
-
-			// jenis_id
-			$this->jenis_id->EditCustomAttributes = "";
-			$curVal = trim(strval($this->jenis_id->AdvancedSearch->SearchValue));
-			if ($curVal != "")
-				$this->jenis_id->AdvancedSearch->ViewValue = $this->jenis_id->lookupCacheOption($curVal);
-			else
-				$this->jenis_id->AdvancedSearch->ViewValue = $this->jenis_id->Lookup !== NULL && is_array($this->jenis_id->Lookup->Options) ? $curVal : NULL;
-			if ($this->jenis_id->AdvancedSearch->ViewValue !== NULL) { // Load from cache
-				$this->jenis_id->EditValue = array_values($this->jenis_id->Lookup->Options);
-				if ($this->jenis_id->AdvancedSearch->ViewValue == "")
-					$this->jenis_id->AdvancedSearch->ViewValue = $Language->phrase("PleaseSelect");
-			} else { // Lookup from database
-				if ($curVal == "") {
-					$filterWrk = "0=1";
-				} else {
-					$filterWrk = "`id`" . SearchString("=", $this->jenis_id->AdvancedSearch->SearchValue, DATATYPE_NUMBER, "");
-				}
-				$sqlWrk = $this->jenis_id->Lookup->getSql(TRUE, $filterWrk, '', $this);
-				$rswrk = Conn()->execute($sqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$arwrk = [];
-					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-					$this->jenis_id->AdvancedSearch->ViewValue = $this->jenis_id->displayValue($arwrk);
-				} else {
-					$this->jenis_id->AdvancedSearch->ViewValue = $Language->phrase("PleaseSelect");
-				}
-				$arwrk = $rswrk ? $rswrk->getRows() : [];
-				if ($rswrk)
-					$rswrk->close();
-				$this->jenis_id->EditValue = $arwrk;
-			}
-
-			// Comment
-			$this->Comment->EditAttrs["class"] = "form-control";
-			$this->Comment->EditCustomAttributes = "";
-			$this->Comment->EditValue = HtmlEncode($this->Comment->AdvancedSearch->SearchValue);
-			$this->Comment->PlaceHolder = RemoveHtml($this->Comment->caption());
-
-			// Masuk
-			$this->Masuk->EditAttrs["class"] = "form-control";
-			$this->Masuk->EditCustomAttributes = "";
-			$this->Masuk->EditValue = HtmlEncode($this->Masuk->AdvancedSearch->SearchValue);
-			$this->Masuk->PlaceHolder = RemoveHtml($this->Masuk->caption());
-
-			// Keluar
-			$this->Keluar->EditAttrs["class"] = "form-control";
-			$this->Keluar->EditCustomAttributes = "";
-			$this->Keluar->EditValue = HtmlEncode($this->Keluar->AdvancedSearch->SearchValue);
-			$this->Keluar->PlaceHolder = RemoveHtml($this->Keluar->caption());
 		} elseif ($this->RowType == ROWTYPE_AGGREGATEINIT) { // Initialize aggregate row
 			$this->Masuk->Total = 0; // Initialize total
 			$this->Keluar->Total = 0; // Initialize total
@@ -3540,43 +2301,10 @@ class t102_mutasi_list extends t102_mutasi
 			$this->Row_Rendered();
 	}
 
-	// Validate search
-	protected function validateSearch()
-	{
-		global $SearchError;
-
-		// Initialize
-		$SearchError = "";
-
-		// Check if validation required
-		if (!Config("SERVER_VALIDATE"))
-			return TRUE;
-		if (!CheckEuroDate($this->Tanggal->AdvancedSearch->SearchValue)) {
-			AddMessage($SearchError, $this->Tanggal->errorMessage());
-		}
-		if (!CheckEuroDate($this->Tanggal->AdvancedSearch->SearchValue2)) {
-			AddMessage($SearchError, $this->Tanggal->errorMessage());
-		}
-
-		// Return validate result
-		$validateSearch = ($SearchError == "");
-
-		// Call Form_CustomValidate event
-		$formCustomError = "";
-		$validateSearch = $validateSearch && $this->Form_CustomValidate($formCustomError);
-		if ($formCustomError != "") {
-			AddMessage($SearchError, $formCustomError);
-		}
-		return $validateSearch;
-	}
-
 	// Validate form
 	protected function validateForm()
 	{
 		global $Language, $FormError;
-
-		// Initialize form error message
-		$FormError = "";
 
 		// Check if validation required
 		if (!Config("SERVER_VALIDATE"))
@@ -3851,40 +2579,15 @@ class t102_mutasi_list extends t102_mutasi
 		return $editRow;
 	}
 
-	// Load row hash
-	protected function loadRowHash()
-	{
-		$filter = $this->getRecordFilter();
-
-		// Load SQL based on filter
-		$this->CurrentFilter = $filter;
-		$sql = $this->getCurrentSql();
-		$conn = $this->getConnection();
-		$rsRow = $conn->Execute($sql);
-		$this->HashValue = ($rsRow && !$rsRow->EOF) ? $this->getRowHash($rsRow) : ""; // Get hash value for record
-		$rsRow->close();
-	}
-
-	// Get Row Hash
-	public function getRowHash(&$rs)
-	{
-		if (!$rs)
-			return "";
-		$hash = "";
-		$hash .= GetFieldHash($rs->fields('Tanggal')); // Tanggal
-		$hash .= GetFieldHash($rs->fields('NoUrut')); // NoUrut
-		$hash .= GetFieldHash($rs->fields('jo_id')); // jo_id
-		$hash .= GetFieldHash($rs->fields('jenis_id')); // jenis_id
-		$hash .= GetFieldHash($rs->fields('Comment')); // Comment
-		$hash .= GetFieldHash($rs->fields('Masuk')); // Masuk
-		$hash .= GetFieldHash($rs->fields('Keluar')); // Keluar
-		return md5($hash);
-	}
-
 	// Add record
 	protected function addRow($rsold = NULL)
 	{
 		global $Language, $Security;
+
+		// Set up foreign key field value from Session
+			if ($this->getCurrentMasterTable() == "t001_jo") {
+				$this->jo_id->CurrentValue = $this->jo_id->getSessionValue();
+			}
 
 		// Check referential integrity for master table 't102_mutasi'
 		$validMasterRecord = TRUE;
@@ -3975,359 +2678,19 @@ class t102_mutasi_list extends t102_mutasi
 		return $addRow;
 	}
 
-	// Load advanced search
-	public function loadAdvancedSearch()
-	{
-		$this->id->AdvancedSearch->load();
-		$this->Tanggal->AdvancedSearch->load();
-		$this->NoUrut->AdvancedSearch->load();
-		$this->jo_id->AdvancedSearch->load();
-		$this->jenis_id->AdvancedSearch->load();
-		$this->Comment->AdvancedSearch->load();
-		$this->Masuk->AdvancedSearch->load();
-		$this->Keluar->AdvancedSearch->load();
-	}
-
-	// Get export HTML tag
-	protected function getExportTag($type, $custom = FALSE)
-	{
-		global $Language;
-		if (SameText($type, "excel")) {
-			if ($custom)
-				return "<a href=\"#\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" onclick=\"return ew.export(document.ft102_mutasilist, '" . $this->ExportExcelUrl . "', 'excel', true);\">" . $Language->phrase("ExportToExcel") . "</a>";
-			else
-				return "<a href=\"" . $this->ExportExcelUrl . "\" class=\"ew-export-link ew-excel\" title=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToExcelText")) . "\">" . $Language->phrase("ExportToExcel") . "</a>";
-		} elseif (SameText($type, "word")) {
-			if ($custom)
-				return "<a href=\"#\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" onclick=\"return ew.export(document.ft102_mutasilist, '" . $this->ExportWordUrl . "', 'word', true);\">" . $Language->phrase("ExportToWord") . "</a>";
-			else
-				return "<a href=\"" . $this->ExportWordUrl . "\" class=\"ew-export-link ew-word\" title=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToWordText")) . "\">" . $Language->phrase("ExportToWord") . "</a>";
-		} elseif (SameText($type, "pdf")) {
-			if ($custom)
-				return "<a href=\"#\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" onclick=\"return ew.export(document.ft102_mutasilist, '" . $this->ExportPdfUrl . "', 'pdf', true);\">" . $Language->phrase("ExportToPDF") . "</a>";
-			else
-				return "<a href=\"" . $this->ExportPdfUrl . "\" class=\"ew-export-link ew-pdf\" title=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToPDFText")) . "\">" . $Language->phrase("ExportToPDF") . "</a>";
-		} elseif (SameText($type, "html")) {
-			return "<a href=\"" . $this->ExportHtmlUrl . "\" class=\"ew-export-link ew-html\" title=\"" . HtmlEncode($Language->phrase("ExportToHtmlText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToHtmlText")) . "\">" . $Language->phrase("ExportToHtml") . "</a>";
-		} elseif (SameText($type, "xml")) {
-			return "<a href=\"" . $this->ExportXmlUrl . "\" class=\"ew-export-link ew-xml\" title=\"" . HtmlEncode($Language->phrase("ExportToXmlText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToXmlText")) . "\">" . $Language->phrase("ExportToXml") . "</a>";
-		} elseif (SameText($type, "csv")) {
-			return "<a href=\"" . $this->ExportCsvUrl . "\" class=\"ew-export-link ew-csv\" title=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("ExportToCsvText")) . "\">" . $Language->phrase("ExportToCsv") . "</a>";
-		} elseif (SameText($type, "email")) {
-			$url = $custom ? ",url:'" . $this->pageUrl() . "export=email&amp;custom=1'" : "";
-			return '<button id="emf_t102_mutasi" class="ew-export-link ew-email" title="' . $Language->phrase("ExportToEmailText") . '" data-caption="' . $Language->phrase("ExportToEmailText") . '" onclick="ew.emailDialogShow({lnk:\'emf_t102_mutasi\', hdr:ew.language.phrase(\'ExportToEmailText\'), f:document.ft102_mutasilist, sel:false' . $url . '});">' . $Language->phrase("ExportToEmail") . '</button>';
-		} elseif (SameText($type, "print")) {
-			return "<a href=\"" . $this->ExportPrintUrl . "\" class=\"ew-export-link ew-print\" title=\"" . HtmlEncode($Language->phrase("PrinterFriendlyText")) . "\" data-caption=\"" . HtmlEncode($Language->phrase("PrinterFriendlyText")) . "\">" . $Language->phrase("PrinterFriendly") . "</a>";
-		}
-	}
-
-	// Set up export options
-	protected function setupExportOptions()
-	{
-		global $Language;
-
-		// Printer friendly
-		$item = &$this->ExportOptions->add("print");
-		$item->Body = $this->getExportTag("print");
-		$item->Visible = FALSE;
-
-		// Export to Excel
-		$item = &$this->ExportOptions->add("excel");
-		$item->Body = $this->getExportTag("excel");
-		$item->Visible = TRUE;
-
-		// Export to Word
-		$item = &$this->ExportOptions->add("word");
-		$item->Body = $this->getExportTag("word");
-		$item->Visible = FALSE;
-
-		// Export to Html
-		$item = &$this->ExportOptions->add("html");
-		$item->Body = $this->getExportTag("html");
-		$item->Visible = FALSE;
-
-		// Export to Xml
-		$item = &$this->ExportOptions->add("xml");
-		$item->Body = $this->getExportTag("xml");
-		$item->Visible = FALSE;
-
-		// Export to Csv
-		$item = &$this->ExportOptions->add("csv");
-		$item->Body = $this->getExportTag("csv");
-		$item->Visible = FALSE;
-
-		// Export to Pdf
-		$item = &$this->ExportOptions->add("pdf");
-		$item->Body = $this->getExportTag("pdf");
-		$item->Visible = FALSE;
-
-		// Export to Email
-		$item = &$this->ExportOptions->add("email");
-		$item->Body = $this->getExportTag("email");
-		$item->Visible = FALSE;
-
-		// Drop down button for export
-		$this->ExportOptions->UseButtonGroup = TRUE;
-		$this->ExportOptions->UseDropDownButton = FALSE;
-		if ($this->ExportOptions->UseButtonGroup && IsMobile())
-			$this->ExportOptions->UseDropDownButton = TRUE;
-		$this->ExportOptions->DropDownButtonPhrase = $Language->phrase("ButtonExport");
-
-		// Add group option item
-		$item = &$this->ExportOptions->add($this->ExportOptions->GroupOptionName);
-		$item->Body = "";
-		$item->Visible = FALSE;
-	}
-
-	// Set up search options
-	protected function setupSearchOptions()
-	{
-		global $Language;
-		$this->SearchOptions = new ListOptions("div");
-		$this->SearchOptions->TagClassName = "ew-search-option";
-
-		// Search button
-		$item = &$this->SearchOptions->add("searchtoggle");
-		$searchToggleClass = ($this->SearchWhere != "") ? " active" : " active";
-		$item->Body = "<a class=\"btn btn-default ew-search-toggle" . $searchToggleClass . "\" href=\"#\" role=\"button\" title=\"" . $Language->phrase("SearchPanel") . "\" data-caption=\"" . $Language->phrase("SearchPanel") . "\" data-toggle=\"button\" data-form=\"ft102_mutasilistsrch\">" . $Language->phrase("SearchLink") . "</a>";
-		$item->Visible = TRUE;
-
-		// Show all button
-		$item = &$this->SearchOptions->add("showall");
-		$item->Body = "<a class=\"btn btn-default ew-show-all\" title=\"" . $Language->phrase("ResetSearch") . "\" data-caption=\"" . $Language->phrase("ResetSearch") . "\" href=\"" . $this->pageUrl() . "cmd=reset\">" . $Language->phrase("ResetSearchBtn") . "</a>";
-		$item->Visible = ($this->SearchWhere != $this->DefaultSearchWhere && $this->SearchWhere != "0=101");
-
-		// Advanced search button
-		$item = &$this->SearchOptions->add("advancedsearch");
-		if (IsMobile())
-			$item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" href=\"t102_mutasisrch.php\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
-		else
-			$item->Body = "<a class=\"btn btn-default ew-advanced-search\" title=\"" . $Language->phrase("AdvancedSearch") . "\" data-table=\"t102_mutasi\" data-caption=\"" . $Language->phrase("AdvancedSearch") . "\" href=\"#\" onclick=\"return ew.modalDialogShow({lnk:this,btn:'SearchBtn',url:'t102_mutasisrch.php'});\">" . $Language->phrase("AdvancedSearchBtn") . "</a>";
-		$item->Visible = TRUE;
-
-		// Button group for search
-		$this->SearchOptions->UseDropDownButton = FALSE;
-		$this->SearchOptions->UseButtonGroup = TRUE;
-		$this->SearchOptions->DropDownButtonPhrase = $Language->phrase("ButtonSearch");
-
-		// Add group option item
-		$item = &$this->SearchOptions->add($this->SearchOptions->GroupOptionName);
-		$item->Body = "";
-		$item->Visible = FALSE;
-
-		// Hide search options
-		if ($this->isExport() || $this->CurrentAction)
-			$this->SearchOptions->hideAllOptions();
-		global $Security;
-		if (!$Security->canSearch()) {
-			$this->SearchOptions->hideAllOptions();
-			$this->FilterOptions->hideAllOptions();
-		}
-	}
-
-	/**
-	 * Export data in HTML/CSV/Word/Excel/XML/Email/PDF format
-	 *
-	 * @param boolean $return Return the data rather than output it
-	 * @return mixed 
-	 */
-	public function exportData($return = FALSE)
-	{
-		global $Language;
-		$utf8 = SameText(Config("PROJECT_CHARSET"), "utf-8");
-		$selectLimit = $this->UseSelectLimit;
-
-		// Load recordset
-		if ($selectLimit) {
-			$this->TotalRecords = $this->listRecordCount();
-		} else {
-			if (!$this->Recordset)
-				$this->Recordset = $this->loadRecordset();
-			$rs = &$this->Recordset;
-			if ($rs)
-				$this->TotalRecords = $rs->RecordCount();
-		}
-		$this->StartRecord = 1;
-
-		// Export all
-		if ($this->ExportAll) {
-			set_time_limit(Config("EXPORT_ALL_TIME_LIMIT"));
-			$this->DisplayRecords = $this->TotalRecords;
-			$this->StopRecord = $this->TotalRecords;
-		} else { // Export one page only
-			$this->setupStartRecord(); // Set up start record position
-
-			// Set the last record to display
-			if ($this->DisplayRecords <= 0) {
-				$this->StopRecord = $this->TotalRecords;
-			} else {
-				$this->StopRecord = $this->StartRecord + $this->DisplayRecords - 1;
-			}
-		}
-		if ($selectLimit)
-			$rs = $this->loadRecordset($this->StartRecord - 1, $this->DisplayRecords <= 0 ? $this->TotalRecords : $this->DisplayRecords);
-		$this->ExportDoc = GetExportDocument($this, "h");
-		$doc = &$this->ExportDoc;
-		if (!$doc)
-			$this->setFailureMessage($Language->phrase("ExportClassNotFound")); // Export class not found
-		if (!$rs || !$doc) {
-			RemoveHeader("Content-Type"); // Remove header
-			RemoveHeader("Content-Disposition");
-			$this->showMessage();
-			return;
-		}
-		if ($selectLimit) {
-			$this->StartRecord = 1;
-			$this->StopRecord = $this->DisplayRecords <= 0 ? $this->TotalRecords : $this->DisplayRecords;
-		}
-
-		// Call Page Exporting server event
-		$this->ExportDoc->ExportCustom = !$this->Page_Exporting();
-
-		// Export master record
-		if (Config("EXPORT_MASTER_RECORD") && $this->getMasterFilter() != "" && $this->getCurrentMasterTable() == "t001_jo") {
-			global $t001_jo;
-			if (!isset($t001_jo))
-				$t001_jo = new t001_jo();
-			$rsmaster = $t001_jo->loadRs($this->DbMasterFilter); // Load master record
-			if ($rsmaster && !$rsmaster->EOF) {
-				$exportStyle = $doc->Style;
-				$doc->setStyle("v"); // Change to vertical
-				if (!$this->isExport("csv") || Config("EXPORT_MASTER_RECORD_FOR_CSV")) {
-					$doc->Table = &$t001_jo;
-					$t001_jo->exportDocument($doc, $rsmaster);
-					$doc->exportEmptyRow();
-					$doc->Table = &$this;
-				}
-				$doc->setStyle($exportStyle); // Restore
-				$rsmaster->close();
-			}
-		}
-		$header = $this->PageHeader;
-		$this->Page_DataRendering($header);
-		$doc->Text .= $header;
-		$this->exportDocument($doc, $rs, $this->StartRecord, $this->StopRecord, "");
-		$footer = $this->PageFooter;
-		$this->Page_DataRendered($footer);
-		$doc->Text .= $footer;
-
-		// Close recordset
-		$rs->close();
-
-		// Call Page Exported server event
-		$this->Page_Exported();
-
-		// Export header and footer
-		$doc->exportHeaderAndFooter();
-
-		// Clean output buffer (without destroying output buffer)
-		$buffer = ob_get_contents(); // Save the output buffer
-		if (!Config("DEBUG") && $buffer)
-			ob_clean();
-
-		// Write debug message if enabled
-		if (Config("DEBUG") && !$this->isExport("pdf"))
-			echo GetDebugMessage();
-
-		// Output data
-		if ($this->isExport("email")) {
-
-			// Export-to-email disabled
-		} else {
-			$doc->export();
-			if ($return) {
-				RemoveHeader("Content-Type"); // Remove header
-				RemoveHeader("Content-Disposition");
-				$content = ob_get_contents();
-				if ($content)
-					ob_clean();
-				if ($buffer)
-					echo $buffer; // Resume the output buffer
-				return $content;
-			}
-		}
-	}
-
 	// Set up master/detail based on QueryString
 	protected function setupMasterParms()
 	{
-		$validMaster = FALSE;
 
-		// Get the keys for master table
-		if (Get(Config("TABLE_SHOW_MASTER")) !== NULL) {
-			$masterTblVar = Get(Config("TABLE_SHOW_MASTER"));
-			if ($masterTblVar == "") {
-				$validMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($masterTblVar == "t001_jo") {
-				$validMaster = TRUE;
-				if (Get("fk_id") !== NULL) {
-					$GLOBALS["t001_jo"]->id->setQueryStringValue(Get("fk_id"));
-					$this->jo_id->setQueryStringValue($GLOBALS["t001_jo"]->id->QueryStringValue);
-					$this->jo_id->setSessionValue($this->jo_id->QueryStringValue);
-					if (!is_numeric($GLOBALS["t001_jo"]->id->QueryStringValue))
-						$validMaster = FALSE;
-				} else {
-					$validMaster = FALSE;
-				}
-			}
-		} elseif (Post(Config("TABLE_SHOW_MASTER")) !== NULL) {
-			$masterTblVar = Post(Config("TABLE_SHOW_MASTER"));
-			if ($masterTblVar == "") {
-				$validMaster = TRUE;
-				$this->DbMasterFilter = "";
-				$this->DbDetailFilter = "";
-			}
-			if ($masterTblVar == "t001_jo") {
-				$validMaster = TRUE;
-				if (Post("fk_id") !== NULL) {
-					$GLOBALS["t001_jo"]->id->setFormValue(Post("fk_id"));
-					$this->jo_id->setFormValue($GLOBALS["t001_jo"]->id->FormValue);
-					$this->jo_id->setSessionValue($this->jo_id->FormValue);
-					if (!is_numeric($GLOBALS["t001_jo"]->id->FormValue))
-						$validMaster = FALSE;
-				} else {
-					$validMaster = FALSE;
-				}
-			}
-		}
-		if ($validMaster) {
-
-			// Update URL
-			$this->AddUrl = $this->addMasterUrl($this->AddUrl);
-			$this->InlineAddUrl = $this->addMasterUrl($this->InlineAddUrl);
-			$this->GridAddUrl = $this->addMasterUrl($this->GridAddUrl);
-			$this->GridEditUrl = $this->addMasterUrl($this->GridEditUrl);
-
-			// Save current master table
-			$this->setCurrentMasterTable($masterTblVar);
-
-			// Reset start record counter (new master key)
-			if (!$this->isAddOrEdit()) {
-				$this->StartRecord = 1;
-				$this->setStartRecordNumber($this->StartRecord);
-			}
-
-			// Clear previous master key from Session
-			if ($masterTblVar != "t001_jo") {
-				if ($this->jo_id->CurrentValue == "")
-					$this->jo_id->setSessionValue("");
-			}
+		// Hide foreign keys
+		$masterTblVar = $this->getCurrentMasterTable();
+		if ($masterTblVar == "t001_jo") {
+			$this->jo_id->Visible = FALSE;
+			if ($GLOBALS["t001_jo"]->EventCancelled)
+				$this->EventCancelled = TRUE;
 		}
 		$this->DbMasterFilter = $this->getMasterFilter(); // Get master filter
 		$this->DbDetailFilter = $this->getDetailFilter(); // Get detail filter
-	}
-
-	// Set up Breadcrumb
-	protected function setupBreadcrumb()
-	{
-		global $Breadcrumb, $Language;
-		$Breadcrumb = new Breadcrumb();
-		$url = substr(CurrentUrl(), strrpos(CurrentUrl(), "/")+1);
-		$url = preg_replace('/\?cmd=reset(all){0,1}$/i', '', $url); // Remove cmd=reset / cmd=resetall
-		$Breadcrumb->add("list", $this->TableVar, $url, "", $this->TableVar, TRUE);
 	}
 
 	// Setup lookup options
@@ -4380,44 +2743,6 @@ class t102_mutasi_list extends t102_mutasi
 					$rs->close();
 				$fld->Lookup->Options = $ar;
 			}
-		}
-	}
-
-	// Set up starting record parameters
-	public function setupStartRecord()
-	{
-		if ($this->DisplayRecords == 0)
-			return;
-		if ($this->isPageRequest()) { // Validate request
-			$startRec = Get(Config("TABLE_START_REC"));
-			$pageNo = Get(Config("TABLE_PAGE_NO"));
-			if ($startRec !== NULL) { // Check for "start" parameter
-				$this->StartRecord = $startRec;
-				$this->setStartRecordNumber($this->StartRecord);
-			} elseif ($pageNo !== NULL) {
-				if (is_numeric($pageNo)) {
-					$this->StartRecord = ($pageNo - 1) * $this->DisplayRecords + 1;
-					if ($this->StartRecord <= 0) {
-						$this->StartRecord = 1;
-					} elseif ($this->StartRecord >= (int)(($this->TotalRecords - 1)/$this->DisplayRecords) * $this->DisplayRecords + 1) {
-						$this->StartRecord = (int)(($this->TotalRecords - 1)/$this->DisplayRecords) * $this->DisplayRecords + 1;
-					}
-					$this->setStartRecordNumber($this->StartRecord);
-				}
-			}
-		}
-		$this->StartRecord = $this->getStartRecordNumber();
-
-		// Check if correct start record counter
-		if (!is_numeric($this->StartRecord) || $this->StartRecord == "") { // Avoid invalid start record counter
-			$this->StartRecord = 1; // Reset start record counter
-			$this->setStartRecordNumber($this->StartRecord);
-		} elseif ($this->StartRecord > $this->TotalRecords) { // Avoid starting record > total records
-			$this->StartRecord = (int)(($this->TotalRecords - 1)/$this->DisplayRecords) * $this->DisplayRecords + 1; // Point to last page first record
-			$this->setStartRecordNumber($this->StartRecord);
-		} elseif (($this->StartRecord - 1) % $this->DisplayRecords != 0) {
-			$this->StartRecord = (int)(($this->StartRecord - 1)/$this->DisplayRecords) * $this->DisplayRecords + 1; // Point to page boundary
-			$this->setStartRecordNumber($this->StartRecord);
 		}
 	}
 
@@ -4520,67 +2845,6 @@ class t102_mutasi_list extends t102_mutasi
 
 		// Example:
 		//$this->ListOptions["new"]->Body = "xxx";
-
-	}
-
-	// Row Custom Action event
-	function Row_CustomAction($action, $row) {
-
-		// Return FALSE to abort
-		return TRUE;
-	}
-
-	// Page Exporting event
-	// $this->ExportDoc = export document object
-	function Page_Exporting() {
-
-		//$this->ExportDoc->Text = "my header"; // Export header
-		//return FALSE; // Return FALSE to skip default export and use Row_Export event
-
-		return TRUE; // Return TRUE to use default export and skip Row_Export event
-	}
-
-	// Row Export event
-	// $this->ExportDoc = export document object
-	function Row_Export($rs) {
-
-		//$this->ExportDoc->Text .= "my content"; // Build HTML with field value: $rs["MyField"] or $this->MyField->ViewValue
-	}
-
-	// Page Exported event
-	// $this->ExportDoc = export document object
-	function Page_Exported() {
-
-		//$this->ExportDoc->Text .= "my footer"; // Export footer
-		//echo $this->ExportDoc->Text;
-
-	}
-
-	// Page Importing event
-	function Page_Importing($reader, &$options) {
-
-		//var_dump($reader); // Import data reader
-		//var_dump($options); // Show all options for importing
-		//return FALSE; // Return FALSE to skip import
-
-		return TRUE;
-	}
-
-	// Row Import event
-	function Row_Import(&$row, $cnt) {
-
-		//echo $cnt; // Import record count
-		//var_dump($row); // Import row
-		//return FALSE; // Return FALSE to skip import
-
-		return TRUE;
-	}
-
-	// Page Imported event
-	function Page_Imported($reader, $results) {
-
-		//var_dump($reader); // Import data reader
-		//var_dump($results); // Import results
 
 	}
 } // End class

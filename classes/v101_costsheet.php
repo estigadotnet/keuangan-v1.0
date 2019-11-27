@@ -2,9 +2,9 @@
 <?php
 
 /**
- * Table class for t001_jo
+ * Table class for v101_costsheet
  */
-class t001_jo extends DbTable
+class v101_costsheet extends DbTable
 {
 	protected $SqlFrom = "";
 	protected $SqlSelect = "";
@@ -21,29 +21,21 @@ class t001_jo extends DbTable
 	public $OffsetColumnClass = "col-sm-10 offset-sm-2";
 	public $TableLeftColumnClass = "w-col-2";
 
-	// Audit trail
-	public $AuditTrailOnAdd = TRUE;
-	public $AuditTrailOnEdit = TRUE;
-	public $AuditTrailOnDelete = TRUE;
-	public $AuditTrailOnView = FALSE;
-	public $AuditTrailOnViewData = FALSE;
-	public $AuditTrailOnSearch = FALSE;
-
 	// Export
 	public $ExportDoc;
 
 	// Fields
 	public $id;
 	public $NoJO;
-	public $Status;
 	public $Tagihan;
 	public $Shipper;
 	public $Qty;
 	public $Cont;
-	public $BM;
+	public $Status;
+	public $Doc;
 	public $Tujuan;
 	public $Kapal;
-	public $Doc;
+	public $BM;
 
 	// Constructor
 	public function __construct()
@@ -54,12 +46,12 @@ class t001_jo extends DbTable
 		// Language object
 		if (!isset($Language))
 			$Language = new Language();
-		$this->TableVar = 't001_jo';
-		$this->TableName = 't001_jo';
-		$this->TableType = 'TABLE';
+		$this->TableVar = 'v101_costsheet';
+		$this->TableName = 'v101_costsheet';
+		$this->TableType = 'VIEW';
 
 		// Update Table
-		$this->UpdateTable = "`t001_jo`";
+		$this->UpdateTable = "`v101_costsheet`";
 		$this->Dbid = 'DB';
 		$this->ExportAll = TRUE;
 		$this->ExportPageBreakCount = 0; // Page break per every n record (PDF only)
@@ -79,7 +71,7 @@ class t001_jo extends DbTable
 		$this->BasicSearch = new BasicSearch($this->TableVar);
 
 		// id
-		$this->id = new DbField('t001_jo', 't001_jo', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
+		$this->id = new DbField('v101_costsheet', 'v101_costsheet', 'x_id', 'id', '`id`', '`id`', 3, 11, -1, FALSE, '`id`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'NO');
 		$this->id->IsAutoIncrement = TRUE; // Autoincrement field
 		$this->id->IsPrimaryKey = TRUE; // Primary key field
 		$this->id->IsForeignKey = TRUE; // Foreign key field
@@ -88,70 +80,65 @@ class t001_jo extends DbTable
 		$this->fields['id'] = &$this->id;
 
 		// NoJO
-		$this->NoJO = new DbField('t001_jo', 't001_jo', 'x_NoJO', 'NoJO', '`NoJO`', '`NoJO`', 200, 25, -1, FALSE, '`NoJO`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->NoJO = new DbField('v101_costsheet', 'v101_costsheet', 'x_NoJO', 'NoJO', '`NoJO`', '`NoJO`', 200, 25, -1, FALSE, '`NoJO`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
 		$this->NoJO->Nullable = FALSE; // NOT NULL field
 		$this->NoJO->Required = TRUE; // Required field
 		$this->NoJO->Sortable = TRUE; // Allow sort
 		$this->NoJO->UsePleaseSelect = TRUE; // Use PleaseSelect by default
 		$this->NoJO->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-		$this->NoJO->Lookup = new Lookup('NoJO', 't001_jo', FALSE, 'NoJO', ["NoJO","","",""], [], [], [], [], [], [], '`NoJO` DESC', '');
+		$this->NoJO->Lookup = new Lookup('NoJO', 'v101_costsheet', FALSE, 'NoJO', ["NoJO","","",""], [], [], [], [], [], [], '', '');
 		$this->fields['NoJO'] = &$this->NoJO;
 
-		// Status
-		$this->Status = new DbField('t001_jo', 't001_jo', 'x_Status', 'Status', '`Status`', '`Status`', 16, 5, -1, FALSE, '`Status`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
-		$this->Status->Required = TRUE; // Required field
-		$this->Status->Sortable = TRUE; // Allow sort
-		$this->Status->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->Status->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-		$this->Status->Lookup = new Lookup('Status', 't001_jo', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
-		$this->Status->OptionCount = 4;
-		$this->Status->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
-		$this->fields['Status'] = &$this->Status;
-
 		// Tagihan
-		$this->Tagihan = new DbField('t001_jo', 't001_jo', 'x_Tagihan', 'Tagihan', '`Tagihan`', '`Tagihan`', 5, 14, -1, FALSE, '`Tagihan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Tagihan = new DbField('v101_costsheet', 'v101_costsheet', 'x_Tagihan', 'Tagihan', '`Tagihan`', '`Tagihan`', 5, 14, -1, FALSE, '`Tagihan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->Tagihan->Nullable = FALSE; // NOT NULL field
 		$this->Tagihan->Sortable = TRUE; // Allow sort
 		$this->Tagihan->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
 		$this->fields['Tagihan'] = &$this->Tagihan;
 
 		// Shipper
-		$this->Shipper = new DbField('t001_jo', 't001_jo', 'x_Shipper', 'Shipper', '`Shipper`', '`Shipper`', 200, 100, -1, FALSE, '`Shipper`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Shipper = new DbField('v101_costsheet', 'v101_costsheet', 'x_Shipper', 'Shipper', '`Shipper`', '`Shipper`', 200, 100, -1, FALSE, '`Shipper`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->Shipper->Sortable = TRUE; // Allow sort
 		$this->fields['Shipper'] = &$this->Shipper;
 
 		// Qty
-		$this->Qty = new DbField('t001_jo', 't001_jo', 'x_Qty', 'Qty', '`Qty`', '`Qty`', 200, 5, -1, FALSE, '`Qty`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Qty = new DbField('v101_costsheet', 'v101_costsheet', 'x_Qty', 'Qty', '`Qty`', '`Qty`', 200, 5, -1, FALSE, '`Qty`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->Qty->Sortable = TRUE; // Allow sort
 		$this->fields['Qty'] = &$this->Qty;
 
 		// Cont
-		$this->Cont = new DbField('t001_jo', 't001_jo', 'x_Cont', 'Cont', '`Cont`', '`Cont`', 200, 5, -1, FALSE, '`Cont`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Cont = new DbField('v101_costsheet', 'v101_costsheet', 'x_Cont', 'Cont', '`Cont`', '`Cont`', 200, 5, -1, FALSE, '`Cont`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->Cont->Sortable = TRUE; // Allow sort
 		$this->fields['Cont'] = &$this->Cont;
 
-		// BM
-		$this->BM = new DbField('t001_jo', 't001_jo', 'x_BM', 'BM', '`BM`', '`BM`', 202, 5, -1, FALSE, '`BM`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
-		$this->BM->Nullable = FALSE; // NOT NULL field
-		$this->BM->Sortable = TRUE; // Allow sort
-		$this->BM->Lookup = new Lookup('BM', 't001_jo', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
-		$this->BM->OptionCount = 3;
-		$this->fields['BM'] = &$this->BM;
+		// Status
+		$this->Status = new DbField('v101_costsheet', 'v101_costsheet', 'x_Status', 'Status', '`Status`', '`Status`', 16, 5, -1, FALSE, '`Status`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Status->Sortable = TRUE; // Allow sort
+		$this->Status->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
+		$this->fields['Status'] = &$this->Status;
+
+		// Doc
+		$this->Doc = new DbField('v101_costsheet', 'v101_costsheet', 'x_Doc', 'Doc', '`Doc`', '`Doc`', 200, 255, -1, FALSE, '`Doc`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Doc->Sortable = TRUE; // Allow sort
+		$this->fields['Doc'] = &$this->Doc;
 
 		// Tujuan
-		$this->Tujuan = new DbField('t001_jo', 't001_jo', 'x_Tujuan', 'Tujuan', '`Tujuan`', '`Tujuan`', 200, 100, -1, FALSE, '`Tujuan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Tujuan = new DbField('v101_costsheet', 'v101_costsheet', 'x_Tujuan', 'Tujuan', '`Tujuan`', '`Tujuan`', 200, 100, -1, FALSE, '`Tujuan`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->Tujuan->Sortable = TRUE; // Allow sort
 		$this->fields['Tujuan'] = &$this->Tujuan;
 
 		// Kapal
-		$this->Kapal = new DbField('t001_jo', 't001_jo', 'x_Kapal', 'Kapal', '`Kapal`', '`Kapal`', 200, 100, -1, FALSE, '`Kapal`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->Kapal = new DbField('v101_costsheet', 'v101_costsheet', 'x_Kapal', 'Kapal', '`Kapal`', '`Kapal`', 200, 100, -1, FALSE, '`Kapal`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->Kapal->Sortable = TRUE; // Allow sort
 		$this->fields['Kapal'] = &$this->Kapal;
 
-		// Doc
-		$this->Doc = new DbField('t001_jo', 't001_jo', 'x_Doc', 'Doc', '`Doc`', '`Doc`', 200, 255, -1, TRUE, '`Doc`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'FILE');
-		$this->Doc->Sortable = TRUE; // Allow sort
-		$this->fields['Doc'] = &$this->Doc;
+		// BM
+		$this->BM = new DbField('v101_costsheet', 'v101_costsheet', 'x_BM', 'BM', '`BM`', '`BM`', 202, 5, -1, FALSE, '`BM`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'RADIO');
+		$this->BM->Nullable = FALSE; // NOT NULL field
+		$this->BM->Sortable = TRUE; // Allow sort
+		$this->BM->Lookup = new Lookup('BM', 'v101_costsheet', FALSE, '', ["","","",""], [], [], [], [], [], [], '', '');
+		$this->BM->OptionCount = 3;
+		$this->fields['BM'] = &$this->BM;
 	}
 
 	// Field Visibility
@@ -224,14 +211,14 @@ class t001_jo extends DbTable
 			$detailUrl .= "&fk_id=" . urlencode($this->id->CurrentValue);
 		}
 		if ($detailUrl == "")
-			$detailUrl = "t001_jolist.php";
+			$detailUrl = "v101_costsheetlist.php";
 		return $detailUrl;
 	}
 
 	// Table level SQL
 	public function getSqlFrom() // From
 	{
-		return ($this->SqlFrom != "") ? $this->SqlFrom : "`t001_jo`";
+		return ($this->SqlFrom != "") ? $this->SqlFrom : "`v101_costsheet`";
 	}
 	public function sqlFrom() // For backward compatibility
 	{
@@ -476,8 +463,6 @@ class t001_jo extends DbTable
 			// Get insert id if necessary
 			$this->id->setDbValue($conn->insert_ID());
 			$rs['id'] = $this->id->DbValue;
-			if ($this->AuditTrailOnAdd)
-				$this->writeAuditTrailOnAdd($rs);
 		}
 		return $success;
 	}
@@ -538,13 +523,6 @@ class t001_jo extends DbTable
 			}
 		}
 		$success = $conn->execute($this->updateSql($rs, $where, $curfilter));
-		if ($success && $this->AuditTrailOnEdit && $rsold) {
-			$rsaudit = $rs;
-			$fldname = 'id';
-			if (!array_key_exists($fldname, $rsaudit))
-				$rsaudit[$fldname] = $rsold[$fldname];
-			$this->writeAuditTrailOnEdit($rsold, $rsaudit);
-		}
 		return $success;
 	}
 
@@ -600,8 +578,6 @@ class t001_jo extends DbTable
 		}
 		if ($success)
 			$success = $conn->execute($this->deleteSql($rs, $where, $curfilter));
-		if ($success && $this->AuditTrailOnDelete)
-			$this->writeAuditTrailOnDelete($rs);
 		return $success;
 	}
 
@@ -613,26 +589,21 @@ class t001_jo extends DbTable
 		$row = is_array($rs) ? $rs : $rs->fields;
 		$this->id->DbValue = $row['id'];
 		$this->NoJO->DbValue = $row['NoJO'];
-		$this->Status->DbValue = $row['Status'];
 		$this->Tagihan->DbValue = $row['Tagihan'];
 		$this->Shipper->DbValue = $row['Shipper'];
 		$this->Qty->DbValue = $row['Qty'];
 		$this->Cont->DbValue = $row['Cont'];
-		$this->BM->DbValue = $row['BM'];
+		$this->Status->DbValue = $row['Status'];
+		$this->Doc->DbValue = $row['Doc'];
 		$this->Tujuan->DbValue = $row['Tujuan'];
 		$this->Kapal->DbValue = $row['Kapal'];
-		$this->Doc->Upload->DbValue = $row['Doc'];
+		$this->BM->DbValue = $row['BM'];
 	}
 
 	// Delete uploaded files
 	public function deleteUploadedFiles($row)
 	{
 		$this->loadDbValues($row);
-		$oldFiles = EmptyValue($row['Doc']) ? [] : [$row['Doc']];
-		foreach ($oldFiles as $oldFile) {
-			if (file_exists($this->Doc->oldPhysicalUploadPath() . $oldFile))
-				@unlink($this->Doc->oldPhysicalUploadPath() . $oldFile);
-		}
 	}
 
 	// Record filter WHERE clause
@@ -669,7 +640,7 @@ class t001_jo extends DbTable
 		if (@$_SESSION[$name] != "") {
 			return $_SESSION[$name];
 		} else {
-			return "t001_jolist.php";
+			return "v101_costsheetlist.php";
 		}
 	}
 	public function setReturnUrl($v)
@@ -681,11 +652,11 @@ class t001_jo extends DbTable
 	public function getModalCaption($pageName)
 	{
 		global $Language;
-		if ($pageName == "t001_joview.php")
+		if ($pageName == "v101_costsheetview.php")
 			return $Language->phrase("View");
-		elseif ($pageName == "t001_joedit.php")
+		elseif ($pageName == "v101_costsheetedit.php")
 			return $Language->phrase("Edit");
-		elseif ($pageName == "t001_joadd.php")
+		elseif ($pageName == "v101_costsheetadd.php")
 			return $Language->phrase("Add");
 		else
 			return "";
@@ -694,16 +665,16 @@ class t001_jo extends DbTable
 	// List URL
 	public function getListUrl()
 	{
-		return "t001_jolist.php";
+		return "v101_costsheetlist.php";
 	}
 
 	// View URL
 	public function getViewUrl($parm = "")
 	{
 		if ($parm != "")
-			$url = $this->keyUrl("t001_joview.php", $this->getUrlParm($parm));
+			$url = $this->keyUrl("v101_costsheetview.php", $this->getUrlParm($parm));
 		else
-			$url = $this->keyUrl("t001_joview.php", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+			$url = $this->keyUrl("v101_costsheetview.php", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
 		return $this->addMasterUrl($url);
 	}
 
@@ -711,9 +682,9 @@ class t001_jo extends DbTable
 	public function getAddUrl($parm = "")
 	{
 		if ($parm != "")
-			$url = "t001_joadd.php?" . $this->getUrlParm($parm);
+			$url = "v101_costsheetadd.php?" . $this->getUrlParm($parm);
 		else
-			$url = "t001_joadd.php";
+			$url = "v101_costsheetadd.php";
 		return $this->addMasterUrl($url);
 	}
 
@@ -721,9 +692,9 @@ class t001_jo extends DbTable
 	public function getEditUrl($parm = "")
 	{
 		if ($parm != "")
-			$url = $this->keyUrl("t001_joedit.php", $this->getUrlParm($parm));
+			$url = $this->keyUrl("v101_costsheetedit.php", $this->getUrlParm($parm));
 		else
-			$url = $this->keyUrl("t001_joedit.php", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+			$url = $this->keyUrl("v101_costsheetedit.php", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
 		return $this->addMasterUrl($url);
 	}
 
@@ -738,9 +709,9 @@ class t001_jo extends DbTable
 	public function getCopyUrl($parm = "")
 	{
 		if ($parm != "")
-			$url = $this->keyUrl("t001_joadd.php", $this->getUrlParm($parm));
+			$url = $this->keyUrl("v101_costsheetadd.php", $this->getUrlParm($parm));
 		else
-			$url = $this->keyUrl("t001_joadd.php", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
+			$url = $this->keyUrl("v101_costsheetadd.php", $this->getUrlParm(Config("TABLE_SHOW_DETAIL") . "="));
 		return $this->addMasterUrl($url);
 	}
 
@@ -754,7 +725,7 @@ class t001_jo extends DbTable
 	// Delete URL
 	public function getDeleteUrl()
 	{
-		return $this->keyUrl("t001_jodelete.php", $this->getUrlParm());
+		return $this->keyUrl("v101_costsheetdelete.php", $this->getUrlParm());
 	}
 
 	// Add master url
@@ -865,15 +836,15 @@ class t001_jo extends DbTable
 	{
 		$this->id->setDbValue($rs->fields('id'));
 		$this->NoJO->setDbValue($rs->fields('NoJO'));
-		$this->Status->setDbValue($rs->fields('Status'));
 		$this->Tagihan->setDbValue($rs->fields('Tagihan'));
 		$this->Shipper->setDbValue($rs->fields('Shipper'));
 		$this->Qty->setDbValue($rs->fields('Qty'));
 		$this->Cont->setDbValue($rs->fields('Cont'));
-		$this->BM->setDbValue($rs->fields('BM'));
+		$this->Status->setDbValue($rs->fields('Status'));
+		$this->Doc->setDbValue($rs->fields('Doc'));
 		$this->Tujuan->setDbValue($rs->fields('Tujuan'));
 		$this->Kapal->setDbValue($rs->fields('Kapal'));
-		$this->Doc->Upload->DbValue = $rs->fields('Doc');
+		$this->BM->setDbValue($rs->fields('BM'));
 	}
 
 	// Render list row values
@@ -887,15 +858,15 @@ class t001_jo extends DbTable
 		// Common render codes
 		// id
 		// NoJO
-		// Status
 		// Tagihan
 		// Shipper
 		// Qty
 		// Cont
-		// BM
+		// Status
+		// Doc
 		// Tujuan
 		// Kapal
-		// Doc
+		// BM
 		// id
 
 		$this->id->ViewValue = $this->id->CurrentValue;
@@ -907,18 +878,9 @@ class t001_jo extends DbTable
 		$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
 		$this->NoJO->ViewCustomAttributes = "";
 
-		// Status
-		if (strval($this->Status->CurrentValue) != "") {
-			$this->Status->ViewValue = $this->Status->optionCaption($this->Status->CurrentValue);
-		} else {
-			$this->Status->ViewValue = NULL;
-		}
-		$this->Status->ViewCustomAttributes = "";
-
 		// Tagihan
 		$this->Tagihan->ViewValue = $this->Tagihan->CurrentValue;
-		$this->Tagihan->ViewValue = FormatNumber($this->Tagihan->ViewValue, 0, -2, -2, -2);
-		$this->Tagihan->CellCssStyle .= "text-align: right;";
+		$this->Tagihan->ViewValue = FormatNumber($this->Tagihan->ViewValue, 2, -2, -2, -2);
 		$this->Tagihan->ViewCustomAttributes = "";
 
 		// Shipper
@@ -933,13 +895,14 @@ class t001_jo extends DbTable
 		$this->Cont->ViewValue = $this->Cont->CurrentValue;
 		$this->Cont->ViewCustomAttributes = "";
 
-		// BM
-		if (strval($this->BM->CurrentValue) != "") {
-			$this->BM->ViewValue = $this->BM->optionCaption($this->BM->CurrentValue);
-		} else {
-			$this->BM->ViewValue = NULL;
-		}
-		$this->BM->ViewCustomAttributes = "";
+		// Status
+		$this->Status->ViewValue = $this->Status->CurrentValue;
+		$this->Status->ViewValue = FormatNumber($this->Status->ViewValue, 0, -2, -2, -2);
+		$this->Status->ViewCustomAttributes = "";
+
+		// Doc
+		$this->Doc->ViewValue = $this->Doc->CurrentValue;
+		$this->Doc->ViewCustomAttributes = "";
 
 		// Tujuan
 		$this->Tujuan->ViewValue = $this->Tujuan->CurrentValue;
@@ -949,13 +912,13 @@ class t001_jo extends DbTable
 		$this->Kapal->ViewValue = $this->Kapal->CurrentValue;
 		$this->Kapal->ViewCustomAttributes = "";
 
-		// Doc
-		if (!EmptyValue($this->Doc->Upload->DbValue)) {
-			$this->Doc->ViewValue = $this->Doc->Upload->DbValue;
+		// BM
+		if (strval($this->BM->CurrentValue) != "") {
+			$this->BM->ViewValue = $this->BM->optionCaption($this->BM->CurrentValue);
 		} else {
-			$this->Doc->ViewValue = "";
+			$this->BM->ViewValue = NULL;
 		}
-		$this->Doc->ViewCustomAttributes = "";
+		$this->BM->ViewCustomAttributes = "";
 
 		// id
 		$this->id->LinkCustomAttributes = "";
@@ -966,11 +929,6 @@ class t001_jo extends DbTable
 		$this->NoJO->LinkCustomAttributes = "";
 		$this->NoJO->HrefValue = "";
 		$this->NoJO->TooltipValue = "";
-
-		// Status
-		$this->Status->LinkCustomAttributes = "";
-		$this->Status->HrefValue = "";
-		$this->Status->TooltipValue = "";
 
 		// Tagihan
 		$this->Tagihan->LinkCustomAttributes = "";
@@ -992,10 +950,15 @@ class t001_jo extends DbTable
 		$this->Cont->HrefValue = "";
 		$this->Cont->TooltipValue = "";
 
-		// BM
-		$this->BM->LinkCustomAttributes = "";
-		$this->BM->HrefValue = "";
-		$this->BM->TooltipValue = "";
+		// Status
+		$this->Status->LinkCustomAttributes = "";
+		$this->Status->HrefValue = "";
+		$this->Status->TooltipValue = "";
+
+		// Doc
+		$this->Doc->LinkCustomAttributes = "";
+		$this->Doc->HrefValue = "";
+		$this->Doc->TooltipValue = "";
 
 		// Tujuan
 		$this->Tujuan->LinkCustomAttributes = "";
@@ -1007,11 +970,10 @@ class t001_jo extends DbTable
 		$this->Kapal->HrefValue = "";
 		$this->Kapal->TooltipValue = "";
 
-		// Doc
-		$this->Doc->LinkCustomAttributes = "";
-		$this->Doc->HrefValue = "";
-		$this->Doc->ExportHrefValue = $this->Doc->UploadPath . $this->Doc->Upload->DbValue;
-		$this->Doc->TooltipValue = "";
+		// BM
+		$this->BM->LinkCustomAttributes = "";
+		$this->BM->HrefValue = "";
+		$this->BM->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1037,11 +999,6 @@ class t001_jo extends DbTable
 		// NoJO
 		$this->NoJO->EditAttrs["class"] = "form-control";
 		$this->NoJO->EditCustomAttributes = "";
-
-		// Status
-		$this->Status->EditAttrs["class"] = "form-control";
-		$this->Status->EditCustomAttributes = "";
-		$this->Status->EditValue = $this->Status->options(TRUE);
 
 		// Tagihan
 		$this->Tagihan->EditAttrs["class"] = "form-control";
@@ -1076,9 +1033,19 @@ class t001_jo extends DbTable
 		$this->Cont->EditValue = $this->Cont->CurrentValue;
 		$this->Cont->PlaceHolder = RemoveHtml($this->Cont->caption());
 
-		// BM
-		$this->BM->EditCustomAttributes = "";
-		$this->BM->EditValue = $this->BM->options(FALSE);
+		// Status
+		$this->Status->EditAttrs["class"] = "form-control";
+		$this->Status->EditCustomAttributes = "";
+		$this->Status->EditValue = $this->Status->CurrentValue;
+		$this->Status->PlaceHolder = RemoveHtml($this->Status->caption());
+
+		// Doc
+		$this->Doc->EditAttrs["class"] = "form-control";
+		$this->Doc->EditCustomAttributes = "";
+		if (!$this->Doc->Raw)
+			$this->Doc->CurrentValue = HtmlDecode($this->Doc->CurrentValue);
+		$this->Doc->EditValue = $this->Doc->CurrentValue;
+		$this->Doc->PlaceHolder = RemoveHtml($this->Doc->caption());
 
 		// Tujuan
 		$this->Tujuan->EditAttrs["class"] = "form-control";
@@ -1096,14 +1063,9 @@ class t001_jo extends DbTable
 		$this->Kapal->EditValue = $this->Kapal->CurrentValue;
 		$this->Kapal->PlaceHolder = RemoveHtml($this->Kapal->caption());
 
-		// Doc
-		$this->Doc->EditAttrs["class"] = "form-control";
-		$this->Doc->EditCustomAttributes = "";
-		if (!EmptyValue($this->Doc->Upload->DbValue)) {
-			$this->Doc->EditValue = $this->Doc->Upload->DbValue;
-		} else {
-			$this->Doc->EditValue = "";
-		}
+		// BM
+		$this->BM->EditCustomAttributes = "";
+		$this->BM->EditValue = $this->BM->options(FALSE);
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1134,28 +1096,29 @@ class t001_jo extends DbTable
 			if ($doc->Horizontal) { // Horizontal format, write header
 				$doc->beginExportRow();
 				if ($exportPageType == "view") {
+					$doc->exportCaption($this->id);
 					$doc->exportCaption($this->NoJO);
-					$doc->exportCaption($this->Status);
 					$doc->exportCaption($this->Tagihan);
 					$doc->exportCaption($this->Shipper);
 					$doc->exportCaption($this->Qty);
 					$doc->exportCaption($this->Cont);
-					$doc->exportCaption($this->BM);
+					$doc->exportCaption($this->Status);
+					$doc->exportCaption($this->Doc);
 					$doc->exportCaption($this->Tujuan);
 					$doc->exportCaption($this->Kapal);
-					$doc->exportCaption($this->Doc);
+					$doc->exportCaption($this->BM);
 				} else {
 					$doc->exportCaption($this->id);
 					$doc->exportCaption($this->NoJO);
-					$doc->exportCaption($this->Status);
 					$doc->exportCaption($this->Tagihan);
 					$doc->exportCaption($this->Shipper);
 					$doc->exportCaption($this->Qty);
 					$doc->exportCaption($this->Cont);
-					$doc->exportCaption($this->BM);
+					$doc->exportCaption($this->Status);
+					$doc->exportCaption($this->Doc);
 					$doc->exportCaption($this->Tujuan);
 					$doc->exportCaption($this->Kapal);
-					$doc->exportCaption($this->Doc);
+					$doc->exportCaption($this->BM);
 				}
 				$doc->endExportRow();
 			}
@@ -1187,28 +1150,29 @@ class t001_jo extends DbTable
 				if (!$doc->ExportCustom) {
 					$doc->beginExportRow($rowCnt); // Allow CSS styles if enabled
 					if ($exportPageType == "view") {
+						$doc->exportField($this->id);
 						$doc->exportField($this->NoJO);
-						$doc->exportField($this->Status);
 						$doc->exportField($this->Tagihan);
 						$doc->exportField($this->Shipper);
 						$doc->exportField($this->Qty);
 						$doc->exportField($this->Cont);
-						$doc->exportField($this->BM);
+						$doc->exportField($this->Status);
+						$doc->exportField($this->Doc);
 						$doc->exportField($this->Tujuan);
 						$doc->exportField($this->Kapal);
-						$doc->exportField($this->Doc);
+						$doc->exportField($this->BM);
 					} else {
 						$doc->exportField($this->id);
 						$doc->exportField($this->NoJO);
-						$doc->exportField($this->Status);
 						$doc->exportField($this->Tagihan);
 						$doc->exportField($this->Shipper);
 						$doc->exportField($this->Qty);
 						$doc->exportField($this->Cont);
-						$doc->exportField($this->BM);
+						$doc->exportField($this->Status);
+						$doc->exportField($this->Doc);
 						$doc->exportField($this->Tujuan);
 						$doc->exportField($this->Kapal);
-						$doc->exportField($this->Doc);
+						$doc->exportField($this->BM);
 					}
 					$doc->endExportRow($rowCnt);
 				}
@@ -1227,230 +1191,9 @@ class t001_jo extends DbTable
 	// Get file data
 	public function getFileData($fldparm, $key, $resize, $width = 0, $height = 0)
 	{
-		$width = ($width > 0) ? $width : Config("THUMBNAIL_DEFAULT_WIDTH");
-		$height = ($height > 0) ? $height : Config("THUMBNAIL_DEFAULT_HEIGHT");
 
-		// Set up field name / file name field / file type field
-		$fldName = "";
-		$fileNameFld = "";
-		$fileTypeFld = "";
-		if ($fldparm == 'Doc') {
-			$fldName = "Doc";
-		} else {
-			return FALSE; // Incorrect field
-		}
-
-		// Set up key values
-		$ar = explode(Config("COMPOSITE_KEY_SEPARATOR"), $key);
-		if (count($ar) == 1) {
-			$this->id->CurrentValue = $ar[0];
-		} else {
-			return FALSE; // Incorrect key
-		}
-
-		// Set up filter (WHERE Clause)
-		$filter = $this->getRecordFilter();
-		$this->CurrentFilter = $filter;
-		$sql = $this->getCurrentSql();
-		$conn = $this->getConnection();
-		$dbtype = GetConnectionType($this->Dbid);
-		if (($rs = $conn->execute($sql)) && !$rs->EOF) {
-			$val = $rs->fields($fldName);
-			if (!EmptyValue($val)) {
-				$fld = $this->fields[$fldName];
-
-				// Binary data
-				if ($fld->DataType == DATATYPE_BLOB) {
-					if ($dbtype != "MYSQL") {
-						if (is_array($val) || is_object($val)) // Byte array
-							$val = BytesToString($val);
-					}
-					if ($resize)
-						ResizeBinary($val, $width, $height);
-
-					// Write file type
-					if ($fileTypeFld != "" && !EmptyValue($rs->fields($fileTypeFld))) {
-						AddHeader("Content-type", $rs->fields($fileTypeFld));
-					} else {
-						AddHeader("Content-type", ContentType($val));
-					}
-
-					// Write file name
-					if ($fileNameFld != "" && !EmptyValue($rs->fields($fileNameFld))) {
-						$fileName = $rs->fields($fileNameFld);
-						$pathinfo = pathinfo($fileName);
-						$ext = strtolower(@$pathinfo["extension"]);
-						$isPdf = SameText($ext, "pdf");
-						if (!Config("EMBED_PDF") || !$isPdf) // Skip header if embed PDF
-							AddHeader("Content-Disposition", "attachment; filename=\"" . $fileName . "\"");
-					}
-
-					// Write file data
-					if (StartsString("PK", $val) && ContainsString($val, "[Content_Types].xml") &&
-						ContainsString($val, "_rels") && ContainsString($val, "docProps")) { // Fix Office 2007 documents
-						if (!EndsString("\0\0\0", $val)) // Not ends with 3 or 4 \0
-							$val .= "\0\0\0\0";
-					}
-
-					// Clear any debug message
-					if (ob_get_length())
-						ob_end_clean();
-
-					// Write binary data
-					Write($val);
-
-				// Upload to folder
-				} else {
-					if ($fld->UploadMultiple)
-						$files = explode(Config("MULTIPLE_UPLOAD_SEPARATOR"), $val);
-					else
-						$files = [$val];
-					$data = [];
-					$ar = [];
-					foreach ($files as $file) {
-						if (!EmptyValue($file))
-							$ar[$file] = FullUrl($fld->hrefPath() . $file);
-					}
-					$data[$fld->Param] = $ar;
-					WriteJson($data);
-				}
-			}
-			$rs->close();
-			return TRUE;
-		}
+		// No binary fields
 		return FALSE;
-	}
-
-	// Write Audit Trail start/end for grid update
-	public function writeAuditTrailDummy($typ)
-	{
-		$table = 't001_jo';
-		$usr = CurrentUserID();
-		WriteAuditTrail("log", DbCurrentDateTime(), ScriptName(), $usr, $typ, $table, "", "", "", "");
-	}
-
-	// Write Audit Trail (add page)
-	public function writeAuditTrailOnAdd(&$rs)
-	{
-		global $Language;
-		if (!$this->AuditTrailOnAdd)
-			return;
-		$table = 't001_jo';
-
-		// Get key value
-		$key = "";
-		if ($key != "")
-			$key .= Config("COMPOSITE_KEY_SEPARATOR");
-		$key .= $rs['id'];
-
-		// Write Audit Trail
-		$dt = DbCurrentDateTime();
-		$id = ScriptName();
-		$usr = CurrentUserID();
-		foreach (array_keys($rs) as $fldname) {
-			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->DataType != DATATYPE_BLOB) { // Ignore BLOB fields
-				if ($this->fields[$fldname]->HtmlTag == "PASSWORD") {
-					$newvalue = $Language->phrase("PasswordMask"); // Password Field
-				} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) {
-					if (Config("AUDIT_TRAIL_TO_DATABASE"))
-						$newvalue = $rs[$fldname];
-					else
-						$newvalue = "[MEMO]"; // Memo Field
-				} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) {
-					$newvalue = "[XML]"; // XML Field
-				} else {
-					$newvalue = $rs[$fldname];
-				}
-				WriteAuditTrail("log", $dt, $id, $usr, "A", $table, $fldname, $key, "", $newvalue);
-			}
-		}
-	}
-
-	// Write Audit Trail (edit page)
-	public function writeAuditTrailOnEdit(&$rsold, &$rsnew)
-	{
-		global $Language;
-		if (!$this->AuditTrailOnEdit)
-			return;
-		$table = 't001_jo';
-
-		// Get key value
-		$key = "";
-		if ($key != "")
-			$key .= Config("COMPOSITE_KEY_SEPARATOR");
-		$key .= $rsold['id'];
-
-		// Write Audit Trail
-		$dt = DbCurrentDateTime();
-		$id = ScriptName();
-		$usr = CurrentUserID();
-		foreach (array_keys($rsnew) as $fldname) {
-			if (array_key_exists($fldname, $this->fields) && array_key_exists($fldname, $rsold) && $this->fields[$fldname]->DataType != DATATYPE_BLOB) { // Ignore BLOB fields
-				if ($this->fields[$fldname]->DataType == DATATYPE_DATE) { // DateTime field
-					$modified = (FormatDateTime($rsold[$fldname], 0) != FormatDateTime($rsnew[$fldname], 0));
-				} else {
-					$modified = !CompareValue($rsold[$fldname], $rsnew[$fldname]);
-				}
-				if ($modified) {
-					if ($this->fields[$fldname]->HtmlTag == "PASSWORD") { // Password Field
-						$oldvalue = $Language->phrase("PasswordMask");
-						$newvalue = $Language->phrase("PasswordMask");
-					} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) { // Memo field
-						if (Config("AUDIT_TRAIL_TO_DATABASE")) {
-							$oldvalue = $rsold[$fldname];
-							$newvalue = $rsnew[$fldname];
-						} else {
-							$oldvalue = "[MEMO]";
-							$newvalue = "[MEMO]";
-						}
-					} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) { // XML field
-						$oldvalue = "[XML]";
-						$newvalue = "[XML]";
-					} else {
-						$oldvalue = $rsold[$fldname];
-						$newvalue = $rsnew[$fldname];
-					}
-					WriteAuditTrail("log", $dt, $id, $usr, "U", $table, $fldname, $key, $oldvalue, $newvalue);
-				}
-			}
-		}
-	}
-
-	// Write Audit Trail (delete page)
-	public function writeAuditTrailOnDelete(&$rs)
-	{
-		global $Language;
-		if (!$this->AuditTrailOnDelete)
-			return;
-		$table = 't001_jo';
-
-		// Get key value
-		$key = "";
-		if ($key != "")
-			$key .= Config("COMPOSITE_KEY_SEPARATOR");
-		$key .= $rs['id'];
-
-		// Write Audit Trail
-		$dt = DbCurrentDateTime();
-		$id = ScriptName();
-		$curUser = CurrentUserID();
-		foreach (array_keys($rs) as $fldname) {
-			if (array_key_exists($fldname, $this->fields) && $this->fields[$fldname]->DataType != DATATYPE_BLOB) { // Ignore BLOB fields
-				if ($this->fields[$fldname]->HtmlTag == "PASSWORD") {
-					$oldvalue = $Language->phrase("PasswordMask"); // Password Field
-				} elseif ($this->fields[$fldname]->DataType == DATATYPE_MEMO) {
-					if (Config("AUDIT_TRAIL_TO_DATABASE"))
-						$oldvalue = $rs[$fldname];
-					else
-						$oldvalue = "[MEMO]"; // Memo field
-				} elseif ($this->fields[$fldname]->DataType == DATATYPE_XML) {
-					$oldvalue = "[XML]"; // XML field
-				} else {
-					$oldvalue = $rs[$fldname];
-				}
-				WriteAuditTrail("log", $dt, $id, $curUser, "D", $table, $fldname, $key, $oldvalue, "");
-			}
-		}
 	}
 
 	// Table level events

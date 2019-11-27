@@ -155,6 +155,8 @@ loadjs.ready("head", function() {
 	ft001_jolist.validateRequired = <?php echo Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
 
 	// Dynamic selection lists
+	ft001_jolist.lists["x_NoJO"] = <?php echo $t001_jo_list->NoJO->Lookup->toClientList($t001_jo_list) ?>;
+	ft001_jolist.lists["x_NoJO"].options = <?php echo JsonEncode($t001_jo_list->NoJO->lookupOptions()) ?>;
 	ft001_jolist.lists["x_Status"] = <?php echo $t001_jo_list->Status->Lookup->toClientList($t001_jo_list) ?>;
 	ft001_jolist.lists["x_Status"].options = <?php echo JsonEncode($t001_jo_list->Status->options(FALSE, TRUE)) ?>;
 	ft001_jolist.lists["x_BM"] = <?php echo $t001_jo_list->BM->Lookup->toClientList($t001_jo_list) ?>;
@@ -167,9 +169,34 @@ loadjs.ready("head", function() {
 	// Form object for search
 	ft001_jolistsrch = currentSearchForm = new ew.Form("ft001_jolistsrch");
 
-	// Dynamic selection lists
-	// Filters
+	// Validate function for search
+	ft001_jolistsrch.validate = function(fobj) {
+		if (!this.validateRequired)
+			return true; // Ignore validation
+		fobj = fobj || this._form;
+		var infix = "";
 
+		// Call Form_CustomValidate event
+		if (!this.Form_CustomValidate(fobj))
+			return false;
+		return true;
+	}
+
+	// Form_CustomValidate
+	ft001_jolistsrch.Form_CustomValidate = function(fobj) { // DO NOT CHANGE THIS LINE!
+
+		// Your custom validation code here, return false if invalid.
+		return true;
+	}
+
+	// Use JavaScript validation or not
+	ft001_jolistsrch.validateRequired = <?php echo Config("CLIENT_VALIDATE") ? "true" : "false" ?>;
+
+	// Dynamic selection lists
+	ft001_jolistsrch.lists["x_NoJO"] = <?php echo $t001_jo_list->NoJO->Lookup->toClientList($t001_jo_list) ?>;
+	ft001_jolistsrch.lists["x_NoJO"].options = <?php echo JsonEncode($t001_jo_list->NoJO->lookupOptions()) ?>;
+
+	// Filters
 	ft001_jolistsrch.filterList = <?php echo $t001_jo_list->getFilterList() ?>;
 	loadjs.done("ft001_jolistsrch");
 });
@@ -210,21 +237,49 @@ $t001_jo_list->renderOtherOptions();
 <input type="hidden" name="cmd" value="search">
 <input type="hidden" name="t" value="t001_jo">
 	<div class="ew-extended-search">
-<div id="xsr_<?php echo $t001_jo_list->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
-	<div class="ew-quick-search input-group">
-		<input type="text" name="<?php echo Config("TABLE_BASIC_SEARCH") ?>" id="<?php echo Config("TABLE_BASIC_SEARCH") ?>" class="form-control" value="<?php echo HtmlEncode($t001_jo_list->BasicSearch->getKeyword()) ?>" placeholder="<?php echo HtmlEncode($Language->phrase("Search")) ?>">
-		<input type="hidden" name="<?php echo Config("TABLE_BASIC_SEARCH_TYPE") ?>" id="<?php echo Config("TABLE_BASIC_SEARCH_TYPE") ?>" value="<?php echo HtmlEncode($t001_jo_list->BasicSearch->getType()) ?>">
-		<div class="input-group-append">
-			<button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?php echo $Language->phrase("SearchBtn") ?></button>
-			<button type="button" data-toggle="dropdown" class="btn btn-primary dropdown-toggle dropdown-toggle-split" aria-haspopup="true" aria-expanded="false"><span id="searchtype"><?php echo $t001_jo_list->BasicSearch->getTypeNameShort() ?></span></button>
-			<div class="dropdown-menu dropdown-menu-right">
-				<a class="dropdown-item<?php if ($t001_jo_list->BasicSearch->getType() == "") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this);"><?php echo $Language->phrase("QuickSearchAuto") ?></a>
-				<a class="dropdown-item<?php if ($t001_jo_list->BasicSearch->getType() == "=") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, '=');"><?php echo $Language->phrase("QuickSearchExact") ?></a>
-				<a class="dropdown-item<?php if ($t001_jo_list->BasicSearch->getType() == "AND") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'AND');"><?php echo $Language->phrase("QuickSearchAll") ?></a>
-				<a class="dropdown-item<?php if ($t001_jo_list->BasicSearch->getType() == "OR") { ?> active<?php } ?>" href="#" onclick="return ew.setSearchType(this, 'OR');"><?php echo $Language->phrase("QuickSearchAny") ?></a>
-			</div>
-		</div>
+<?php
+
+// Render search row
+$t001_jo->RowType = ROWTYPE_SEARCH;
+$t001_jo->resetAttributes();
+$t001_jo_list->renderRow();
+?>
+<?php if ($t001_jo_list->NoJO->Visible) { // NoJO ?>
+	<?php
+		$t001_jo_list->SearchColumnCount++;
+		if (($t001_jo_list->SearchColumnCount - 1) % $t001_jo_list->SearchFieldsPerRow == 0) {
+			$t001_jo_list->SearchRowCount++;
+	?>
+<div id="xsr_<?php echo $t001_jo_list->SearchRowCount ?>" class="ew-row d-sm-flex">
+	<?php
+		}
+	 ?>
+	<div id="xsc_NoJO" class="ew-cell form-group">
+		<label for="x_NoJO" class="ew-search-caption ew-label"><?php echo $t001_jo_list->NoJO->caption() ?></label>
+		<span class="ew-search-operator">
+<?php echo $Language->phrase("=") ?>
+<input type="hidden" name="z_NoJO" id="z_NoJO" value="=">
+</span>
+		<span id="el_t001_jo_NoJO" class="ew-search-field">
+<div class="input-group ew-lookup-list">
+	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->AdvancedSearch->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->AdvancedSearch->ViewValue ?></div>
+	<div class="input-group-append">
+		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
 	</div>
+</div>
+<?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x_NoJO") ?>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x_NoJO" id="x_NoJO" value="<?php echo $t001_jo_list->NoJO->AdvancedSearch->SearchValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+</span>
+	</div>
+	<?php if ($t001_jo_list->SearchColumnCount % $t001_jo_list->SearchFieldsPerRow == 0) { ?>
+</div>
+	<?php } ?>
+<?php } ?>
+	<?php if ($t001_jo_list->SearchColumnCount % $t001_jo_list->SearchFieldsPerRow > 0) { ?>
+</div>
+	<?php } ?>
+<div id="xsr_<?php echo $t001_jo_list->SearchRowCount + 1 ?>" class="ew-row d-sm-flex">
+	<button class="btn btn-primary" name="btn-submit" id="btn-submit" type="submit"><?php echo $Language->phrase("SearchBtn") ?></button>
 </div>
 	</div><!-- /.ew-extended-search -->
 </div><!-- /.ew-search-panel -->
@@ -276,7 +331,7 @@ $t001_jo_list->ListOptions->render("header", "left");
 		<th data-name="NoJO" class="<?php echo $t001_jo_list->NoJO->headerCellClass() ?>"><div id="elh_t001_jo_NoJO" class="t001_jo_NoJO"><div class="ew-table-header-caption"><?php echo $t001_jo_list->NoJO->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="NoJO" class="<?php echo $t001_jo_list->NoJO->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->NoJO) ?>', 2);"><div id="elh_t001_jo_NoJO" class="t001_jo_NoJO">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->NoJO->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->NoJO->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->NoJO->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->NoJO->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->NoJO->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->NoJO->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -303,7 +358,7 @@ $t001_jo_list->ListOptions->render("header", "left");
 		<th data-name="Shipper" class="<?php echo $t001_jo_list->Shipper->headerCellClass() ?>"><div id="elh_t001_jo_Shipper" class="t001_jo_Shipper"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Shipper->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="Shipper" class="<?php echo $t001_jo_list->Shipper->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->Shipper) ?>', 2);"><div id="elh_t001_jo_Shipper" class="t001_jo_Shipper">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Shipper->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Shipper->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Shipper->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Shipper->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Shipper->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Shipper->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -312,7 +367,7 @@ $t001_jo_list->ListOptions->render("header", "left");
 		<th data-name="Qty" class="<?php echo $t001_jo_list->Qty->headerCellClass() ?>"><div id="elh_t001_jo_Qty" class="t001_jo_Qty"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Qty->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="Qty" class="<?php echo $t001_jo_list->Qty->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->Qty) ?>', 2);"><div id="elh_t001_jo_Qty" class="t001_jo_Qty">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Qty->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Qty->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Qty->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Qty->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Qty->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Qty->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -321,7 +376,7 @@ $t001_jo_list->ListOptions->render("header", "left");
 		<th data-name="Cont" class="<?php echo $t001_jo_list->Cont->headerCellClass() ?>"><div id="elh_t001_jo_Cont" class="t001_jo_Cont"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Cont->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="Cont" class="<?php echo $t001_jo_list->Cont->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->Cont) ?>', 2);"><div id="elh_t001_jo_Cont" class="t001_jo_Cont">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Cont->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Cont->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Cont->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Cont->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Cont->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Cont->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -339,7 +394,7 @@ $t001_jo_list->ListOptions->render("header", "left");
 		<th data-name="Tujuan" class="<?php echo $t001_jo_list->Tujuan->headerCellClass() ?>"><div id="elh_t001_jo_Tujuan" class="t001_jo_Tujuan"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Tujuan->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="Tujuan" class="<?php echo $t001_jo_list->Tujuan->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->Tujuan) ?>', 2);"><div id="elh_t001_jo_Tujuan" class="t001_jo_Tujuan">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Tujuan->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Tujuan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Tujuan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Tujuan->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Tujuan->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Tujuan->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -348,7 +403,7 @@ $t001_jo_list->ListOptions->render("header", "left");
 		<th data-name="Kapal" class="<?php echo $t001_jo_list->Kapal->headerCellClass() ?>"><div id="elh_t001_jo_Kapal" class="t001_jo_Kapal"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Kapal->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="Kapal" class="<?php echo $t001_jo_list->Kapal->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->Kapal) ?>', 2);"><div id="elh_t001_jo_Kapal" class="t001_jo_Kapal">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Kapal->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Kapal->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Kapal->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Kapal->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Kapal->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Kapal->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -357,7 +412,7 @@ $t001_jo_list->ListOptions->render("header", "left");
 		<th data-name="Doc" class="<?php echo $t001_jo_list->Doc->headerCellClass() ?>"><div id="elh_t001_jo_Doc" class="t001_jo_Doc"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Doc->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="Doc" class="<?php echo $t001_jo_list->Doc->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->Doc) ?>', 2);"><div id="elh_t001_jo_Doc" class="t001_jo_Doc">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Doc->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Doc->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Doc->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->Doc->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->Doc->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->Doc->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -401,7 +456,14 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 	<?php if ($t001_jo_list->NoJO->Visible) { // NoJO ?>
 		<td data-name="NoJO">
 <span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoJO" class="form-group t001_jo_NoJO">
-<input type="text" data-table="t001_jo" data-field="x_NoJO" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->NoJO->EditValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+<div class="input-group ew-lookup-list">
+	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t001_jo_list->RowIndex ?>_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->ViewValue ?></div>
+	<div class="input-group-append">
+		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+	</div>
+</div>
+<?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x" . $t001_jo_list->RowIndex . "_NoJO") ?>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo $t001_jo_list->NoJO->CurrentValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_NoJO" name="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->OldValue) ?>">
 </td>
@@ -628,13 +690,27 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 		<td data-name="NoJO" <?php echo $t001_jo_list->NoJO->cellAttributes() ?>>
 <?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoJO" class="form-group">
-<input type="text" data-table="t001_jo" data-field="x_NoJO" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->NoJO->EditValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+<div class="input-group ew-lookup-list">
+	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t001_jo_list->RowIndex ?>_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->ViewValue ?></div>
+	<div class="input-group-append">
+		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+	</div>
+</div>
+<?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x" . $t001_jo_list->RowIndex . "_NoJO") ?>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo $t001_jo_list->NoJO->CurrentValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_NoJO" name="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->OldValue) ?>">
 <?php } ?>
 <?php if ($t001_jo->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoJO" class="form-group">
-<input type="text" data-table="t001_jo" data-field="x_NoJO" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->NoJO->EditValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+<div class="input-group ew-lookup-list">
+	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t001_jo_list->RowIndex ?>_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->ViewValue ?></div>
+	<div class="input-group-append">
+		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+	</div>
+</div>
+<?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x" . $t001_jo_list->RowIndex . "_NoJO") ?>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo $t001_jo_list->NoJO->CurrentValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
 </span>
 <?php } ?>
 <?php if ($t001_jo->RowType == ROWTYPE_VIEW) { // View record ?>
@@ -919,7 +995,14 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowIndex);
 	<?php if ($t001_jo_list->NoJO->Visible) { // NoJO ?>
 		<td data-name="NoJO">
 <span id="el$rowindex$_t001_jo_NoJO" class="form-group t001_jo_NoJO">
-<input type="text" data-table="t001_jo" data-field="x_NoJO" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->NoJO->EditValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+<div class="input-group ew-lookup-list">
+	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t001_jo_list->RowIndex ?>_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->ViewValue ?></div>
+	<div class="input-group-append">
+		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+	</div>
+</div>
+<?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x" . $t001_jo_list->RowIndex . "_NoJO") ?>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo $t001_jo_list->NoJO->CurrentValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_NoJO" name="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->OldValue) ?>">
 </td>

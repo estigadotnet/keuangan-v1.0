@@ -157,6 +157,10 @@ $t102_mutasi_edit->showMessage();
 <input type="hidden" name="t" value="t102_mutasi">
 <input type="hidden" name="action" id="action" value="update">
 <input type="hidden" name="modal" value="<?php echo (int)$t102_mutasi_edit->IsModal ?>">
+<?php if ($t102_mutasi->getCurrentMasterTable() == "t001_jo") { ?>
+<input type="hidden" name="<?php echo Config("TABLE_SHOW_MASTER") ?>" value="t001_jo">
+<input type="hidden" name="fk_id" value="<?php echo $t102_mutasi_edit->jo_id->getSessionValue() ?>">
+<?php } ?>
 <div class="ew-edit-div"><!-- page* -->
 <?php if ($t102_mutasi_edit->Tanggal->Visible) { // Tanggal ?>
 	<div id="r_Tanggal" class="form-group row">
@@ -189,6 +193,12 @@ loadjs.ready(["ft102_mutasiedit", "datetimepicker"], function() {
 	<div id="r_jo_id" class="form-group row">
 		<label id="elh_t102_mutasi_jo_id" for="x_jo_id" class="<?php echo $t102_mutasi_edit->LeftColumnClass ?>"><?php echo $t102_mutasi_edit->jo_id->caption() ?><?php echo $t102_mutasi_edit->jo_id->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $t102_mutasi_edit->RightColumnClass ?>"><div <?php echo $t102_mutasi_edit->jo_id->cellAttributes() ?>>
+<?php if ($t102_mutasi_edit->jo_id->getSessionValue() != "") { ?>
+<span id="el_t102_mutasi_jo_id">
+<span<?php echo $t102_mutasi_edit->jo_id->viewAttributes() ?>><input type="text" readonly class="form-control-plaintext" value="<?php echo HtmlEncode(RemoveHtml($t102_mutasi_edit->jo_id->ViewValue)) ?>"></span>
+</span>
+<input type="hidden" id="x_jo_id" name="x_jo_id" value="<?php echo HtmlEncode($t102_mutasi_edit->jo_id->CurrentValue) ?>">
+<?php } else { ?>
 <span id="el_t102_mutasi_jo_id">
 <div class="input-group ew-lookup-list">
 	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x_jo_id"><?php echo EmptyValue(strval($t102_mutasi_edit->jo_id->ViewValue)) ? $Language->phrase("PleaseSelect") : $t102_mutasi_edit->jo_id->ViewValue ?></div>
@@ -202,6 +212,7 @@ loadjs.ready(["ft102_mutasiedit", "datetimepicker"], function() {
 <?php echo $t102_mutasi_edit->jo_id->Lookup->getParamTag($t102_mutasi_edit, "p_x_jo_id") ?>
 <input type="hidden" data-table="t102_mutasi" data-field="x_jo_id" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t102_mutasi_edit->jo_id->displayValueSeparatorAttribute() ?>" name="x_jo_id" id="x_jo_id" value="<?php echo $t102_mutasi_edit->jo_id->CurrentValue ?>"<?php echo $t102_mutasi_edit->jo_id->editAttributes() ?>>
 </span>
+<?php } ?>
 <?php echo $t102_mutasi_edit->jo_id->CustomMsg ?></div></div>
 	</div>
 <?php } ?>

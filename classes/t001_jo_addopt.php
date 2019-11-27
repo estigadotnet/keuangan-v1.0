@@ -685,6 +685,7 @@ class t001_jo_addopt extends t001_jo
 		$this->createToken();
 
 		// Set up lookup cache
+		$this->setupLookupOptions($this->NoJO);
 		set_error_handler(PROJECT_NAMESPACE . "ErrorHandler");
 
 		// Set up Breadcrumb
@@ -914,7 +915,9 @@ class t001_jo_addopt extends t001_jo
 			$this->id->ViewCustomAttributes = "";
 
 			// NoJO
-			$this->NoJO->ViewValue = $this->NoJO->CurrentValue;
+			$arwrk = [];
+			$arwrk[1] = $this->NoJO->CurrentValue;
+			$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
 			$this->NoJO->ViewCustomAttributes = "";
 
 			// Status
@@ -1020,12 +1023,36 @@ class t001_jo_addopt extends t001_jo
 		} elseif ($this->RowType == ROWTYPE_ADD) { // Add row
 
 			// NoJO
-			$this->NoJO->EditAttrs["class"] = "form-control";
 			$this->NoJO->EditCustomAttributes = "";
-			if (!$this->NoJO->Raw)
-				$this->NoJO->CurrentValue = HtmlDecode($this->NoJO->CurrentValue);
-			$this->NoJO->EditValue = HtmlEncode($this->NoJO->CurrentValue);
-			$this->NoJO->PlaceHolder = RemoveHtml($this->NoJO->caption());
+			$curVal = trim(strval($this->NoJO->CurrentValue));
+			if ($curVal != "")
+				$this->NoJO->ViewValue = $this->NoJO->lookupCacheOption($curVal);
+			else
+				$this->NoJO->ViewValue = $this->NoJO->Lookup !== NULL && is_array($this->NoJO->Lookup->Options) ? $curVal : NULL;
+			if ($this->NoJO->ViewValue !== NULL) { // Load from cache
+				$this->NoJO->EditValue = array_values($this->NoJO->Lookup->Options);
+				if ($this->NoJO->ViewValue == "")
+					$this->NoJO->ViewValue = $Language->phrase("PleaseSelect");
+			} else { // Lookup from database
+				if ($curVal == "") {
+					$filterWrk = "0=1";
+				} else {
+					$filterWrk = "`NoJO`" . SearchString("=", $this->NoJO->CurrentValue, DATATYPE_STRING, "");
+				}
+				$sqlWrk = $this->NoJO->Lookup->getSql(TRUE, $filterWrk, '', $this);
+				$rswrk = Conn()->execute($sqlWrk);
+				if ($rswrk && !$rswrk->EOF) { // Lookup values found
+					$arwrk = [];
+					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
+					$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
+				} else {
+					$this->NoJO->ViewValue = $Language->phrase("PleaseSelect");
+				}
+				$arwrk = $rswrk ? $rswrk->getRows() : [];
+				if ($rswrk)
+					$rswrk->close();
+				$this->NoJO->EditValue = $arwrk;
+			}
 
 			// Status
 			$this->Status->EditAttrs["class"] = "form-control";
@@ -1423,6 +1450,8 @@ class t001_jo_addopt extends t001_jo
 
 			// Set up lookup SQL and connection
 			switch ($fld->FieldVar) {
+				case "x_NoJO":
+					break;
 				case "x_Status":
 					break;
 				case "x_BM":
@@ -1447,6 +1476,8 @@ class t001_jo_addopt extends t001_jo
 
 					// Format the field values
 					switch ($fld->FieldVar) {
+						case "x_NoJO":
+							break;
 					}
 					$ar[strval($row[0])] = $row;
 					$rs->moveNext();
