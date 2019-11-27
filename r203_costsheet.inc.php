@@ -42,83 +42,77 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 
 ?>
 
-<div class="table-responsive">
+<div class="table-responsive-sm">
 
-	<table class="table table-bordered">
+	<table class="table table-bordered table-sm w-75">
 		<thead>
 
 			<!-- baris 1 -->
 			<tr>
-				<th scope="col" colspan="3">COST SHEET</th>
+				<!-- <th scope="col" colspan="3">COST SHEET</th> -->
+				<th colspan="6" style="text-align: center;">COST SHEET</th>
 			</tr>
 
 			<!-- baris 2 -->
 			<tr>
-				<td scope="col">No. JO</td>
-				<td>:</td>
-				<td><?php echo $r_costsheet->fields('NoJO'); ?></td>
+				<td>No. JO</td>
+				<td colspan="5"><?php echo $r_costsheet->fields('NoJO'); ?></td>
 			</tr>
 
 			<!-- baris 3 -->
 			<tr>
-				<td scope="col">VSL / VOY</td>
-				<td>:</td>
-				<td><?php echo $r_costsheet->fields('Kapal'); ?></td>
+				<td>VSL / VOY</td>
+				<td colspan="5"><?php echo $r_costsheet->fields('Kapal'); ?></td>
 			</tr>
 
 			<!-- baris 4 -->
 			<tr>
-				<td scope="col">POL / POD</td>
-				<td>:</td>
-				<td><?php echo $r_costsheet->fields('Tujuan'); ?></td>
+				<td>POL / POD</td>
+				<td colspan="5"><?php echo $r_costsheet->fields('Tujuan'); ?></td>
 			</tr>
 
 			<!-- baris 5 -->
 			<tr>
-				<td scope="col">LINER</td>
-				<td>:</td>
-				<td><?php //echo $r_costsheet->fields('Kapal'); ?></td>
+				<td>LINER</td>
+				<td colspan="5"><?php //echo $r_costsheet->fields('Kapal'); ?></td>
 			</tr>
 
 			<!-- baris 6 -->
 			<tr>
-				<td scope="col">BL No.</td>
-				<td>:</td>
-				<td><?php //echo $r_costsheet->fields('Kapal'); ?></td>
+				<td>BL No.</td>
+				<td colspan="5"><?php //echo $r_costsheet->fields('Kapal'); ?></td>
 			</tr>
 
 			<!-- baris 7 -->
 			<tr>
-				<td scope="col">SHIPPER</td>
-				<td>:</td>
-				<td><?php echo $r_costsheet->fields('Shipper'); ?></td>
+				<td>SHIPPER</td>
+				<td colspan="5"><?php echo $r_costsheet->fields('Shipper'); ?></td>
 			</tr>
 
 			<!-- baris 8 -->
 			<tr>
-				<td scope="col">VOL</td>
-				<td>:</td>
-				<td><?php echo $r_costsheet->fields('Qty') . ' x ' . $r_costsheet->fields('Cont'); ?></td>
+				<td>VOL</td>
+				<td colspan="5"><?php echo $r_costsheet->fields('Qty') . ' x ' . $r_costsheet->fields('Cont'); ?></td>
 			</tr>
-		</thead>
+	<!-- 	</thead>
 	</table>
 
-	<table class="table table-bordered">
-		<thead>
+	<table class="table table-bordered table-sm w-50">
+		<thead> -->
 			<!-- baris 9 -->
 			<tr>
-				<th scope="col" rowspan="2">CHARGE CODE</th>
-				<th scope="col" rowspan="2">NOTE</th>
-				<th scope="col" colspan="2">PAID TO LINER</th>
-				<th scope="col" colspan="2">RECEIVED FROM CUSTOMER</th>
+				<th scope="col" rowspan="2" style="text-align: center; vertical-align: middle;">CHARGE CODE</th>
+				<th scope="col" rowspan="2" style="text-align: center; vertical-align: middle;">NOTE</th>
+				<th scope="col" colspan="2" style="text-align: center;">PAID TO LINER</th>
+				<th scope="col" colspan="2" style="text-align: center;">RECEIVED FROM CUSTOMER</th>
 			</tr>
 
 			<!-- baris 10 -->
 			<tr>
-				<th scope="col">AMOUNT</th>
-				<th scope="col">TOTAL</th>
-				<th scope="col">AMOUNT</th>
-				<th scope="col">TOTAL</th>
+				<th scope="col" style="text-align: center;">AMOUNT</th>
+				<th scope="col" style="text-align: center;">TOTAL</th>
+				<th scope="col" style="text-align: center;">AMOUNT</th>
+				<th scope="col" style="text-align: center;">TOTAL</th>
 			</tr>
 
 		</thead>
@@ -148,7 +142,7 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 			?>
 
 			<tr>
-				<th scope="row" colspan="2">GRAND TOTAL</th>
+				<th scope="row" colspan="2" style="text-align: right">GRAND TOTAL</th>
 				<th scope="row">&nbsp;</th>
 				<th scope="row" style="text-align: right"><?php echo number_format($subtotal) ?></th>
 				<th scope="row">&nbsp;</th>
