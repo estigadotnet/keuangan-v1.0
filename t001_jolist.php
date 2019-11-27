@@ -257,8 +257,8 @@ $t001_jo_list->renderRow();
 	<div id="xsc_NoJO" class="ew-cell form-group">
 		<label for="x_NoJO" class="ew-search-caption ew-label"><?php echo $t001_jo_list->NoJO->caption() ?></label>
 		<span class="ew-search-operator">
-<?php echo $Language->phrase("=") ?>
-<input type="hidden" name="z_NoJO" id="z_NoJO" value="=">
+<?php echo $Language->phrase("LIKE") ?>
+<input type="hidden" name="z_NoJO" id="z_NoJO" value="LIKE">
 </span>
 		<span id="el_t001_jo_NoJO" class="ew-search-field">
 <div class="input-group ew-lookup-list">
