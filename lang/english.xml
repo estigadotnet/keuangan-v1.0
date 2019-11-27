@@ -889,6 +889,12 @@
     <menu id="25">
       <phrase id="menutext" value="Job Order" />
     </menu>
+    <menu id="28">
+      <phrase id="menutext" value="Cost Sheet" />
+    </menu>
+    <menu id="29">
+      <phrase id="menutext" value="Cost Sheet" />
+    </menu>
     <menu id="15">
       <phrase id="menutext" value="Mutasi" />
     </menu>
@@ -1269,6 +1275,84 @@
       <field id="comment">
         <phrase id="fldcaption" value="Comment" />
       </field>
+    </table>
+    <table id="v203_costsheet">
+      <phrase id="tblcaption" value="Cost Sheet" />
+      <field id="jo_id">
+        <phrase id="fldcaption" value="jo id" />
+      </field>
+      <field id="nojo">
+        <phrase id="fldcaption" value="No JO" />
+      </field>
+      <field id="tagihan">
+        <phrase id="fldcaption" value="Tagihan" />
+      </field>
+      <field id="shipper">
+        <phrase id="fldcaption" value="Shipper" />
+      </field>
+      <field id="qty">
+        <phrase id="fldcaption" value="Qty" />
+      </field>
+      <field id="cont">
+        <phrase id="fldcaption" value="Cont" />
+      </field>
+      <field id="status">
+        <phrase id="fldcaption" value="Status" />
+      </field>
+      <field id="doc">
+        <phrase id="fldcaption" value="doc" />
+      </field>
+      <field id="tujuan">
+        <phrase id="fldcaption" value="Tujuan" />
+      </field>
+      <field id="kapal">
+        <phrase id="fldcaption" value="Kapal" />
+      </field>
+      <field id="bm">
+        <phrase id="fldcaption" value="BM" />
+        <phrase id="fldtagvalue1" value="BALEN" />
+        <phrase id="fldtagcaption1" value="BALEN" />
+        <phrase id="fldtagvalue2" value="MURNI" />
+        <phrase id="fldtagcaption2" value="MURNI" />
+        <phrase id="fldtagvalue3" value="-" />
+        <phrase id="fldtagcaption3" value="-" />
+      </field>
+      <field id="mts_id">
+        <phrase id="fldcaption" value="mts id" />
+      </field>
+      <field id="tanggal">
+        <phrase id="fldcaption" value="Tanggal" />
+      </field>
+      <field id="nourut">
+        <phrase id="fldcaption" value="No Urut" />
+      </field>
+      <field id="mts_jo_id">
+        <phrase id="fldcaption" value="mts jo id" />
+      </field>
+      <field id="mts_jenis_id">
+        <phrase id="fldcaption" value="mts jenis id" />
+      </field>
+      <field id="masuk">
+        <phrase id="fldcaption" value="Masuk" />
+      </field>
+      <field id="keluar">
+        <phrase id="fldcaption" value="Keluar" />
+      </field>
+      <field id="comment">
+        <phrase id="fldcaption" value="Comment" />
+      </field>
+      <field id="jns_id">
+        <phrase id="fldcaption" value="jns id" />
+      </field>
+      <field id="jns_nama">
+        <phrase id="fldcaption" value="jns nama" />
+      </field>
+      <field id="nokolom">
+        <phrase id="fldcaption" value="No Kolom" />
+      </field>
+    </table>
+    <table id="r203_costsheet">
+      <phrase id="tblcaption" value="Cost Sheet" />
     </table>
   </project>
 </ew-language>

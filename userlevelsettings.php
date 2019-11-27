@@ -37,7 +37,11 @@ $USER_LEVEL_PRIVS = [["{FBB5EF95-13BB-496B-B131-E8C649D0628A}c201_mutasi","-2","
 	["{FBB5EF95-13BB-496B-B131-E8C649D0628A}v201_mutasi","-2","0"],
 	["{FBB5EF95-13BB-496B-B131-E8C649D0628A}v201_mutasi","0","0"],
 	["{FBB5EF95-13BB-496B-B131-E8C649D0628A}v202_jomutasihrn","-2","0"],
-	["{FBB5EF95-13BB-496B-B131-E8C649D0628A}v202_jomutasihrn","0","0"]];
+	["{FBB5EF95-13BB-496B-B131-E8C649D0628A}v202_jomutasihrn","0","0"],
+	["{FBB5EF95-13BB-496B-B131-E8C649D0628A}v203_costsheet","-2","0"],
+	["{FBB5EF95-13BB-496B-B131-E8C649D0628A}v203_costsheet","0","0"],
+	["{FBB5EF95-13BB-496B-B131-E8C649D0628A}r203_costsheet.php","-2","0"],
+	["{FBB5EF95-13BB-496B-B131-E8C649D0628A}r203_costsheet.php","0","0"]];
 
 // User level table info
 $USER_LEVEL_TABLES = [["c201_mutasi","c201_mutasi","cv 201 mutasi",true,"{FBB5EF95-13BB-496B-B131-E8C649D0628A}"],
@@ -53,4 +57,6 @@ $USER_LEVEL_TABLES = [["c201_mutasi","c201_mutasi","cv 201 mutasi",true,"{FBB5EF
 	["t303_userlevelpermissions","t303_userlevelpermissions","t 303 userlevelpermissions",true,"{FBB5EF95-13BB-496B-B131-E8C649D0628A}"],
 	["t304_audittrail","t304_audittrail","t 304 audittrail",true,"{FBB5EF95-13BB-496B-B131-E8C649D0628A}"],
 	["v201_mutasi","v201_mutasi","v 201 mutasi",true,"{FBB5EF95-13BB-496B-B131-E8C649D0628A}"],
-	["v202_jomutasihrn","v202_jomutasihrn","Laporan Job Order",true,"{FBB5EF95-13BB-496B-B131-E8C649D0628A}"]];
+	["v202_jomutasihrn","v202_jomutasihrn","Laporan Job Order",true,"{FBB5EF95-13BB-496B-B131-E8C649D0628A}"],
+	["v203_costsheet","v203_costsheet","Cost Sheet",true,"{FBB5EF95-13BB-496B-B131-E8C649D0628A}"],
+	["r203_costsheet.php","r203_costsheet","Cost Sheet",true,"{FBB5EF95-13BB-496B-B131-E8C649D0628A}"]];

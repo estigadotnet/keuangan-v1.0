@@ -256,3 +256,6 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 		</tbody>
 	</table>
 </div>
+<!-- <p>&nbsp;</p>
+<button type="button" class="btn btn-primary">Cetak</button>
+<p>&nbsp;</p> -->
