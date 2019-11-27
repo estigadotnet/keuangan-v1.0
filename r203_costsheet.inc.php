@@ -44,7 +44,7 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 
 <div class="table-responsive">
 
-	<table class="table">
+	<table class="table table-bordered">
 		<thead>
 
 			<!-- baris 1 -->
@@ -103,7 +103,7 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 		</thead>
 	</table>
 
-	<table class="table">
+	<table class="table table-bordered">
 		<thead>
 			<!-- baris 9 -->
 			<tr>
