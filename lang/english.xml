@@ -880,17 +880,17 @@
     <menu id="23">
       <phrase id="menutext" value="Laporan" />
     </menu>
-    <menu id="15">
-      <phrase id="menutext" value="Mutasi" />
-    </menu>
     <menu id="27">
-      <phrase id="menutext" value="Job Order" />
+      <phrase id="menutext" value="Bulanan" />
     </menu>
     <menu id="26">
       <phrase id="menutext" value="cv 201 mutasi" />
     </menu>
     <menu id="25">
       <phrase id="menutext" value="Job Order" />
+    </menu>
+    <menu id="15">
+      <phrase id="menutext" value="Mutasi" />
     </menu>
     <menu id="13">
       <phrase id="menutext" value="v 201 mutasi" />
