@@ -996,7 +996,11 @@ class t001_jo_list extends t001_jo
 			}
 
 			// Get default search criteria
+			AddFilter($this->DefaultSearchWhere, $this->basicSearchWhere(TRUE));
 			AddFilter($this->DefaultSearchWhere, $this->advancedSearchWhere(TRUE));
+
+			// Get basic search values
+			$this->loadBasicSearchValues();
 
 			// Get and validate search values for advanced search
 			$this->loadSearchValues(); // Get search values
@@ -1017,6 +1021,10 @@ class t001_jo_list extends t001_jo
 			// Set up sorting order
 			$this->setupSortOrder();
 
+			// Get basic search criteria
+			if ($SearchError == "")
+				$srchBasic = $this->basicSearchWhere();
+
 			// Get search criteria for advanced search
 			if ($SearchError == "")
 				$srchAdvanced = $this->advancedSearchWhere();
@@ -1036,6 +1044,11 @@ class t001_jo_list extends t001_jo
 
 		// Load search default if no existing search criteria
 		if (!$this->checkSearchParms()) {
+
+			// Load basic search from default
+			$this->BasicSearch->loadDefault();
+			if ($this->BasicSearch->Keyword != "")
+				$srchBasic = $this->basicSearchWhere();
 
 			// Load advanced search from default
 			if ($this->loadAdvancedSearchDefault()) {
@@ -1670,6 +1683,10 @@ class t001_jo_list extends t001_jo
 		$filterList = Concat($filterList, $this->Tujuan->AdvancedSearch->toJson(), ","); // Field Tujuan
 		$filterList = Concat($filterList, $this->Kapal->AdvancedSearch->toJson(), ","); // Field Kapal
 		$filterList = Concat($filterList, $this->Doc->AdvancedSearch->toJson(), ","); // Field Doc
+		if ($this->BasicSearch->Keyword != "") {
+			$wrk = "\"" . Config("TABLE_BASIC_SEARCH") . "\":\"" . JsEncode($this->BasicSearch->Keyword) . "\",\"" . Config("TABLE_BASIC_SEARCH_TYPE") . "\":\"" . JsEncode($this->BasicSearch->Type) . "\"";
+			$filterList = Concat($filterList, $wrk, ",");
+		}
 
 		// Return filter list in JSON
 		if ($filterList != "")
@@ -1791,6 +1808,8 @@ class t001_jo_list extends t001_jo
 		$this->Doc->AdvancedSearch->SearchValue2 = @$filter["y_Doc"];
 		$this->Doc->AdvancedSearch->SearchOperator2 = @$filter["w_Doc"];
 		$this->Doc->AdvancedSearch->save();
+		$this->BasicSearch->setKeyword(@$filter[Config("TABLE_BASIC_SEARCH")]);
+		$this->BasicSearch->setType(@$filter[Config("TABLE_BASIC_SEARCH_TYPE")]);
 	}
 
 	// Advanced search WHERE clause based on QueryString
@@ -1884,9 +1903,132 @@ class t001_jo_list extends t001_jo
 		return $value;
 	}
 
+	// Return basic search SQL
+	protected function basicSearchSql($arKeywords, $type)
+	{
+		$where = "";
+		$this->buildBasicSearchSql($where, $this->NoJO, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->Status, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->Shipper, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->Qty, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->Cont, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->Tujuan, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->Kapal, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->Doc, $arKeywords, $type);
+		return $where;
+	}
+
+	// Build basic search SQL
+	protected function buildBasicSearchSql(&$where, &$fld, $arKeywords, $type)
+	{
+		$defCond = ($type == "OR") ? "OR" : "AND";
+		$arSql = []; // Array for SQL parts
+		$arCond = []; // Array for search conditions
+		$cnt = count($arKeywords);
+		$j = 0; // Number of SQL parts
+		for ($i = 0; $i < $cnt; $i++) {
+			$keyword = $arKeywords[$i];
+			$keyword = trim($keyword);
+			if (Config("BASIC_SEARCH_IGNORE_PATTERN") != "") {
+				$keyword = preg_replace(Config("BASIC_SEARCH_IGNORE_PATTERN"), "\\", $keyword);
+				$ar = explode("\\", $keyword);
+			} else {
+				$ar = [$keyword];
+			}
+			foreach ($ar as $keyword) {
+				if ($keyword != "") {
+					$wrk = "";
+					if ($keyword == "OR" && $type == "") {
+						if ($j > 0)
+							$arCond[$j - 1] = "OR";
+					} elseif ($keyword == Config("NULL_VALUE")) {
+						$wrk = $fld->Expression . " IS NULL";
+					} elseif ($keyword == Config("NOT_NULL_VALUE")) {
+						$wrk = $fld->Expression . " IS NOT NULL";
+					} elseif ($fld->IsVirtual) {
+						$wrk = $fld->VirtualExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+					} elseif ($fld->DataType != DATATYPE_NUMBER || is_numeric($keyword)) {
+						$wrk = $fld->BasicSearchExpression . Like(QuotedValue("%" . $keyword . "%", DATATYPE_STRING, $this->Dbid), $this->Dbid);
+					}
+					if ($wrk != "") {
+						$arSql[$j] = $wrk;
+						$arCond[$j] = $defCond;
+						$j += 1;
+					}
+				}
+			}
+		}
+		$cnt = count($arSql);
+		$quoted = FALSE;
+		$sql = "";
+		if ($cnt > 0) {
+			for ($i = 0; $i < $cnt - 1; $i++) {
+				if ($arCond[$i] == "OR") {
+					if (!$quoted)
+						$sql .= "(";
+					$quoted = TRUE;
+				}
+				$sql .= $arSql[$i];
+				if ($quoted && $arCond[$i] != "OR") {
+					$sql .= ")";
+					$quoted = FALSE;
+				}
+				$sql .= " " . $arCond[$i] . " ";
+			}
+			$sql .= $arSql[$cnt - 1];
+			if ($quoted)
+				$sql .= ")";
+		}
+		if ($sql != "") {
+			if ($where != "")
+				$where .= " OR ";
+			$where .= "(" . $sql . ")";
+		}
+	}
+
+	// Return basic search WHERE clause based on search keyword and type
+	protected function basicSearchWhere($default = FALSE)
+	{
+		global $Security;
+		$searchStr = "";
+		if (!$Security->canSearch())
+			return "";
+		$searchKeyword = ($default) ? $this->BasicSearch->KeywordDefault : $this->BasicSearch->Keyword;
+		$searchType = ($default) ? $this->BasicSearch->TypeDefault : $this->BasicSearch->Type;
+
+		// Get search SQL
+		if ($searchKeyword != "") {
+			$ar = $this->BasicSearch->keywordList($default);
+
+			// Search keyword in any fields
+			if (($searchType == "OR" || $searchType == "AND") && $this->BasicSearch->BasicSearchAnyFields) {
+				foreach ($ar as $keyword) {
+					if ($keyword != "") {
+						if ($searchStr != "")
+							$searchStr .= " " . $searchType . " ";
+						$searchStr .= "(" . $this->basicSearchSql([$keyword], $searchType) . ")";
+					}
+				}
+			} else {
+				$searchStr = $this->basicSearchSql($ar, $searchType);
+			}
+			if (!$default && in_array($this->Command, ["", "reset", "resetall"]))
+				$this->Command = "search";
+		}
+		if (!$default && $this->Command == "search") {
+			$this->BasicSearch->setKeyword($searchKeyword);
+			$this->BasicSearch->setType($searchType);
+		}
+		return $searchStr;
+	}
+
 	// Check if search parm exists
 	protected function checkSearchParms()
 	{
+
+		// Check basic search
+		if ($this->BasicSearch->issetSession())
+			return TRUE;
 		if ($this->id->AdvancedSearch->issetSession())
 			return TRUE;
 		if ($this->NoJO->AdvancedSearch->issetSession())
@@ -1920,6 +2062,9 @@ class t001_jo_list extends t001_jo
 		$this->SearchWhere = "";
 		$this->setSearchWhere($this->SearchWhere);
 
+		// Clear basic search parameters
+		$this->resetBasicSearchParms();
+
 		// Clear advanced search parameters
 		$this->resetAdvancedSearchParms();
 	}
@@ -1928,6 +2073,12 @@ class t001_jo_list extends t001_jo
 	protected function loadAdvancedSearchDefault()
 	{
 		return FALSE;
+	}
+
+	// Clear all basic search parameters
+	protected function resetBasicSearchParms()
+	{
+		$this->BasicSearch->unsetSession();
 	}
 
 	// Clear all advanced search parameters
@@ -1950,6 +2101,9 @@ class t001_jo_list extends t001_jo
 	protected function restoreSearchParms()
 	{
 		$this->RestoreSearch = TRUE;
+
+		// Restore basic search values
+		$this->BasicSearch->load();
 
 		// Restore advanced search values
 		$this->id->AdvancedSearch->load();
@@ -2654,6 +2808,15 @@ class t001_jo_list extends t001_jo
 		$this->Kapal->OldValue = $this->Kapal->CurrentValue;
 		$this->Doc->Upload->DbValue = NULL;
 		$this->Doc->OldValue = $this->Doc->Upload->DbValue;
+	}
+
+	// Load basic search values
+	protected function loadBasicSearchValues()
+	{
+		$this->BasicSearch->setKeyword(Get(Config("TABLE_BASIC_SEARCH"), ""), FALSE);
+		if ($this->BasicSearch->Keyword != "" && $this->Command == "")
+			$this->Command = "search";
+		$this->BasicSearch->setType(Get(Config("TABLE_BASIC_SEARCH_TYPE"), ""), FALSE);
 	}
 
 	// Load search values for validation
