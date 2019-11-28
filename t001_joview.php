@@ -101,6 +101,16 @@ $t001_jo_view->showMessage();
 </td>
 	</tr>
 <?php } ?>
+<?php if ($t001_jo_view->NoBL->Visible) { // NoBL ?>
+	<tr id="r_NoBL">
+		<td class="<?php echo $t001_jo_view->TableLeftColumnClass ?>"><span id="elh_t001_jo_NoBL"><?php echo $t001_jo_view->NoBL->caption() ?></span></td>
+		<td data-name="NoBL" <?php echo $t001_jo_view->NoBL->cellAttributes() ?>>
+<span id="el_t001_jo_NoBL">
+<span<?php echo $t001_jo_view->NoBL->viewAttributes() ?>><?php echo $t001_jo_view->NoBL->getViewValue() ?></span>
+</span>
+</td>
+	</tr>
+<?php } ?>
 <?php if ($t001_jo_view->Shipper->Visible) { // Shipper ?>
 	<tr id="r_Shipper">
 		<td class="<?php echo $t001_jo_view->TableLeftColumnClass ?>"><span id="elh_t001_jo_Shipper"><?php echo $t001_jo_view->Shipper->caption() ?></span></td>

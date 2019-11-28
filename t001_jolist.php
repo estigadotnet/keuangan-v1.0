@@ -79,6 +79,11 @@ loadjs.ready("head", function() {
 				elm = this.getElements("x" + infix + "_Tagihan");
 				if (elm && !ew.checkNumber(elm.value))
 					return this.onError(elm, "<?php echo JsEncode($t001_jo_list->Tagihan->errorMessage()) ?>");
+			<?php if ($t001_jo_list->NoBL->Required) { ?>
+				elm = this.getElements("x" + infix + "_NoBL");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_list->NoBL->caption(), $t001_jo_list->NoBL->RequiredErrorMessage)) ?>");
+			<?php } ?>
 			<?php if ($t001_jo_list->Shipper->Required) { ?>
 				elm = this.getElements("x" + infix + "_Shipper");
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -134,6 +139,7 @@ loadjs.ready("head", function() {
 		if (ew.valueChanged(fobj, infix, "NoJO", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Status", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Tagihan", false)) return false;
+		if (ew.valueChanged(fobj, infix, "NoBL", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Shipper", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Qty", false)) return false;
 		if (ew.valueChanged(fobj, infix, "Cont", false)) return false;
@@ -366,6 +372,15 @@ $t001_jo_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
+<?php if ($t001_jo_list->NoBL->Visible) { // NoBL ?>
+	<?php if ($t001_jo_list->SortUrl($t001_jo_list->NoBL) == "") { ?>
+		<th data-name="NoBL" class="<?php echo $t001_jo_list->NoBL->headerCellClass() ?>"><div id="elh_t001_jo_NoBL" class="t001_jo_NoBL"><div class="ew-table-header-caption"><?php echo $t001_jo_list->NoBL->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="NoBL" class="<?php echo $t001_jo_list->NoBL->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->NoBL) ?>', 2);"><div id="elh_t001_jo_NoBL" class="t001_jo_NoBL">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->NoBL->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->NoBL->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->NoBL->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php if ($t001_jo_list->Shipper->Visible) { // Shipper ?>
 	<?php if ($t001_jo_list->SortUrl($t001_jo_list->Shipper) == "") { ?>
 		<th data-name="Shipper" class="<?php echo $t001_jo_list->Shipper->headerCellClass() ?>"><div id="elh_t001_jo_Shipper" class="t001_jo_Shipper"><div class="ew-table-header-caption"><?php echo $t001_jo_list->Shipper->caption() ?></div></div></th>
@@ -499,6 +514,14 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 <input type="text" data-table="t001_jo" data-field="x_Tagihan" name="x<?php echo $t001_jo_list->RowIndex ?>_Tagihan" id="x<?php echo $t001_jo_list->RowIndex ?>_Tagihan" size="14" maxlength="14" placeholder="<?php echo HtmlEncode($t001_jo_list->Tagihan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Tagihan->EditValue ?>"<?php echo $t001_jo_list->Tagihan->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_Tagihan" name="o<?php echo $t001_jo_list->RowIndex ?>_Tagihan" id="o<?php echo $t001_jo_list->RowIndex ?>_Tagihan" value="<?php echo HtmlEncode($t001_jo_list->Tagihan->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($t001_jo_list->NoBL->Visible) { // NoBL ?>
+		<td data-name="NoBL">
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoBL" class="form-group t001_jo_NoBL">
+<input type="text" data-table="t001_jo" data-field="x_NoBL" name="x<?php echo $t001_jo_list->RowIndex ?>_NoBL" id="x<?php echo $t001_jo_list->RowIndex ?>_NoBL" size="30" maxlength="50" placeholder="<?php echo HtmlEncode($t001_jo_list->NoBL->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->NoBL->EditValue ?>"<?php echo $t001_jo_list->NoBL->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_NoBL" name="o<?php echo $t001_jo_list->RowIndex ?>_NoBL" id="o<?php echo $t001_jo_list->RowIndex ?>_NoBL" value="<?php echo HtmlEncode($t001_jo_list->NoBL->OldValue) ?>">
 </td>
 	<?php } ?>
 	<?php if ($t001_jo_list->Shipper->Visible) { // Shipper ?>
@@ -788,6 +811,26 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 <?php } ?>
 </td>
 	<?php } ?>
+	<?php if ($t001_jo_list->NoBL->Visible) { // NoBL ?>
+		<td data-name="NoBL" <?php echo $t001_jo_list->NoBL->cellAttributes() ?>>
+<?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoBL" class="form-group">
+<input type="text" data-table="t001_jo" data-field="x_NoBL" name="x<?php echo $t001_jo_list->RowIndex ?>_NoBL" id="x<?php echo $t001_jo_list->RowIndex ?>_NoBL" size="30" maxlength="50" placeholder="<?php echo HtmlEncode($t001_jo_list->NoBL->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->NoBL->EditValue ?>"<?php echo $t001_jo_list->NoBL->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_NoBL" name="o<?php echo $t001_jo_list->RowIndex ?>_NoBL" id="o<?php echo $t001_jo_list->RowIndex ?>_NoBL" value="<?php echo HtmlEncode($t001_jo_list->NoBL->OldValue) ?>">
+<?php } ?>
+<?php if ($t001_jo->RowType == ROWTYPE_EDIT) { // Edit record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoBL" class="form-group">
+<input type="text" data-table="t001_jo" data-field="x_NoBL" name="x<?php echo $t001_jo_list->RowIndex ?>_NoBL" id="x<?php echo $t001_jo_list->RowIndex ?>_NoBL" size="30" maxlength="50" placeholder="<?php echo HtmlEncode($t001_jo_list->NoBL->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->NoBL->EditValue ?>"<?php echo $t001_jo_list->NoBL->editAttributes() ?>>
+</span>
+<?php } ?>
+<?php if ($t001_jo->RowType == ROWTYPE_VIEW) { // View record ?>
+<span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoBL">
+<span<?php echo $t001_jo_list->NoBL->viewAttributes() ?>><?php echo $t001_jo_list->NoBL->getViewValue() ?></span>
+</span>
+<?php } ?>
+</td>
+	<?php } ?>
 	<?php if ($t001_jo_list->Shipper->Visible) { // Shipper ?>
 		<td data-name="Shipper" <?php echo $t001_jo_list->Shipper->cellAttributes() ?>>
 <?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
@@ -1038,6 +1081,14 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowIndex);
 <input type="text" data-table="t001_jo" data-field="x_Tagihan" name="x<?php echo $t001_jo_list->RowIndex ?>_Tagihan" id="x<?php echo $t001_jo_list->RowIndex ?>_Tagihan" size="14" maxlength="14" placeholder="<?php echo HtmlEncode($t001_jo_list->Tagihan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->Tagihan->EditValue ?>"<?php echo $t001_jo_list->Tagihan->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_Tagihan" name="o<?php echo $t001_jo_list->RowIndex ?>_Tagihan" id="o<?php echo $t001_jo_list->RowIndex ?>_Tagihan" value="<?php echo HtmlEncode($t001_jo_list->Tagihan->OldValue) ?>">
+</td>
+	<?php } ?>
+	<?php if ($t001_jo_list->NoBL->Visible) { // NoBL ?>
+		<td data-name="NoBL">
+<span id="el$rowindex$_t001_jo_NoBL" class="form-group t001_jo_NoBL">
+<input type="text" data-table="t001_jo" data-field="x_NoBL" name="x<?php echo $t001_jo_list->RowIndex ?>_NoBL" id="x<?php echo $t001_jo_list->RowIndex ?>_NoBL" size="30" maxlength="50" placeholder="<?php echo HtmlEncode($t001_jo_list->NoBL->getPlaceHolder()) ?>" value="<?php echo $t001_jo_list->NoBL->EditValue ?>"<?php echo $t001_jo_list->NoBL->editAttributes() ?>>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_NoBL" name="o<?php echo $t001_jo_list->RowIndex ?>_NoBL" id="o<?php echo $t001_jo_list->RowIndex ?>_NoBL" value="<?php echo HtmlEncode($t001_jo_list->NoBL->OldValue) ?>">
 </td>
 	<?php } ?>
 	<?php if ($t001_jo_list->Shipper->Visible) { // Shipper ?>

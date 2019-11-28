@@ -667,6 +667,7 @@ class t001_jo_view extends t001_jo
 		$this->NoJO->setVisibility();
 		$this->Status->setVisibility();
 		$this->Tagihan->setVisibility();
+		$this->NoBL->setVisibility();
 		$this->Shipper->setVisibility();
 		$this->Qty->setVisibility();
 		$this->Cont->setVisibility();
@@ -946,6 +947,7 @@ class t001_jo_view extends t001_jo
 		$this->NoJO->setDbValue($row['NoJO']);
 		$this->Status->setDbValue($row['Status']);
 		$this->Tagihan->setDbValue($row['Tagihan']);
+		$this->NoBL->setDbValue($row['NoBL']);
 		$this->Shipper->setDbValue($row['Shipper']);
 		$this->Qty->setDbValue($row['Qty']);
 		$this->Cont->setDbValue($row['Cont']);
@@ -964,6 +966,7 @@ class t001_jo_view extends t001_jo
 		$row['NoJO'] = NULL;
 		$row['Status'] = NULL;
 		$row['Tagihan'] = NULL;
+		$row['NoBL'] = NULL;
 		$row['Shipper'] = NULL;
 		$row['Qty'] = NULL;
 		$row['Cont'] = NULL;
@@ -999,6 +1002,7 @@ class t001_jo_view extends t001_jo
 		// NoJO
 		// Status
 		// Tagihan
+		// NoBL
 		// Shipper
 		// Qty
 		// Cont
@@ -1032,6 +1036,10 @@ class t001_jo_view extends t001_jo
 			$this->Tagihan->ViewValue = FormatNumber($this->Tagihan->ViewValue, 0, -2, -2, -2);
 			$this->Tagihan->CellCssStyle .= "text-align: right;";
 			$this->Tagihan->ViewCustomAttributes = "";
+
+			// NoBL
+			$this->NoBL->ViewValue = $this->NoBL->CurrentValue;
+			$this->NoBL->ViewCustomAttributes = "";
 
 			// Shipper
 			$this->Shipper->ViewValue = $this->Shipper->CurrentValue;
@@ -1083,6 +1091,11 @@ class t001_jo_view extends t001_jo
 			$this->Tagihan->LinkCustomAttributes = "";
 			$this->Tagihan->HrefValue = "";
 			$this->Tagihan->TooltipValue = "";
+
+			// NoBL
+			$this->NoBL->LinkCustomAttributes = "";
+			$this->NoBL->HrefValue = "";
+			$this->NoBL->TooltipValue = "";
 
 			// Shipper
 			$this->Shipper->LinkCustomAttributes = "";

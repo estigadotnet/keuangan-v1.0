@@ -80,7 +80,7 @@ if (isset($_SESSION['NoJO']) and $_SESSION['NoJO'] != '') {
 			<!-- baris 6 -->
 			<tr>
 				<td>BL No.</td>
-				<td colspan="5"><?php //echo $r_costsheet->fields('Kapal'); ?></td>
+				<td colspan="5"><?php echo $r_costsheet->fields('NoBL'); ?></td>
 			</tr>
 
 			<!-- baris 7 -->

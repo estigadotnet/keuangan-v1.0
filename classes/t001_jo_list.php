@@ -827,6 +827,7 @@ class t001_jo_list extends t001_jo
 		$this->NoJO->setVisibility();
 		$this->Status->setVisibility();
 		$this->Tagihan->setVisibility();
+		$this->NoBL->setVisibility();
 		$this->Shipper->setVisibility();
 		$this->Qty->setVisibility();
 		$this->Cont->setVisibility();
@@ -1580,6 +1581,8 @@ class t001_jo_list extends t001_jo
 			return FALSE;
 		if ($CurrentForm->hasValue("x_Tagihan") && $CurrentForm->hasValue("o_Tagihan") && $this->Tagihan->CurrentValue != $this->Tagihan->OldValue)
 			return FALSE;
+		if ($CurrentForm->hasValue("x_NoBL") && $CurrentForm->hasValue("o_NoBL") && $this->NoBL->CurrentValue != $this->NoBL->OldValue)
+			return FALSE;
 		if ($CurrentForm->hasValue("x_Shipper") && $CurrentForm->hasValue("o_Shipper") && $this->Shipper->CurrentValue != $this->Shipper->OldValue)
 			return FALSE;
 		if ($CurrentForm->hasValue("x_Qty") && $CurrentForm->hasValue("o_Qty") && $this->Qty->CurrentValue != $this->Qty->OldValue)
@@ -1680,6 +1683,7 @@ class t001_jo_list extends t001_jo
 		$filterList = Concat($filterList, $this->NoJO->AdvancedSearch->toJson(), ","); // Field NoJO
 		$filterList = Concat($filterList, $this->Status->AdvancedSearch->toJson(), ","); // Field Status
 		$filterList = Concat($filterList, $this->Tagihan->AdvancedSearch->toJson(), ","); // Field Tagihan
+		$filterList = Concat($filterList, $this->NoBL->AdvancedSearch->toJson(), ","); // Field NoBL
 		$filterList = Concat($filterList, $this->Shipper->AdvancedSearch->toJson(), ","); // Field Shipper
 		$filterList = Concat($filterList, $this->Qty->AdvancedSearch->toJson(), ","); // Field Qty
 		$filterList = Concat($filterList, $this->Cont->AdvancedSearch->toJson(), ","); // Field Cont
@@ -1757,6 +1761,14 @@ class t001_jo_list extends t001_jo
 		$this->Tagihan->AdvancedSearch->SearchOperator2 = @$filter["w_Tagihan"];
 		$this->Tagihan->AdvancedSearch->save();
 
+		// Field NoBL
+		$this->NoBL->AdvancedSearch->SearchValue = @$filter["x_NoBL"];
+		$this->NoBL->AdvancedSearch->SearchOperator = @$filter["z_NoBL"];
+		$this->NoBL->AdvancedSearch->SearchCondition = @$filter["v_NoBL"];
+		$this->NoBL->AdvancedSearch->SearchValue2 = @$filter["y_NoBL"];
+		$this->NoBL->AdvancedSearch->SearchOperator2 = @$filter["w_NoBL"];
+		$this->NoBL->AdvancedSearch->save();
+
 		// Field Shipper
 		$this->Shipper->AdvancedSearch->SearchValue = @$filter["x_Shipper"];
 		$this->Shipper->AdvancedSearch->SearchOperator = @$filter["z_Shipper"];
@@ -1827,6 +1839,7 @@ class t001_jo_list extends t001_jo
 		$this->buildSearchSql($where, $this->NoJO, $default, FALSE); // NoJO
 		$this->buildSearchSql($where, $this->Status, $default, FALSE); // Status
 		$this->buildSearchSql($where, $this->Tagihan, $default, FALSE); // Tagihan
+		$this->buildSearchSql($where, $this->NoBL, $default, FALSE); // NoBL
 		$this->buildSearchSql($where, $this->Shipper, $default, FALSE); // Shipper
 		$this->buildSearchSql($where, $this->Qty, $default, FALSE); // Qty
 		$this->buildSearchSql($where, $this->Cont, $default, FALSE); // Cont
@@ -1844,6 +1857,7 @@ class t001_jo_list extends t001_jo
 			$this->NoJO->AdvancedSearch->save(); // NoJO
 			$this->Status->AdvancedSearch->save(); // Status
 			$this->Tagihan->AdvancedSearch->save(); // Tagihan
+			$this->NoBL->AdvancedSearch->save(); // NoBL
 			$this->Shipper->AdvancedSearch->save(); // Shipper
 			$this->Qty->AdvancedSearch->save(); // Qty
 			$this->Cont->AdvancedSearch->save(); // Cont
@@ -1913,6 +1927,7 @@ class t001_jo_list extends t001_jo
 		$where = "";
 		$this->buildBasicSearchSql($where, $this->NoJO, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->Status, $arKeywords, $type);
+		$this->buildBasicSearchSql($where, $this->NoBL, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->Shipper, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->Qty, $arKeywords, $type);
 		$this->buildBasicSearchSql($where, $this->Cont, $arKeywords, $type);
@@ -2041,6 +2056,8 @@ class t001_jo_list extends t001_jo
 			return TRUE;
 		if ($this->Tagihan->AdvancedSearch->issetSession())
 			return TRUE;
+		if ($this->NoBL->AdvancedSearch->issetSession())
+			return TRUE;
 		if ($this->Shipper->AdvancedSearch->issetSession())
 			return TRUE;
 		if ($this->Qty->AdvancedSearch->issetSession())
@@ -2092,6 +2109,7 @@ class t001_jo_list extends t001_jo
 		$this->NoJO->AdvancedSearch->unsetSession();
 		$this->Status->AdvancedSearch->unsetSession();
 		$this->Tagihan->AdvancedSearch->unsetSession();
+		$this->NoBL->AdvancedSearch->unsetSession();
 		$this->Shipper->AdvancedSearch->unsetSession();
 		$this->Qty->AdvancedSearch->unsetSession();
 		$this->Cont->AdvancedSearch->unsetSession();
@@ -2114,6 +2132,7 @@ class t001_jo_list extends t001_jo
 		$this->NoJO->AdvancedSearch->load();
 		$this->Status->AdvancedSearch->load();
 		$this->Tagihan->AdvancedSearch->load();
+		$this->NoBL->AdvancedSearch->load();
 		$this->Shipper->AdvancedSearch->load();
 		$this->Qty->AdvancedSearch->load();
 		$this->Cont->AdvancedSearch->load();
@@ -2137,6 +2156,7 @@ class t001_jo_list extends t001_jo
 			$this->updateSort($this->NoJO, $ctrl); // NoJO
 			$this->updateSort($this->Status, $ctrl); // Status
 			$this->updateSort($this->Tagihan, $ctrl); // Tagihan
+			$this->updateSort($this->NoBL, $ctrl); // NoBL
 			$this->updateSort($this->Shipper, $ctrl); // Shipper
 			$this->updateSort($this->Qty, $ctrl); // Qty
 			$this->updateSort($this->Cont, $ctrl); // Cont
@@ -2184,6 +2204,7 @@ class t001_jo_list extends t001_jo
 				$this->NoJO->setSort("");
 				$this->Status->setSort("");
 				$this->Tagihan->setSort("");
+				$this->NoBL->setSort("");
 				$this->Shipper->setSort("");
 				$this->Qty->setSort("");
 				$this->Cont->setSort("");
@@ -2798,6 +2819,8 @@ class t001_jo_list extends t001_jo
 		$this->Status->OldValue = $this->Status->CurrentValue;
 		$this->Tagihan->CurrentValue = 0.00;
 		$this->Tagihan->OldValue = $this->Tagihan->CurrentValue;
+		$this->NoBL->CurrentValue = NULL;
+		$this->NoBL->OldValue = $this->NoBL->CurrentValue;
 		$this->Shipper->CurrentValue = NULL;
 		$this->Shipper->OldValue = $this->Shipper->CurrentValue;
 		$this->Qty->CurrentValue = NULL;
@@ -2855,6 +2878,13 @@ class t001_jo_list extends t001_jo
 		if (!$this->isAddOrEdit() && $this->Tagihan->AdvancedSearch->get()) {
 			$got = TRUE;
 			if (($this->Tagihan->AdvancedSearch->SearchValue != "" || $this->Tagihan->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
+				$this->Command = "search";
+		}
+
+		// NoBL
+		if (!$this->isAddOrEdit() && $this->NoBL->AdvancedSearch->get()) {
+			$got = TRUE;
+			if (($this->NoBL->AdvancedSearch->SearchValue != "" || $this->NoBL->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
 				$this->Command = "search";
 		}
 
@@ -2947,6 +2977,16 @@ class t001_jo_list extends t001_jo
 		}
 		$this->Tagihan->setOldValue($CurrentForm->getValue("o_Tagihan"));
 
+		// Check field name 'NoBL' first before field var 'x_NoBL'
+		$val = $CurrentForm->hasValue("NoBL") ? $CurrentForm->getValue("NoBL") : $CurrentForm->getValue("x_NoBL");
+		if (!$this->NoBL->IsDetailKey) {
+			if (IsApi() && $val == NULL)
+				$this->NoBL->Visible = FALSE; // Disable update for API request
+			else
+				$this->NoBL->setFormValue($val);
+		}
+		$this->NoBL->setOldValue($CurrentForm->getValue("o_NoBL"));
+
 		// Check field name 'Shipper' first before field var 'x_Shipper'
 		$val = $CurrentForm->hasValue("Shipper") ? $CurrentForm->getValue("Shipper") : $CurrentForm->getValue("x_Shipper");
 		if (!$this->Shipper->IsDetailKey) {
@@ -3022,6 +3062,7 @@ class t001_jo_list extends t001_jo
 		$this->NoJO->CurrentValue = $this->NoJO->FormValue;
 		$this->Status->CurrentValue = $this->Status->FormValue;
 		$this->Tagihan->CurrentValue = $this->Tagihan->FormValue;
+		$this->NoBL->CurrentValue = $this->NoBL->FormValue;
 		$this->Shipper->CurrentValue = $this->Shipper->FormValue;
 		$this->Qty->CurrentValue = $this->Qty->FormValue;
 		$this->Cont->CurrentValue = $this->Cont->FormValue;
@@ -3098,6 +3139,7 @@ class t001_jo_list extends t001_jo
 		$this->NoJO->setDbValue($row['NoJO']);
 		$this->Status->setDbValue($row['Status']);
 		$this->Tagihan->setDbValue($row['Tagihan']);
+		$this->NoBL->setDbValue($row['NoBL']);
 		$this->Shipper->setDbValue($row['Shipper']);
 		$this->Qty->setDbValue($row['Qty']);
 		$this->Cont->setDbValue($row['Cont']);
@@ -3117,6 +3159,7 @@ class t001_jo_list extends t001_jo
 		$row['NoJO'] = $this->NoJO->CurrentValue;
 		$row['Status'] = $this->Status->CurrentValue;
 		$row['Tagihan'] = $this->Tagihan->CurrentValue;
+		$row['NoBL'] = $this->NoBL->CurrentValue;
 		$row['Shipper'] = $this->Shipper->CurrentValue;
 		$row['Qty'] = $this->Qty->CurrentValue;
 		$row['Cont'] = $this->Cont->CurrentValue;
@@ -3175,6 +3218,7 @@ class t001_jo_list extends t001_jo
 		// NoJO
 		// Status
 		// Tagihan
+		// NoBL
 		// Shipper
 		// Qty
 		// Cont
@@ -3208,6 +3252,10 @@ class t001_jo_list extends t001_jo
 			$this->Tagihan->ViewValue = FormatNumber($this->Tagihan->ViewValue, 0, -2, -2, -2);
 			$this->Tagihan->CellCssStyle .= "text-align: right;";
 			$this->Tagihan->ViewCustomAttributes = "";
+
+			// NoBL
+			$this->NoBL->ViewValue = $this->NoBL->CurrentValue;
+			$this->NoBL->ViewCustomAttributes = "";
 
 			// Shipper
 			$this->Shipper->ViewValue = $this->Shipper->CurrentValue;
@@ -3259,6 +3307,11 @@ class t001_jo_list extends t001_jo
 			$this->Tagihan->LinkCustomAttributes = "";
 			$this->Tagihan->HrefValue = "";
 			$this->Tagihan->TooltipValue = "";
+
+			// NoBL
+			$this->NoBL->LinkCustomAttributes = "";
+			$this->NoBL->HrefValue = "";
+			$this->NoBL->TooltipValue = "";
 
 			// Shipper
 			$this->Shipper->LinkCustomAttributes = "";
@@ -3345,6 +3398,14 @@ class t001_jo_list extends t001_jo
 			}
 			
 
+			// NoBL
+			$this->NoBL->EditAttrs["class"] = "form-control";
+			$this->NoBL->EditCustomAttributes = "";
+			if (!$this->NoBL->Raw)
+				$this->NoBL->CurrentValue = HtmlDecode($this->NoBL->CurrentValue);
+			$this->NoBL->EditValue = HtmlEncode($this->NoBL->CurrentValue);
+			$this->NoBL->PlaceHolder = RemoveHtml($this->NoBL->caption());
+
 			// Shipper
 			$this->Shipper->EditAttrs["class"] = "form-control";
 			$this->Shipper->EditCustomAttributes = "";
@@ -3413,6 +3474,10 @@ class t001_jo_list extends t001_jo
 			// Tagihan
 			$this->Tagihan->LinkCustomAttributes = "";
 			$this->Tagihan->HrefValue = "";
+
+			// NoBL
+			$this->NoBL->LinkCustomAttributes = "";
+			$this->NoBL->HrefValue = "";
 
 			// Shipper
 			$this->Shipper->LinkCustomAttributes = "";
@@ -3492,6 +3557,14 @@ class t001_jo_list extends t001_jo
 			}
 			
 
+			// NoBL
+			$this->NoBL->EditAttrs["class"] = "form-control";
+			$this->NoBL->EditCustomAttributes = "";
+			if (!$this->NoBL->Raw)
+				$this->NoBL->CurrentValue = HtmlDecode($this->NoBL->CurrentValue);
+			$this->NoBL->EditValue = HtmlEncode($this->NoBL->CurrentValue);
+			$this->NoBL->PlaceHolder = RemoveHtml($this->NoBL->caption());
+
 			// Shipper
 			$this->Shipper->EditAttrs["class"] = "form-control";
 			$this->Shipper->EditCustomAttributes = "";
@@ -3560,6 +3633,10 @@ class t001_jo_list extends t001_jo
 			// Tagihan
 			$this->Tagihan->LinkCustomAttributes = "";
 			$this->Tagihan->HrefValue = "";
+
+			// NoBL
+			$this->NoBL->LinkCustomAttributes = "";
+			$this->NoBL->HrefValue = "";
 
 			// Shipper
 			$this->Shipper->LinkCustomAttributes = "";
@@ -3633,6 +3710,14 @@ class t001_jo_list extends t001_jo
 			$this->Tagihan->EditCustomAttributes = "";
 			$this->Tagihan->EditValue = HtmlEncode($this->Tagihan->AdvancedSearch->SearchValue);
 			$this->Tagihan->PlaceHolder = RemoveHtml($this->Tagihan->caption());
+
+			// NoBL
+			$this->NoBL->EditAttrs["class"] = "form-control";
+			$this->NoBL->EditCustomAttributes = "";
+			if (!$this->NoBL->Raw)
+				$this->NoBL->AdvancedSearch->SearchValue = HtmlDecode($this->NoBL->AdvancedSearch->SearchValue);
+			$this->NoBL->EditValue = HtmlEncode($this->NoBL->AdvancedSearch->SearchValue);
+			$this->NoBL->PlaceHolder = RemoveHtml($this->NoBL->caption());
 
 			// Shipper
 			$this->Shipper->EditAttrs["class"] = "form-control";
@@ -3746,6 +3831,11 @@ class t001_jo_list extends t001_jo
 		}
 		if (!CheckNumber($this->Tagihan->FormValue)) {
 			AddMessage($FormError, $this->Tagihan->errorMessage());
+		}
+		if ($this->NoBL->Required) {
+			if (!$this->NoBL->IsDetailKey && $this->NoBL->FormValue != NULL && $this->NoBL->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->NoBL->caption(), $this->NoBL->RequiredErrorMessage));
+			}
 		}
 		if ($this->Shipper->Required) {
 			if (!$this->Shipper->IsDetailKey && $this->Shipper->FormValue != NULL && $this->Shipper->FormValue == "") {
@@ -3933,6 +4023,9 @@ class t001_jo_list extends t001_jo
 			// Tagihan
 			$this->Tagihan->setDbValueDef($rsnew, $this->Tagihan->CurrentValue, 0, $this->Tagihan->ReadOnly);
 
+			// NoBL
+			$this->NoBL->setDbValueDef($rsnew, $this->NoBL->CurrentValue, NULL, $this->NoBL->ReadOnly);
+
 			// Shipper
 			$this->Shipper->setDbValueDef($rsnew, $this->Shipper->CurrentValue, NULL, $this->Shipper->ReadOnly);
 
@@ -4114,6 +4207,7 @@ class t001_jo_list extends t001_jo
 		$hash .= GetFieldHash($rs->fields('NoJO')); // NoJO
 		$hash .= GetFieldHash($rs->fields('Status')); // Status
 		$hash .= GetFieldHash($rs->fields('Tagihan')); // Tagihan
+		$hash .= GetFieldHash($rs->fields('NoBL')); // NoBL
 		$hash .= GetFieldHash($rs->fields('Shipper')); // Shipper
 		$hash .= GetFieldHash($rs->fields('Qty')); // Qty
 		$hash .= GetFieldHash($rs->fields('Cont')); // Cont
@@ -4155,6 +4249,9 @@ class t001_jo_list extends t001_jo
 
 		// Tagihan
 		$this->Tagihan->setDbValueDef($rsnew, $this->Tagihan->CurrentValue, 0, strval($this->Tagihan->CurrentValue) == "");
+
+		// NoBL
+		$this->NoBL->setDbValueDef($rsnew, $this->NoBL->CurrentValue, NULL, FALSE);
 
 		// Shipper
 		$this->Shipper->setDbValueDef($rsnew, $this->Shipper->CurrentValue, NULL, FALSE);
@@ -4305,6 +4402,7 @@ class t001_jo_list extends t001_jo
 		$this->NoJO->AdvancedSearch->load();
 		$this->Status->AdvancedSearch->load();
 		$this->Tagihan->AdvancedSearch->load();
+		$this->NoBL->AdvancedSearch->load();
 		$this->Shipper->AdvancedSearch->load();
 		$this->Qty->AdvancedSearch->load();
 		$this->Cont->AdvancedSearch->load();

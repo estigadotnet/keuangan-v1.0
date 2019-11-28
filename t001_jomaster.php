@@ -35,6 +35,16 @@ namespace PHPMaker2020\p_keuangan_v1_0;
 </td>
 		</tr>
 <?php } ?>
+<?php if ($t001_jo->NoBL->Visible) { // NoBL ?>
+		<tr id="r_NoBL">
+			<td class="<?php echo $t001_jo->TableLeftColumnClass ?>"><?php echo $t001_jo->NoBL->caption() ?></td>
+			<td <?php echo $t001_jo->NoBL->cellAttributes() ?>>
+<span id="el_t001_jo_NoBL">
+<span<?php echo $t001_jo->NoBL->viewAttributes() ?>><?php echo $t001_jo->NoBL->getViewValue() ?></span>
+</span>
+</td>
+		</tr>
+<?php } ?>
 <?php if ($t001_jo->Shipper->Visible) { // Shipper ?>
 		<tr id="r_Shipper">
 			<td class="<?php echo $t001_jo->TableLeftColumnClass ?>"><?php echo $t001_jo->Shipper->caption() ?></td>

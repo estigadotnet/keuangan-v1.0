@@ -73,6 +73,11 @@ loadjs.ready("head", function() {
 				elm = this.getElements("x" + infix + "_Tagihan");
 				if (elm && !ew.checkNumber(elm.value))
 					return this.onError(elm, "<?php echo JsEncode($t001_jo_addopt->Tagihan->errorMessage()) ?>");
+			<?php if ($t001_jo_addopt->NoBL->Required) { ?>
+				elm = this.getElements("x" + infix + "_NoBL");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_addopt->NoBL->caption(), $t001_jo_addopt->NoBL->RequiredErrorMessage)) ?>");
+			<?php } ?>
 			<?php if ($t001_jo_addopt->Shipper->Required) { ?>
 				elm = this.getElements("x" + infix + "_Shipper");
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -188,6 +193,14 @@ $t001_jo_addopt->showMessage();
 		<label class="col-sm-2 col-form-label ew-label" for="x_Tagihan"><?php echo $t001_jo_addopt->Tagihan->caption() ?><?php echo $t001_jo_addopt->Tagihan->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="col-sm-10">
 <input type="text" data-table="t001_jo" data-field="x_Tagihan" name="x_Tagihan" id="x_Tagihan" size="14" maxlength="14" placeholder="<?php echo HtmlEncode($t001_jo_addopt->Tagihan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_addopt->Tagihan->EditValue ?>"<?php echo $t001_jo_addopt->Tagihan->editAttributes() ?>>
+</div>
+	</div>
+<?php } ?>
+<?php if ($t001_jo_addopt->NoBL->Visible) { // NoBL ?>
+	<div class="form-group row">
+		<label class="col-sm-2 col-form-label ew-label" for="x_NoBL"><?php echo $t001_jo_addopt->NoBL->caption() ?><?php echo $t001_jo_addopt->NoBL->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="col-sm-10">
+<input type="text" data-table="t001_jo" data-field="x_NoBL" name="x_NoBL" id="x_NoBL" size="30" maxlength="50" placeholder="<?php echo HtmlEncode($t001_jo_addopt->NoBL->getPlaceHolder()) ?>" value="<?php echo $t001_jo_addopt->NoBL->EditValue ?>"<?php echo $t001_jo_addopt->NoBL->editAttributes() ?>>
 </div>
 	</div>
 <?php } ?>

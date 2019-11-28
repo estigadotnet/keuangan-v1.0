@@ -79,6 +79,9 @@ $t001_jo_delete->showMessage();
 <?php if ($t001_jo_delete->Tagihan->Visible) { // Tagihan ?>
 		<th class="<?php echo $t001_jo_delete->Tagihan->headerCellClass() ?>"><span id="elh_t001_jo_Tagihan" class="t001_jo_Tagihan"><?php echo $t001_jo_delete->Tagihan->caption() ?></span></th>
 <?php } ?>
+<?php if ($t001_jo_delete->NoBL->Visible) { // NoBL ?>
+		<th class="<?php echo $t001_jo_delete->NoBL->headerCellClass() ?>"><span id="elh_t001_jo_NoBL" class="t001_jo_NoBL"><?php echo $t001_jo_delete->NoBL->caption() ?></span></th>
+<?php } ?>
 <?php if ($t001_jo_delete->Shipper->Visible) { // Shipper ?>
 		<th class="<?php echo $t001_jo_delete->Shipper->headerCellClass() ?>"><span id="elh_t001_jo_Shipper" class="t001_jo_Shipper"><?php echo $t001_jo_delete->Shipper->caption() ?></span></th>
 <?php } ?>
@@ -139,6 +142,13 @@ while (!$t001_jo_delete->Recordset->EOF) {
 		<td <?php echo $t001_jo_delete->Tagihan->cellAttributes() ?>>
 <span id="el<?php echo $t001_jo_delete->RowCount ?>_t001_jo_Tagihan" class="t001_jo_Tagihan">
 <span<?php echo $t001_jo_delete->Tagihan->viewAttributes() ?>><?php echo $t001_jo_delete->Tagihan->getViewValue() ?></span>
+</span>
+</td>
+<?php } ?>
+<?php if ($t001_jo_delete->NoBL->Visible) { // NoBL ?>
+		<td <?php echo $t001_jo_delete->NoBL->cellAttributes() ?>>
+<span id="el<?php echo $t001_jo_delete->RowCount ?>_t001_jo_NoBL" class="t001_jo_NoBL">
+<span<?php echo $t001_jo_delete->NoBL->viewAttributes() ?>><?php echo $t001_jo_delete->NoBL->getViewValue() ?></span>
 </span>
 </td>
 <?php } ?>

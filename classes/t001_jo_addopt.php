@@ -657,6 +657,7 @@ class t001_jo_addopt extends t001_jo
 		$this->NoJO->setVisibility();
 		$this->Status->setVisibility();
 		$this->Tagihan->setVisibility();
+		$this->NoBL->setVisibility();
 		$this->Shipper->setVisibility();
 		$this->Qty->setVisibility();
 		$this->Cont->setVisibility();
@@ -717,6 +718,8 @@ class t001_jo_addopt extends t001_jo
 		$this->Status->CurrentValue = NULL;
 		$this->Status->OldValue = $this->Status->CurrentValue;
 		$this->Tagihan->CurrentValue = 0.00;
+		$this->NoBL->CurrentValue = NULL;
+		$this->NoBL->OldValue = $this->NoBL->CurrentValue;
 		$this->Shipper->CurrentValue = NULL;
 		$this->Shipper->OldValue = $this->Shipper->CurrentValue;
 		$this->Qty->CurrentValue = NULL;
@@ -756,6 +759,12 @@ class t001_jo_addopt extends t001_jo
 		$val = $CurrentForm->hasValue("Tagihan") ? $CurrentForm->getValue("Tagihan") : $CurrentForm->getValue("x_Tagihan");
 		if (!$this->Tagihan->IsDetailKey) {
 			$this->Tagihan->setFormValue(ConvertFromUtf8($val));
+		}
+
+		// Check field name 'NoBL' first before field var 'x_NoBL'
+		$val = $CurrentForm->hasValue("NoBL") ? $CurrentForm->getValue("NoBL") : $CurrentForm->getValue("x_NoBL");
+		if (!$this->NoBL->IsDetailKey) {
+			$this->NoBL->setFormValue(ConvertFromUtf8($val));
 		}
 
 		// Check field name 'Shipper' first before field var 'x_Shipper'
@@ -805,6 +814,7 @@ class t001_jo_addopt extends t001_jo
 		$this->NoJO->CurrentValue = ConvertToUtf8($this->NoJO->FormValue);
 		$this->Status->CurrentValue = ConvertToUtf8($this->Status->FormValue);
 		$this->Tagihan->CurrentValue = ConvertToUtf8($this->Tagihan->FormValue);
+		$this->NoBL->CurrentValue = ConvertToUtf8($this->NoBL->FormValue);
 		$this->Shipper->CurrentValue = ConvertToUtf8($this->Shipper->FormValue);
 		$this->Qty->CurrentValue = ConvertToUtf8($this->Qty->FormValue);
 		$this->Cont->CurrentValue = ConvertToUtf8($this->Cont->FormValue);
@@ -852,6 +862,7 @@ class t001_jo_addopt extends t001_jo
 		$this->NoJO->setDbValue($row['NoJO']);
 		$this->Status->setDbValue($row['Status']);
 		$this->Tagihan->setDbValue($row['Tagihan']);
+		$this->NoBL->setDbValue($row['NoBL']);
 		$this->Shipper->setDbValue($row['Shipper']);
 		$this->Qty->setDbValue($row['Qty']);
 		$this->Cont->setDbValue($row['Cont']);
@@ -871,6 +882,7 @@ class t001_jo_addopt extends t001_jo
 		$row['NoJO'] = $this->NoJO->CurrentValue;
 		$row['Status'] = $this->Status->CurrentValue;
 		$row['Tagihan'] = $this->Tagihan->CurrentValue;
+		$row['NoBL'] = $this->NoBL->CurrentValue;
 		$row['Shipper'] = $this->Shipper->CurrentValue;
 		$row['Qty'] = $this->Qty->CurrentValue;
 		$row['Cont'] = $this->Cont->CurrentValue;
@@ -900,6 +912,7 @@ class t001_jo_addopt extends t001_jo
 		// NoJO
 		// Status
 		// Tagihan
+		// NoBL
 		// Shipper
 		// Qty
 		// Cont
@@ -933,6 +946,10 @@ class t001_jo_addopt extends t001_jo
 			$this->Tagihan->ViewValue = FormatNumber($this->Tagihan->ViewValue, 0, -2, -2, -2);
 			$this->Tagihan->CellCssStyle .= "text-align: right;";
 			$this->Tagihan->ViewCustomAttributes = "";
+
+			// NoBL
+			$this->NoBL->ViewValue = $this->NoBL->CurrentValue;
+			$this->NoBL->ViewCustomAttributes = "";
 
 			// Shipper
 			$this->Shipper->ViewValue = $this->Shipper->CurrentValue;
@@ -984,6 +1001,11 @@ class t001_jo_addopt extends t001_jo
 			$this->Tagihan->LinkCustomAttributes = "";
 			$this->Tagihan->HrefValue = "";
 			$this->Tagihan->TooltipValue = "";
+
+			// NoBL
+			$this->NoBL->LinkCustomAttributes = "";
+			$this->NoBL->HrefValue = "";
+			$this->NoBL->TooltipValue = "";
 
 			// Shipper
 			$this->Shipper->LinkCustomAttributes = "";
@@ -1068,6 +1090,14 @@ class t001_jo_addopt extends t001_jo
 				$this->Tagihan->EditValue = FormatNumber($this->Tagihan->EditValue, -2, -2, -2, -2);
 			
 
+			// NoBL
+			$this->NoBL->EditAttrs["class"] = "form-control";
+			$this->NoBL->EditCustomAttributes = "";
+			if (!$this->NoBL->Raw)
+				$this->NoBL->CurrentValue = HtmlDecode($this->NoBL->CurrentValue);
+			$this->NoBL->EditValue = HtmlEncode($this->NoBL->CurrentValue);
+			$this->NoBL->PlaceHolder = RemoveHtml($this->NoBL->caption());
+
 			// Shipper
 			$this->Shipper->EditAttrs["class"] = "form-control";
 			$this->Shipper->EditCustomAttributes = "";
@@ -1137,6 +1167,10 @@ class t001_jo_addopt extends t001_jo
 			$this->Tagihan->LinkCustomAttributes = "";
 			$this->Tagihan->HrefValue = "";
 
+			// NoBL
+			$this->NoBL->LinkCustomAttributes = "";
+			$this->NoBL->HrefValue = "";
+
 			// Shipper
 			$this->Shipper->LinkCustomAttributes = "";
 			$this->Shipper->HrefValue = "";
@@ -1202,6 +1236,11 @@ class t001_jo_addopt extends t001_jo
 		}
 		if (!CheckNumber($this->Tagihan->FormValue)) {
 			AddMessage($FormError, $this->Tagihan->errorMessage());
+		}
+		if ($this->NoBL->Required) {
+			if (!$this->NoBL->IsDetailKey && $this->NoBL->FormValue != NULL && $this->NoBL->FormValue == "") {
+				AddMessage($FormError, str_replace("%s", $this->NoBL->caption(), $this->NoBL->RequiredErrorMessage));
+			}
 		}
 		if ($this->Shipper->Required) {
 			if (!$this->Shipper->IsDetailKey && $this->Shipper->FormValue != NULL && $this->Shipper->FormValue == "") {
@@ -1282,6 +1321,9 @@ class t001_jo_addopt extends t001_jo
 
 		// Tagihan
 		$this->Tagihan->setDbValueDef($rsnew, $this->Tagihan->CurrentValue, 0, strval($this->Tagihan->CurrentValue) == "");
+
+		// NoBL
+		$this->NoBL->setDbValueDef($rsnew, $this->NoBL->CurrentValue, NULL, FALSE);
 
 		// Shipper
 		$this->Shipper->setDbValueDef($rsnew, $this->Shipper->CurrentValue, NULL, FALSE);

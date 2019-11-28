@@ -37,6 +37,7 @@ class t001_jo extends DbTable
 	public $NoJO;
 	public $Status;
 	public $Tagihan;
+	public $NoBL;
 	public $Shipper;
 	public $Qty;
 	public $Cont;
@@ -114,6 +115,11 @@ class t001_jo extends DbTable
 		$this->Tagihan->Sortable = TRUE; // Allow sort
 		$this->Tagihan->DefaultErrorMessage = $Language->phrase("IncorrectFloat");
 		$this->fields['Tagihan'] = &$this->Tagihan;
+
+		// NoBL
+		$this->NoBL = new DbField('t001_jo', 't001_jo', 'x_NoBL', 'NoBL', '`NoBL`', '`NoBL`', 200, 50, -1, FALSE, '`NoBL`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->NoBL->Sortable = TRUE; // Allow sort
+		$this->fields['NoBL'] = &$this->NoBL;
 
 		// Shipper
 		$this->Shipper = new DbField('t001_jo', 't001_jo', 'x_Shipper', 'Shipper', '`Shipper`', '`Shipper`', 200, 100, -1, FALSE, '`Shipper`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
@@ -615,6 +621,7 @@ class t001_jo extends DbTable
 		$this->NoJO->DbValue = $row['NoJO'];
 		$this->Status->DbValue = $row['Status'];
 		$this->Tagihan->DbValue = $row['Tagihan'];
+		$this->NoBL->DbValue = $row['NoBL'];
 		$this->Shipper->DbValue = $row['Shipper'];
 		$this->Qty->DbValue = $row['Qty'];
 		$this->Cont->DbValue = $row['Cont'];
@@ -867,6 +874,7 @@ class t001_jo extends DbTable
 		$this->NoJO->setDbValue($rs->fields('NoJO'));
 		$this->Status->setDbValue($rs->fields('Status'));
 		$this->Tagihan->setDbValue($rs->fields('Tagihan'));
+		$this->NoBL->setDbValue($rs->fields('NoBL'));
 		$this->Shipper->setDbValue($rs->fields('Shipper'));
 		$this->Qty->setDbValue($rs->fields('Qty'));
 		$this->Cont->setDbValue($rs->fields('Cont'));
@@ -889,6 +897,7 @@ class t001_jo extends DbTable
 		// NoJO
 		// Status
 		// Tagihan
+		// NoBL
 		// Shipper
 		// Qty
 		// Cont
@@ -920,6 +929,10 @@ class t001_jo extends DbTable
 		$this->Tagihan->ViewValue = FormatNumber($this->Tagihan->ViewValue, 0, -2, -2, -2);
 		$this->Tagihan->CellCssStyle .= "text-align: right;";
 		$this->Tagihan->ViewCustomAttributes = "";
+
+		// NoBL
+		$this->NoBL->ViewValue = $this->NoBL->CurrentValue;
+		$this->NoBL->ViewCustomAttributes = "";
 
 		// Shipper
 		$this->Shipper->ViewValue = $this->Shipper->CurrentValue;
@@ -976,6 +989,11 @@ class t001_jo extends DbTable
 		$this->Tagihan->LinkCustomAttributes = "";
 		$this->Tagihan->HrefValue = "";
 		$this->Tagihan->TooltipValue = "";
+
+		// NoBL
+		$this->NoBL->LinkCustomAttributes = "";
+		$this->NoBL->HrefValue = "";
+		$this->NoBL->TooltipValue = "";
 
 		// Shipper
 		$this->Shipper->LinkCustomAttributes = "";
@@ -1051,6 +1069,14 @@ class t001_jo extends DbTable
 		if (strval($this->Tagihan->EditValue) != "" && is_numeric($this->Tagihan->EditValue))
 			$this->Tagihan->EditValue = FormatNumber($this->Tagihan->EditValue, -2, -2, -2, -2);
 		
+
+		// NoBL
+		$this->NoBL->EditAttrs["class"] = "form-control";
+		$this->NoBL->EditCustomAttributes = "";
+		if (!$this->NoBL->Raw)
+			$this->NoBL->CurrentValue = HtmlDecode($this->NoBL->CurrentValue);
+		$this->NoBL->EditValue = $this->NoBL->CurrentValue;
+		$this->NoBL->PlaceHolder = RemoveHtml($this->NoBL->caption());
 
 		// Shipper
 		$this->Shipper->EditAttrs["class"] = "form-control";
@@ -1137,6 +1163,7 @@ class t001_jo extends DbTable
 					$doc->exportCaption($this->NoJO);
 					$doc->exportCaption($this->Status);
 					$doc->exportCaption($this->Tagihan);
+					$doc->exportCaption($this->NoBL);
 					$doc->exportCaption($this->Shipper);
 					$doc->exportCaption($this->Qty);
 					$doc->exportCaption($this->Cont);
@@ -1149,6 +1176,7 @@ class t001_jo extends DbTable
 					$doc->exportCaption($this->NoJO);
 					$doc->exportCaption($this->Status);
 					$doc->exportCaption($this->Tagihan);
+					$doc->exportCaption($this->NoBL);
 					$doc->exportCaption($this->Shipper);
 					$doc->exportCaption($this->Qty);
 					$doc->exportCaption($this->Cont);
@@ -1190,6 +1218,7 @@ class t001_jo extends DbTable
 						$doc->exportField($this->NoJO);
 						$doc->exportField($this->Status);
 						$doc->exportField($this->Tagihan);
+						$doc->exportField($this->NoBL);
 						$doc->exportField($this->Shipper);
 						$doc->exportField($this->Qty);
 						$doc->exportField($this->Cont);
@@ -1202,6 +1231,7 @@ class t001_jo extends DbTable
 						$doc->exportField($this->NoJO);
 						$doc->exportField($this->Status);
 						$doc->exportField($this->Tagihan);
+						$doc->exportField($this->NoBL);
 						$doc->exportField($this->Shipper);
 						$doc->exportField($this->Qty);
 						$doc->exportField($this->Cont);

@@ -74,6 +74,11 @@ loadjs.ready("head", function() {
 				elm = this.getElements("x" + infix + "_Tagihan");
 				if (elm && !ew.checkNumber(elm.value))
 					return this.onError(elm, "<?php echo JsEncode($t001_jo_add->Tagihan->errorMessage()) ?>");
+			<?php if ($t001_jo_add->NoBL->Required) { ?>
+				elm = this.getElements("x" + infix + "_NoBL");
+				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
+					return this.onError(elm, "<?php echo JsEncode(str_replace("%s", $t001_jo_add->NoBL->caption(), $t001_jo_add->NoBL->RequiredErrorMessage)) ?>");
+			<?php } ?>
 			<?php if ($t001_jo_add->Shipper->Required) { ?>
 				elm = this.getElements("x" + infix + "_Shipper");
 				if (elm && !ew.isHidden(elm) && !ew.hasValue(elm))
@@ -206,6 +211,16 @@ $t001_jo_add->showMessage();
 <input type="text" data-table="t001_jo" data-field="x_Tagihan" name="x_Tagihan" id="x_Tagihan" size="14" maxlength="14" placeholder="<?php echo HtmlEncode($t001_jo_add->Tagihan->getPlaceHolder()) ?>" value="<?php echo $t001_jo_add->Tagihan->EditValue ?>"<?php echo $t001_jo_add->Tagihan->editAttributes() ?>>
 </span>
 <?php echo $t001_jo_add->Tagihan->CustomMsg ?></div></div>
+	</div>
+<?php } ?>
+<?php if ($t001_jo_add->NoBL->Visible) { // NoBL ?>
+	<div id="r_NoBL" class="form-group row">
+		<label id="elh_t001_jo_NoBL" for="x_NoBL" class="<?php echo $t001_jo_add->LeftColumnClass ?>"><?php echo $t001_jo_add->NoBL->caption() ?><?php echo $t001_jo_add->NoBL->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<div class="<?php echo $t001_jo_add->RightColumnClass ?>"><div <?php echo $t001_jo_add->NoBL->cellAttributes() ?>>
+<span id="el_t001_jo_NoBL">
+<input type="text" data-table="t001_jo" data-field="x_NoBL" name="x_NoBL" id="x_NoBL" size="30" maxlength="50" placeholder="<?php echo HtmlEncode($t001_jo_add->NoBL->getPlaceHolder()) ?>" value="<?php echo $t001_jo_add->NoBL->EditValue ?>"<?php echo $t001_jo_add->NoBL->editAttributes() ?>>
+</span>
+<?php echo $t001_jo_add->NoBL->CustomMsg ?></div></div>
 	</div>
 <?php } ?>
 <?php if ($t001_jo_add->Shipper->Visible) { // Shipper ?>
