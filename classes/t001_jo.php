@@ -89,12 +89,10 @@ class t001_jo extends DbTable
 		$this->fields['id'] = &$this->id;
 
 		// NoJO
-		$this->NoJO = new DbField('t001_jo', 't001_jo', 'x_NoJO', 'NoJO', '`NoJO`', '`NoJO`', 200, 25, -1, FALSE, '`NoJO`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'SELECT');
+		$this->NoJO = new DbField('t001_jo', 't001_jo', 'x_NoJO', 'NoJO', '`NoJO`', '`NoJO`', 200, 25, -1, FALSE, '`NoJO`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
 		$this->NoJO->Nullable = FALSE; // NOT NULL field
 		$this->NoJO->Required = TRUE; // Required field
 		$this->NoJO->Sortable = TRUE; // Allow sort
-		$this->NoJO->UsePleaseSelect = TRUE; // Use PleaseSelect by default
-		$this->NoJO->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
 		$this->NoJO->Lookup = new Lookup('NoJO', 't001_jo', FALSE, 'NoJO', ["NoJO","","",""], [], [], [], [], [], [], '`NoJO` DESC', '');
 		$this->fields['NoJO'] = &$this->NoJO;
 
@@ -911,6 +909,7 @@ class t001_jo extends DbTable
 		$this->id->ViewCustomAttributes = "";
 
 		// NoJO
+		$this->NoJO->ViewValue = $this->NoJO->CurrentValue;
 		$arwrk = [];
 		$arwrk[1] = $this->NoJO->CurrentValue;
 		$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
@@ -1055,6 +1054,10 @@ class t001_jo extends DbTable
 		// NoJO
 		$this->NoJO->EditAttrs["class"] = "form-control";
 		$this->NoJO->EditCustomAttributes = "";
+		if (!$this->NoJO->Raw)
+			$this->NoJO->CurrentValue = HtmlDecode($this->NoJO->CurrentValue);
+		$this->NoJO->EditValue = $this->NoJO->CurrentValue;
+		$this->NoJO->PlaceHolder = RemoveHtml($this->NoJO->caption());
 
 		// Status
 		$this->Status->EditAttrs["class"] = "form-control";

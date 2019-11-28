@@ -387,6 +387,15 @@ $v203_costsheet_list->ListOptions->render("header", "left");
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
+<?php if ($v203_costsheet_list->NoBL->Visible) { // NoBL ?>
+	<?php if ($v203_costsheet_list->SortUrl($v203_costsheet_list->NoBL) == "") { ?>
+		<th data-name="NoBL" class="<?php echo $v203_costsheet_list->NoBL->headerCellClass() ?>"><div id="elh_v203_costsheet_NoBL" class="v203_costsheet_NoBL"><div class="ew-table-header-caption"><?php echo $v203_costsheet_list->NoBL->caption() ?></div></div></th>
+	<?php } else { ?>
+		<th data-name="NoBL" class="<?php echo $v203_costsheet_list->NoBL->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $v203_costsheet_list->SortUrl($v203_costsheet_list->NoBL) ?>', 2);"><div id="elh_v203_costsheet_NoBL" class="v203_costsheet_NoBL">
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $v203_costsheet_list->NoBL->caption() ?></span><span class="ew-table-header-sort"><?php if ($v203_costsheet_list->NoBL->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($v203_costsheet_list->NoBL->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+		</div></div></th>
+	<?php } ?>
+<?php } ?>
 <?php
 
 // Render list options (header, right)
@@ -589,6 +598,13 @@ $v203_costsheet_list->ListOptions->render("body", "left", $v203_costsheet_list->
 		<td data-name="NoKolom" <?php echo $v203_costsheet_list->NoKolom->cellAttributes() ?>>
 <span id="el<?php echo $v203_costsheet_list->RowCount ?>_v203_costsheet_NoKolom">
 <span<?php echo $v203_costsheet_list->NoKolom->viewAttributes() ?>><?php echo $v203_costsheet_list->NoKolom->getViewValue() ?></span>
+</span>
+</td>
+	<?php } ?>
+	<?php if ($v203_costsheet_list->NoBL->Visible) { // NoBL ?>
+		<td data-name="NoBL" <?php echo $v203_costsheet_list->NoBL->cellAttributes() ?>>
+<span id="el<?php echo $v203_costsheet_list->RowCount ?>_v203_costsheet_NoBL">
+<span<?php echo $v203_costsheet_list->NoBL->viewAttributes() ?>><?php echo $v203_costsheet_list->NoBL->getViewValue() ?></span>
 </span>
 </td>
 	<?php } ?>

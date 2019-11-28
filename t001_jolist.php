@@ -163,6 +163,7 @@ loadjs.ready("head", function() {
 	// Dynamic selection lists
 	ft001_jolist.lists["x_NoJO"] = <?php echo $t001_jo_list->NoJO->Lookup->toClientList($t001_jo_list) ?>;
 	ft001_jolist.lists["x_NoJO"].options = <?php echo JsonEncode($t001_jo_list->NoJO->lookupOptions()) ?>;
+	ft001_jolist.autoSuggests["x_NoJO"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 	ft001_jolist.lists["x_Status"] = <?php echo $t001_jo_list->Status->Lookup->toClientList($t001_jo_list) ?>;
 	ft001_jolist.lists["x_Status"].options = <?php echo JsonEncode($t001_jo_list->Status->options(FALSE, TRUE)) ?>;
 	ft001_jolist.lists["x_BM"] = <?php echo $t001_jo_list->BM->Lookup->toClientList($t001_jo_list) ?>;
@@ -201,6 +202,7 @@ loadjs.ready("head", function() {
 	// Dynamic selection lists
 	ft001_jolistsrch.lists["x_NoJO"] = <?php echo $t001_jo_list->NoJO->Lookup->toClientList($t001_jo_list) ?>;
 	ft001_jolistsrch.lists["x_NoJO"].options = <?php echo JsonEncode($t001_jo_list->NoJO->lookupOptions()) ?>;
+	ft001_jolistsrch.autoSuggests["x_NoJO"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 
 	// Filters
 	ft001_jolistsrch.filterList = <?php echo $t001_jo_list->getFilterList() ?>;
@@ -261,20 +263,32 @@ $t001_jo_list->renderRow();
 		}
 	 ?>
 	<div id="xsc_NoJO" class="ew-cell form-group">
-		<label for="x_NoJO" class="ew-search-caption ew-label"><?php echo $t001_jo_list->NoJO->caption() ?></label>
+		<label class="ew-search-caption ew-label"><?php echo $t001_jo_list->NoJO->caption() ?></label>
 		<span class="ew-search-operator">
 <?php echo $Language->phrase("LIKE") ?>
 <input type="hidden" name="z_NoJO" id="z_NoJO" value="LIKE">
 </span>
 		<span id="el_t001_jo_NoJO" class="ew-search-field">
-<div class="input-group ew-lookup-list">
-	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->AdvancedSearch->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->AdvancedSearch->ViewValue ?></div>
-	<div class="input-group-append">
-		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+<?php
+$onchange = $t001_jo_list->NoJO->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$t001_jo_list->NoJO->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_NoJO">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x_NoJO" id="sv_x_NoJO" value="<?php echo RemoveHtml($t001_jo_list->NoJO->EditValue) ?>" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_NoJO',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?>><i class="fas fa-search ew-icon"></i></button>
+		</div>
 	</div>
-</div>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x_NoJO" id="x_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->AdvancedSearch->SearchValue) ?>"<?php echo $onchange ?>>
+<script>
+loadjs.ready(["ft001_jolistsrch"], function() {
+	ft001_jolistsrch.createAutoSuggest({"id":"x_NoJO","forceSelect":false});
+});
+</script>
 <?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x_NoJO") ?>
-<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x_NoJO" id="x_NoJO" value="<?php echo $t001_jo_list->NoJO->AdvancedSearch->SearchValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
 </span>
 	</div>
 	<?php if ($t001_jo_list->SearchColumnCount % $t001_jo_list->SearchFieldsPerRow == 0) { ?>
@@ -350,7 +364,7 @@ $t001_jo_list->ListOptions->render("header", "left");
 		<th data-name="NoJO" class="<?php echo $t001_jo_list->NoJO->headerCellClass() ?>"><div id="elh_t001_jo_NoJO" class="t001_jo_NoJO"><div class="ew-table-header-caption"><?php echo $t001_jo_list->NoJO->caption() ?></div></div></th>
 	<?php } else { ?>
 		<th data-name="NoJO" class="<?php echo $t001_jo_list->NoJO->headerCellClass() ?>"><div class="ew-pointer" onclick="ew.sort(event, '<?php echo $t001_jo_list->SortUrl($t001_jo_list->NoJO) ?>', 2);"><div id="elh_t001_jo_NoJO" class="t001_jo_NoJO">
-			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->NoJO->caption() ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->NoJO->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->NoJO->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
+			<div class="ew-table-header-btn"><span class="ew-table-header-caption"><?php echo $t001_jo_list->NoJO->caption() ?><?php echo $Language->phrase("SrchLegend") ?></span><span class="ew-table-header-sort"><?php if ($t001_jo_list->NoJO->getSort() == "ASC") { ?><i class="fas fa-sort-up"></i><?php } elseif ($t001_jo_list->NoJO->getSort() == "DESC") { ?><i class="fas fa-sort-down"></i><?php } ?></span></div>
 		</div></div></th>
 	<?php } ?>
 <?php } ?>
@@ -484,14 +498,26 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 	<?php if ($t001_jo_list->NoJO->Visible) { // NoJO ?>
 		<td data-name="NoJO">
 <span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoJO" class="form-group t001_jo_NoJO">
-<div class="input-group ew-lookup-list">
-	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t001_jo_list->RowIndex ?>_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->ViewValue ?></div>
-	<div class="input-group-append">
-		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+<?php
+$onchange = $t001_jo_list->NoJO->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$t001_jo_list->NoJO->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t001_jo_list->RowIndex ?>_NoJO">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="sv_x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo RemoveHtml($t001_jo_list->NoJO->EditValue) ?>" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?>><i class="fas fa-search ew-icon"></i></button>
+		</div>
 	</div>
-</div>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->CurrentValue) ?>"<?php echo $onchange ?>>
+<script>
+loadjs.ready(["ft001_jolist"], function() {
+	ft001_jolist.createAutoSuggest({"id":"x<?php echo $t001_jo_list->RowIndex ?>_NoJO","forceSelect":false});
+});
+</script>
 <?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x" . $t001_jo_list->RowIndex . "_NoJO") ?>
-<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo $t001_jo_list->NoJO->CurrentValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_NoJO" name="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->OldValue) ?>">
 </td>
@@ -726,27 +752,51 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowCount);
 		<td data-name="NoJO" <?php echo $t001_jo_list->NoJO->cellAttributes() ?>>
 <?php if ($t001_jo->RowType == ROWTYPE_ADD) { // Add record ?>
 <span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoJO" class="form-group">
-<div class="input-group ew-lookup-list">
-	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t001_jo_list->RowIndex ?>_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->ViewValue ?></div>
-	<div class="input-group-append">
-		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+<?php
+$onchange = $t001_jo_list->NoJO->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$t001_jo_list->NoJO->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t001_jo_list->RowIndex ?>_NoJO">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="sv_x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo RemoveHtml($t001_jo_list->NoJO->EditValue) ?>" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?>><i class="fas fa-search ew-icon"></i></button>
+		</div>
 	</div>
-</div>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->CurrentValue) ?>"<?php echo $onchange ?>>
+<script>
+loadjs.ready(["ft001_jolist"], function() {
+	ft001_jolist.createAutoSuggest({"id":"x<?php echo $t001_jo_list->RowIndex ?>_NoJO","forceSelect":false});
+});
+</script>
 <?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x" . $t001_jo_list->RowIndex . "_NoJO") ?>
-<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo $t001_jo_list->NoJO->CurrentValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_NoJO" name="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->OldValue) ?>">
 <?php } ?>
 <?php if ($t001_jo->RowType == ROWTYPE_EDIT) { // Edit record ?>
 <span id="el<?php echo $t001_jo_list->RowCount ?>_t001_jo_NoJO" class="form-group">
-<div class="input-group ew-lookup-list">
-	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t001_jo_list->RowIndex ?>_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->ViewValue ?></div>
-	<div class="input-group-append">
-		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+<?php
+$onchange = $t001_jo_list->NoJO->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$t001_jo_list->NoJO->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t001_jo_list->RowIndex ?>_NoJO">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="sv_x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo RemoveHtml($t001_jo_list->NoJO->EditValue) ?>" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?>><i class="fas fa-search ew-icon"></i></button>
+		</div>
 	</div>
-</div>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->CurrentValue) ?>"<?php echo $onchange ?>>
+<script>
+loadjs.ready(["ft001_jolist"], function() {
+	ft001_jolist.createAutoSuggest({"id":"x<?php echo $t001_jo_list->RowIndex ?>_NoJO","forceSelect":false});
+});
+</script>
 <?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x" . $t001_jo_list->RowIndex . "_NoJO") ?>
-<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo $t001_jo_list->NoJO->CurrentValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
 </span>
 <?php } ?>
 <?php if ($t001_jo->RowType == ROWTYPE_VIEW) { // View record ?>
@@ -1051,14 +1101,26 @@ $t001_jo_list->ListOptions->render("body", "left", $t001_jo_list->RowIndex);
 	<?php if ($t001_jo_list->NoJO->Visible) { // NoJO ?>
 		<td data-name="NoJO">
 <span id="el$rowindex$_t001_jo_NoJO" class="form-group t001_jo_NoJO">
-<div class="input-group ew-lookup-list">
-	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x<?php echo $t001_jo_list->RowIndex ?>_NoJO"><?php echo EmptyValue(strval($t001_jo_list->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_list->NoJO->ViewValue ?></div>
-	<div class="input-group-append">
-		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+<?php
+$onchange = $t001_jo_list->NoJO->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$t001_jo_list->NoJO->EditAttrs["onchange"] = "";
+?>
+<span id="as_x<?php echo $t001_jo_list->RowIndex ?>_NoJO">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="sv_x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo RemoveHtml($t001_jo_list->NoJO->EditValue) ?>" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($t001_jo_list->NoJO->getPlaceHolder()) ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_list->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x<?php echo $t001_jo_list->RowIndex ?>_NoJO',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_list->NoJO->ReadOnly || $t001_jo_list->NoJO->Disabled) ? " disabled" : "" ?>><i class="fas fa-search ew-icon"></i></button>
+		</div>
 	</div>
-</div>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->CurrentValue) ?>"<?php echo $onchange ?>>
+<script>
+loadjs.ready(["ft001_jolist"], function() {
+	ft001_jolist.createAutoSuggest({"id":"x<?php echo $t001_jo_list->RowIndex ?>_NoJO","forceSelect":false});
+});
+</script>
 <?php echo $t001_jo_list->NoJO->Lookup->getParamTag($t001_jo_list, "p_x" . $t001_jo_list->RowIndex . "_NoJO") ?>
-<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_list->NoJO->displayValueSeparatorAttribute() ?>" name="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="x<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo $t001_jo_list->NoJO->CurrentValue ?>"<?php echo $t001_jo_list->NoJO->editAttributes() ?>>
 </span>
 <input type="hidden" data-table="t001_jo" data-field="x_NoJO" name="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" id="o<?php echo $t001_jo_list->RowIndex ?>_NoJO" value="<?php echo HtmlEncode($t001_jo_list->NoJO->OldValue) ?>">
 </td>

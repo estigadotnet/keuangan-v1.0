@@ -47,6 +47,7 @@ class v203_costsheet extends DbTable
 	public $jns_id;
 	public $jns_nama;
 	public $NoKolom;
+	public $NoBL;
 
 	// Constructor
 	public function __construct()
@@ -217,6 +218,11 @@ class v203_costsheet extends DbTable
 		$this->NoKolom->Sortable = TRUE; // Allow sort
 		$this->NoKolom->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['NoKolom'] = &$this->NoKolom;
+
+		// NoBL
+		$this->NoBL = new DbField('v203_costsheet', 'v203_costsheet', 'x_NoBL', 'NoBL', '`NoBL`', '`NoBL`', 200, 50, -1, FALSE, '`NoBL`', FALSE, FALSE, FALSE, 'FORMATTED TEXT', 'TEXT');
+		$this->NoBL->Sortable = TRUE; // Allow sort
+		$this->fields['NoBL'] = &$this->NoBL;
 	}
 
 	// Field Visibility
@@ -617,6 +623,7 @@ class v203_costsheet extends DbTable
 		$this->jns_id->DbValue = $row['jns_id'];
 		$this->jns_nama->DbValue = $row['jns_nama'];
 		$this->NoKolom->DbValue = $row['NoKolom'];
+		$this->NoBL->DbValue = $row['NoBL'];
 	}
 
 	// Delete uploaded files
@@ -934,6 +941,7 @@ class v203_costsheet extends DbTable
 		$this->jns_id->setDbValue($rs->fields('jns_id'));
 		$this->jns_nama->setDbValue($rs->fields('jns_nama'));
 		$this->NoKolom->setDbValue($rs->fields('NoKolom'));
+		$this->NoBL->setDbValue($rs->fields('NoBL'));
 	}
 
 	// Render list row values
@@ -967,6 +975,7 @@ class v203_costsheet extends DbTable
 		// jns_id
 		// jns_nama
 		// NoKolom
+		// NoBL
 		// jo_id
 
 		$this->jo_id->ViewValue = $this->jo_id->CurrentValue;
@@ -1070,6 +1079,10 @@ class v203_costsheet extends DbTable
 		$this->NoKolom->ViewValue = $this->NoKolom->CurrentValue;
 		$this->NoKolom->ViewValue = FormatNumber($this->NoKolom->ViewValue, 0, -2, -2, -2);
 		$this->NoKolom->ViewCustomAttributes = "";
+
+		// NoBL
+		$this->NoBL->ViewValue = $this->NoBL->CurrentValue;
+		$this->NoBL->ViewCustomAttributes = "";
 
 		// jo_id
 		$this->jo_id->LinkCustomAttributes = "";
@@ -1180,6 +1193,11 @@ class v203_costsheet extends DbTable
 		$this->NoKolom->LinkCustomAttributes = "";
 		$this->NoKolom->HrefValue = "";
 		$this->NoKolom->TooltipValue = "";
+
+		// NoBL
+		$this->NoBL->LinkCustomAttributes = "";
+		$this->NoBL->HrefValue = "";
+		$this->NoBL->TooltipValue = "";
 
 		// Call Row Rendered event
 		$this->Row_Rendered();
@@ -1345,6 +1363,14 @@ class v203_costsheet extends DbTable
 		$this->NoKolom->EditValue = $this->NoKolom->CurrentValue;
 		$this->NoKolom->PlaceHolder = RemoveHtml($this->NoKolom->caption());
 
+		// NoBL
+		$this->NoBL->EditAttrs["class"] = "form-control";
+		$this->NoBL->EditCustomAttributes = "";
+		if (!$this->NoBL->Raw)
+			$this->NoBL->CurrentValue = HtmlDecode($this->NoBL->CurrentValue);
+		$this->NoBL->EditValue = $this->NoBL->CurrentValue;
+		$this->NoBL->PlaceHolder = RemoveHtml($this->NoBL->caption());
+
 		// Call Row Rendered event
 		$this->Row_Rendered();
 	}
@@ -1396,6 +1422,7 @@ class v203_costsheet extends DbTable
 					$doc->exportCaption($this->jns_id);
 					$doc->exportCaption($this->jns_nama);
 					$doc->exportCaption($this->NoKolom);
+					$doc->exportCaption($this->NoBL);
 				} else {
 					$doc->exportCaption($this->jo_id);
 					$doc->exportCaption($this->NoJO);
@@ -1417,6 +1444,7 @@ class v203_costsheet extends DbTable
 					$doc->exportCaption($this->Keluar);
 					$doc->exportCaption($this->jns_id);
 					$doc->exportCaption($this->NoKolom);
+					$doc->exportCaption($this->NoBL);
 				}
 				$doc->endExportRow();
 			}
@@ -1470,6 +1498,7 @@ class v203_costsheet extends DbTable
 						$doc->exportField($this->jns_id);
 						$doc->exportField($this->jns_nama);
 						$doc->exportField($this->NoKolom);
+						$doc->exportField($this->NoBL);
 					} else {
 						$doc->exportField($this->jo_id);
 						$doc->exportField($this->NoJO);
@@ -1491,6 +1520,7 @@ class v203_costsheet extends DbTable
 						$doc->exportField($this->Keluar);
 						$doc->exportField($this->jns_id);
 						$doc->exportField($this->NoKolom);
+						$doc->exportField($this->NoBL);
 					}
 					$doc->endExportRow($rowCnt);
 				}

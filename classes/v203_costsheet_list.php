@@ -840,6 +840,7 @@ class v203_costsheet_list extends v203_costsheet
 		$this->jns_id->setVisibility();
 		$this->jns_nama->Visible = FALSE;
 		$this->NoKolom->setVisibility();
+		$this->NoBL->setVisibility();
 		$this->hideFieldsForAddEdit();
 
 		// Global Page Loading event (in userfn*.php)
@@ -1164,6 +1165,7 @@ class v203_costsheet_list extends v203_costsheet
 		$filterList = Concat($filterList, $this->jns_id->AdvancedSearch->toJson(), ","); // Field jns_id
 		$filterList = Concat($filterList, $this->jns_nama->AdvancedSearch->toJson(), ","); // Field jns_nama
 		$filterList = Concat($filterList, $this->NoKolom->AdvancedSearch->toJson(), ","); // Field NoKolom
+		$filterList = Concat($filterList, $this->NoBL->AdvancedSearch->toJson(), ","); // Field NoBL
 
 		// Return filter list in JSON
 		if ($filterList != "")
@@ -1373,6 +1375,14 @@ class v203_costsheet_list extends v203_costsheet
 		$this->NoKolom->AdvancedSearch->SearchValue2 = @$filter["y_NoKolom"];
 		$this->NoKolom->AdvancedSearch->SearchOperator2 = @$filter["w_NoKolom"];
 		$this->NoKolom->AdvancedSearch->save();
+
+		// Field NoBL
+		$this->NoBL->AdvancedSearch->SearchValue = @$filter["x_NoBL"];
+		$this->NoBL->AdvancedSearch->SearchOperator = @$filter["z_NoBL"];
+		$this->NoBL->AdvancedSearch->SearchCondition = @$filter["v_NoBL"];
+		$this->NoBL->AdvancedSearch->SearchValue2 = @$filter["y_NoBL"];
+		$this->NoBL->AdvancedSearch->SearchOperator2 = @$filter["w_NoBL"];
+		$this->NoBL->AdvancedSearch->save();
 	}
 
 	// Advanced search WHERE clause based on QueryString
@@ -1404,6 +1414,7 @@ class v203_costsheet_list extends v203_costsheet
 		$this->buildSearchSql($where, $this->jns_id, $default, FALSE); // jns_id
 		$this->buildSearchSql($where, $this->jns_nama, $default, FALSE); // jns_nama
 		$this->buildSearchSql($where, $this->NoKolom, $default, FALSE); // NoKolom
+		$this->buildSearchSql($where, $this->NoBL, $default, FALSE); // NoBL
 
 		// Set up search parm
 		if (!$default && $where != "" && in_array($this->Command, ["", "reset", "resetall"])) {
@@ -1432,6 +1443,7 @@ class v203_costsheet_list extends v203_costsheet
 			$this->jns_id->AdvancedSearch->save(); // jns_id
 			$this->jns_nama->AdvancedSearch->save(); // jns_nama
 			$this->NoKolom->AdvancedSearch->save(); // NoKolom
+			$this->NoBL->AdvancedSearch->save(); // NoBL
 		}
 		return $where;
 	}
@@ -1535,6 +1547,8 @@ class v203_costsheet_list extends v203_costsheet
 			return TRUE;
 		if ($this->NoKolom->AdvancedSearch->issetSession())
 			return TRUE;
+		if ($this->NoBL->AdvancedSearch->issetSession())
+			return TRUE;
 		return FALSE;
 	}
 
@@ -1581,6 +1595,7 @@ class v203_costsheet_list extends v203_costsheet
 		$this->jns_id->AdvancedSearch->unsetSession();
 		$this->jns_nama->AdvancedSearch->unsetSession();
 		$this->NoKolom->AdvancedSearch->unsetSession();
+		$this->NoBL->AdvancedSearch->unsetSession();
 	}
 
 	// Restore all search parameters
@@ -1611,6 +1626,7 @@ class v203_costsheet_list extends v203_costsheet
 		$this->jns_id->AdvancedSearch->load();
 		$this->jns_nama->AdvancedSearch->load();
 		$this->NoKolom->AdvancedSearch->load();
+		$this->NoBL->AdvancedSearch->load();
 	}
 
 	// Set up sort parameters
@@ -1644,6 +1660,7 @@ class v203_costsheet_list extends v203_costsheet
 			$this->updateSort($this->Keluar, $ctrl); // Keluar
 			$this->updateSort($this->jns_id, $ctrl); // jns_id
 			$this->updateSort($this->NoKolom, $ctrl); // NoKolom
+			$this->updateSort($this->NoBL, $ctrl); // NoBL
 			$this->setStartRecordNumber(1); // Reset start position
 		}
 	}
@@ -1699,6 +1716,7 @@ class v203_costsheet_list extends v203_costsheet
 				$this->Keluar->setSort("");
 				$this->jns_id->setSort("");
 				$this->NoKolom->setSort("");
+				$this->NoBL->setSort("");
 			}
 
 			// Reset start position
@@ -2128,6 +2146,13 @@ class v203_costsheet_list extends v203_costsheet
 			if (($this->NoKolom->AdvancedSearch->SearchValue != "" || $this->NoKolom->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
 				$this->Command = "search";
 		}
+
+		// NoBL
+		if (!$this->isAddOrEdit() && $this->NoBL->AdvancedSearch->get()) {
+			$got = TRUE;
+			if (($this->NoBL->AdvancedSearch->SearchValue != "" || $this->NoBL->AdvancedSearch->SearchValue2 != "") && $this->Command == "")
+				$this->Command = "search";
+		}
 		return $got;
 	}
 
@@ -2215,6 +2240,7 @@ class v203_costsheet_list extends v203_costsheet
 		$this->jns_id->setDbValue($row['jns_id']);
 		$this->jns_nama->setDbValue($row['jns_nama']);
 		$this->NoKolom->setDbValue($row['NoKolom']);
+		$this->NoBL->setDbValue($row['NoBL']);
 	}
 
 	// Return a row with default values
@@ -2243,6 +2269,7 @@ class v203_costsheet_list extends v203_costsheet
 		$row['jns_id'] = NULL;
 		$row['jns_nama'] = NULL;
 		$row['NoKolom'] = NULL;
+		$row['NoBL'] = NULL;
 		return $row;
 	}
 
@@ -2328,6 +2355,7 @@ class v203_costsheet_list extends v203_costsheet
 		// jns_id
 		// jns_nama
 		// NoKolom
+		// NoBL
 
 		if ($this->RowType == ROWTYPE_VIEW) { // View row
 
@@ -2425,6 +2453,10 @@ class v203_costsheet_list extends v203_costsheet
 			$this->NoKolom->ViewValue = $this->NoKolom->CurrentValue;
 			$this->NoKolom->ViewValue = FormatNumber($this->NoKolom->ViewValue, 0, -2, -2, -2);
 			$this->NoKolom->ViewCustomAttributes = "";
+
+			// NoBL
+			$this->NoBL->ViewValue = $this->NoBL->CurrentValue;
+			$this->NoBL->ViewCustomAttributes = "";
 
 			// jo_id
 			$this->jo_id->LinkCustomAttributes = "";
@@ -2525,6 +2557,11 @@ class v203_costsheet_list extends v203_costsheet
 			$this->NoKolom->LinkCustomAttributes = "";
 			$this->NoKolom->HrefValue = "";
 			$this->NoKolom->TooltipValue = "";
+
+			// NoBL
+			$this->NoBL->LinkCustomAttributes = "";
+			$this->NoBL->HrefValue = "";
+			$this->NoBL->TooltipValue = "";
 		} elseif ($this->RowType == ROWTYPE_SEARCH) { // Search row
 
 			// jo_id
@@ -2682,6 +2719,14 @@ class v203_costsheet_list extends v203_costsheet
 			$this->NoKolom->EditCustomAttributes = "";
 			$this->NoKolom->EditValue = HtmlEncode($this->NoKolom->AdvancedSearch->SearchValue);
 			$this->NoKolom->PlaceHolder = RemoveHtml($this->NoKolom->caption());
+
+			// NoBL
+			$this->NoBL->EditAttrs["class"] = "form-control";
+			$this->NoBL->EditCustomAttributes = "";
+			if (!$this->NoBL->Raw)
+				$this->NoBL->AdvancedSearch->SearchValue = HtmlDecode($this->NoBL->AdvancedSearch->SearchValue);
+			$this->NoBL->EditValue = HtmlEncode($this->NoBL->AdvancedSearch->SearchValue);
+			$this->NoBL->PlaceHolder = RemoveHtml($this->NoBL->caption());
 		}
 		if ($this->RowType == ROWTYPE_ADD || $this->RowType == ROWTYPE_EDIT || $this->RowType == ROWTYPE_SEARCH) // Add/Edit/Search row
 			$this->setupFieldTitles();
@@ -2740,6 +2785,7 @@ class v203_costsheet_list extends v203_costsheet
 		$this->jns_id->AdvancedSearch->load();
 		$this->jns_nama->AdvancedSearch->load();
 		$this->NoKolom->AdvancedSearch->load();
+		$this->NoBL->AdvancedSearch->load();
 	}
 
 	// Get export HTML tag

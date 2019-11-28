@@ -145,6 +145,7 @@ loadjs.ready("head", function() {
 	// Dynamic selection lists
 	ft001_joadd.lists["x_NoJO"] = <?php echo $t001_jo_add->NoJO->Lookup->toClientList($t001_jo_add) ?>;
 	ft001_joadd.lists["x_NoJO"].options = <?php echo JsonEncode($t001_jo_add->NoJO->lookupOptions()) ?>;
+	ft001_joadd.autoSuggests["x_NoJO"] = <?php echo json_encode(["data" => "ajax=autosuggest"]) ?>;
 	ft001_joadd.lists["x_Status"] = <?php echo $t001_jo_add->Status->Lookup->toClientList($t001_jo_add) ?>;
 	ft001_joadd.lists["x_Status"].options = <?php echo JsonEncode($t001_jo_add->Status->options(FALSE, TRUE)) ?>;
 	ft001_joadd.lists["x_BM"] = <?php echo $t001_jo_add->BM->Lookup->toClientList($t001_jo_add) ?>;
@@ -174,17 +175,29 @@ $t001_jo_add->showMessage();
 <div class="ew-add-div"><!-- page* -->
 <?php if ($t001_jo_add->NoJO->Visible) { // NoJO ?>
 	<div id="r_NoJO" class="form-group row">
-		<label id="elh_t001_jo_NoJO" for="x_NoJO" class="<?php echo $t001_jo_add->LeftColumnClass ?>"><?php echo $t001_jo_add->NoJO->caption() ?><?php echo $t001_jo_add->NoJO->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
+		<label id="elh_t001_jo_NoJO" class="<?php echo $t001_jo_add->LeftColumnClass ?>"><?php echo $t001_jo_add->NoJO->caption() ?><?php echo $t001_jo_add->NoJO->Required ? $Language->phrase("FieldRequiredIndicator") : "" ?></label>
 		<div class="<?php echo $t001_jo_add->RightColumnClass ?>"><div <?php echo $t001_jo_add->NoJO->cellAttributes() ?>>
 <span id="el_t001_jo_NoJO">
-<div class="input-group ew-lookup-list">
-	<div class="form-control ew-lookup-text" tabindex="-1" id="lu_x_NoJO"><?php echo EmptyValue(strval($t001_jo_add->NoJO->ViewValue)) ? $Language->phrase("PleaseSelect") : $t001_jo_add->NoJO->ViewValue ?></div>
-	<div class="input-group-append">
-		<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_add->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_add->NoJO->ReadOnly || $t001_jo_add->NoJO->Disabled) ? " disabled" : "" ?> onclick="ew.modalLookupShow({lnk:this,el:'x_NoJO',m:0,n:10});"><i class="fas fa-search ew-icon"></i></button>
+<?php
+$onchange = $t001_jo_add->NoJO->EditAttrs->prepend("onchange", "");
+$onchange = ($onchange) ? ' onchange="' . JsEncode($onchange) . '"' : '';
+$t001_jo_add->NoJO->EditAttrs["onchange"] = "";
+?>
+<span id="as_x_NoJO">
+	<div class="input-group">
+		<input type="text" class="form-control" name="sv_x_NoJO" id="sv_x_NoJO" value="<?php echo RemoveHtml($t001_jo_add->NoJO->EditValue) ?>" size="15" maxlength="25" placeholder="<?php echo HtmlEncode($t001_jo_add->NoJO->getPlaceHolder()) ?>" data-placeholder="<?php echo HtmlEncode($t001_jo_add->NoJO->getPlaceHolder()) ?>"<?php echo $t001_jo_add->NoJO->editAttributes() ?>>
+		<div class="input-group-append">
+			<button type="button" title="<?php echo HtmlEncode(str_replace("%s", RemoveHtml($t001_jo_add->NoJO->caption()), $Language->phrase("LookupLink", TRUE))) ?>" onclick="ew.modalLookupShow({lnk:this,el:'x_NoJO',m:0,n:10,srch:true});" class="ew-lookup-btn btn btn-default"<?php echo ($t001_jo_add->NoJO->ReadOnly || $t001_jo_add->NoJO->Disabled) ? " disabled" : "" ?>><i class="fas fa-search ew-icon"></i></button>
+		</div>
 	</div>
-</div>
+</span>
+<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_add->NoJO->displayValueSeparatorAttribute() ?>" name="x_NoJO" id="x_NoJO" value="<?php echo HtmlEncode($t001_jo_add->NoJO->CurrentValue) ?>"<?php echo $onchange ?>>
+<script>
+loadjs.ready(["ft001_joadd"], function() {
+	ft001_joadd.createAutoSuggest({"id":"x_NoJO","forceSelect":false});
+});
+</script>
 <?php echo $t001_jo_add->NoJO->Lookup->getParamTag($t001_jo_add, "p_x_NoJO") ?>
-<input type="hidden" data-table="t001_jo" data-field="x_NoJO" data-multiple="0" data-lookup="1" data-value-separator="<?php echo $t001_jo_add->NoJO->displayValueSeparatorAttribute() ?>" name="x_NoJO" id="x_NoJO" value="<?php echo $t001_jo_add->NoJO->CurrentValue ?>"<?php echo $t001_jo_add->NoJO->editAttributes() ?>>
 </span>
 <?php echo $t001_jo_add->NoJO->CustomMsg ?></div></div>
 	</div>

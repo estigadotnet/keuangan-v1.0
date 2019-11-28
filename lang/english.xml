@@ -1353,6 +1353,9 @@
       <field id="nokolom">
         <phrase id="fldcaption" value="No Kolom" />
       </field>
+      <field id="nobl">
+        <phrase id="fldcaption" value="No BL" />
+      </field>
     </table>
     <table id="r203_costsheet">
       <phrase id="tblcaption" value="Cost Sheet" />

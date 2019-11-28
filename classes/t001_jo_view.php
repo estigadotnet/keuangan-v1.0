@@ -1018,6 +1018,7 @@ class t001_jo_view extends t001_jo
 			$this->id->ViewCustomAttributes = "";
 
 			// NoJO
+			$this->NoJO->ViewValue = $this->NoJO->CurrentValue;
 			$arwrk = [];
 			$arwrk[1] = $this->NoJO->CurrentValue;
 			$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);

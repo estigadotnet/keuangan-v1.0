@@ -1080,6 +1080,7 @@ class t001_jo_edit extends t001_jo
 			$this->id->ViewCustomAttributes = "";
 
 			// NoJO
+			$this->NoJO->ViewValue = $this->NoJO->CurrentValue;
 			$arwrk = [];
 			$arwrk[1] = $this->NoJO->CurrentValue;
 			$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
@@ -1197,36 +1198,15 @@ class t001_jo_edit extends t001_jo
 		} elseif ($this->RowType == ROWTYPE_EDIT) { // Edit row
 
 			// NoJO
+			$this->NoJO->EditAttrs["class"] = "form-control";
 			$this->NoJO->EditCustomAttributes = "";
-			$curVal = trim(strval($this->NoJO->CurrentValue));
-			if ($curVal != "")
-				$this->NoJO->ViewValue = $this->NoJO->lookupCacheOption($curVal);
-			else
-				$this->NoJO->ViewValue = $this->NoJO->Lookup !== NULL && is_array($this->NoJO->Lookup->Options) ? $curVal : NULL;
-			if ($this->NoJO->ViewValue !== NULL) { // Load from cache
-				$this->NoJO->EditValue = array_values($this->NoJO->Lookup->Options);
-				if ($this->NoJO->ViewValue == "")
-					$this->NoJO->ViewValue = $Language->phrase("PleaseSelect");
-			} else { // Lookup from database
-				if ($curVal == "") {
-					$filterWrk = "0=1";
-				} else {
-					$filterWrk = "`NoJO`" . SearchString("=", $this->NoJO->CurrentValue, DATATYPE_STRING, "");
-				}
-				$sqlWrk = $this->NoJO->Lookup->getSql(TRUE, $filterWrk, '', $this);
-				$rswrk = Conn()->execute($sqlWrk);
-				if ($rswrk && !$rswrk->EOF) { // Lookup values found
-					$arwrk = [];
-					$arwrk[1] = HtmlEncode($rswrk->fields('df'));
-					$this->NoJO->ViewValue = $this->NoJO->displayValue($arwrk);
-				} else {
-					$this->NoJO->ViewValue = $Language->phrase("PleaseSelect");
-				}
-				$arwrk = $rswrk ? $rswrk->getRows() : [];
-				if ($rswrk)
-					$rswrk->close();
-				$this->NoJO->EditValue = $arwrk;
-			}
+			if (!$this->NoJO->Raw)
+				$this->NoJO->CurrentValue = HtmlDecode($this->NoJO->CurrentValue);
+			$this->NoJO->EditValue = HtmlEncode($this->NoJO->CurrentValue);
+			$arwrk = [];
+			$arwrk[1] = HtmlEncode($this->NoJO->CurrentValue);
+			$this->NoJO->EditValue = $this->NoJO->displayValue($arwrk);
+			$this->NoJO->PlaceHolder = RemoveHtml($this->NoJO->caption());
 
 			// Status
 			$this->Status->EditAttrs["class"] = "form-control";
