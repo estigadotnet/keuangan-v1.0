@@ -107,7 +107,7 @@ class t102_mutasi extends DbTable
 		$this->jo_id->Sortable = TRUE; // Allow sort
 		$this->jo_id->UsePleaseSelect = TRUE; // Use PleaseSelect by default
 		$this->jo_id->PleaseSelectText = $Language->phrase("PleaseSelect"); // "PleaseSelect" text
-		$this->jo_id->Lookup = new Lookup('jo_id', 't001_jo', FALSE, 'id', ["NoJO","","",""], [], [], [], [], [], [], '`NoJO` DESC', '');
+		$this->jo_id->Lookup = new Lookup('jo_id', 't001_jo', FALSE, 'id', ["NoJO","Shipper","Kapal",""], [], [], [], [], [], [], '`NoJO` DESC', '');
 		$this->jo_id->DefaultErrorMessage = $Language->phrase("IncorrectInteger");
 		$this->fields['jo_id'] = &$this->jo_id;
 
@@ -867,6 +867,8 @@ class t102_mutasi extends DbTable
 				if ($rswrk && !$rswrk->EOF) { // Lookup values found
 					$arwrk = [];
 					$arwrk[1] = $rswrk->fields('df');
+					$arwrk[2] = $rswrk->fields('df2');
+					$arwrk[3] = $rswrk->fields('df3');
 					$this->jo_id->ViewValue = $this->jo_id->displayValue($arwrk);
 					$rswrk->Close();
 				} else {
@@ -1004,6 +1006,8 @@ class t102_mutasi extends DbTable
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = [];
 						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[3] = $rswrk->fields('df3');
 						$this->jo_id->ViewValue = $this->jo_id->displayValue($arwrk);
 						$rswrk->Close();
 					} else {

@@ -820,6 +820,8 @@ class t102_mutasi_delete extends t102_mutasi
 					if ($rswrk && !$rswrk->EOF) { // Lookup values found
 						$arwrk = [];
 						$arwrk[1] = $rswrk->fields('df');
+						$arwrk[2] = $rswrk->fields('df2');
+						$arwrk[3] = $rswrk->fields('df3');
 						$this->jo_id->ViewValue = $this->jo_id->displayValue($arwrk);
 						$rswrk->Close();
 					} else {
